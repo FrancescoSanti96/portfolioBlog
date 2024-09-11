@@ -6,6 +6,10 @@ export function BlogPosts() {
 
   return (
     <div>
+      <h1 className="mb-8 text-2xl font-semibold tracking-tighter text-center md:text-left">
+        Recent Posts
+      </h1>
+       <div>
       {allBlogs
         .sort((a, b) => {
           if (
@@ -32,5 +36,7 @@ export function BlogPosts() {
           </Link>
         ))}
     </div>
+    </div>
+   
   )
 }
