@@ -105,7 +105,6 @@ const CurrentTimelineExp = () => {
       <h1 className="mb-8 text-2xl font-semibold tracking-tighter text-center md:text-left">
       Job Experience
       </h1>
-      {/* <h2 className="text-3xl font-bold text-center mb-10">Job Experience</h2> */}
       <div className="relative border-l border-gray-200 dark:border-gray-700">
         {experiences.map((exp, index) => (
           <div key={index} className="mb-10 ml-4">
