@@ -15,7 +15,7 @@ const navItems = {
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const pathname = usePathname() 
+  const pathname = usePathname() // Get the current route
 
   return (
     <aside className="mb-16 tracking-tight">
