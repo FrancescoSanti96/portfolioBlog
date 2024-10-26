@@ -1,0 +1,85 @@
+---
+title: 'Learn Algorithm 2'
+publishedAt: '2024-10-18'
+summary: 'Series of learn together algorithms'
+---
+
+# **Learn Together Algorithm p.2**
+
+### **Introduction**
+In this lesson, we will explore the concept of a recursive function.
+
+## Recursive Function:
+- **Definition:** A recursive function is one that calls itself, allowing it to define an entity in terms of itself.
+
+## Example of Recursion in Nature:
+- **Fractals:** A **fractal** is a self-similar object, meaning it repeats its shape in the same way at different scales, appearing unchanged even when viewed through a magnifying lens. At first glance, it may seem complex, but it is generated from a very simple ordered source. 
+<img src="/img/algorithm2/frattale1.jpeg" alt="flowchart factorial" style={{height: 300, marginTop:'20px', marginBottom: '20px'}} />
+<img src="/img/algorithm2/frattale.jpg" alt="flowchart factorial" style={{height: 300, marginTop:'20px', marginBottom: '20px'}} />
+
+## Recursive Algorithm:
+- **Definition:** An algorithm is called recursive when its body includes calls to itself.
+
+### A Correct Recursive Function Has the Following Characteristics:
+
+1. **Base case(s):** The function includes one or more base cases where the function’s result is calculated without further recursion.
+2. **Recursive calls:** The function calls itself with arguments that progressively approach the base cases.
+(If these two conditions are not met, the function may not terminate or may not produce the correct result.)
+
+## Types of Recursion
+
+- **Direct recursion:** The procedure calls itself directly.
+   - **Linear recursion:** The procedure makes a single recursive call (e.g., factorial).
+   An example of direct and linear recursion is the factorial function, which is defined as follows:
+   ```
+   factorial function:
+   Require: n ≥ 0
+   1 function factorial(n)
+   2 if n = 0 then return 1
+   3 else return n * factorial(n-1)
+   ```
+   Esplicative example, watch the call stack for factorial(5):
+   <img src="/img/algorithm2/factorialCallStack.png" alt="factorial example" style={{height: 200, marginTop:'20px', marginBottom: '20px'}} />
+
+
+      - **Tail recursion:** A special case of linear recursion where the recursive call is the last instruction of the procedure.
+   
+   - **Multiple recursion:** The procedure includes more than one recursive call (e.g., Fibonacci).
+
+   An example of direct and multiple recursion is the resolution of Hanoi Towers:
+   <img src="/img/algorithm2/hanoi.png" alt="factorial example" style={{height: 200, marginTop:'20px', marginBottom: '20px'}} />
+
+   Anthoer example of multiple recursion is the Fibonacci function, which is defined as follows:
+   ```
+   Fibonacci function:
+   Require: n ≥1
+   1: function FIB(n)
+   2: if n ≤2 then return 1
+   3: else return FIB(n−1)) + FIB(n−2)
+   ```
+   Esplicative example, watch the call stack:
+   <img src="/img/algorithm2/fibonacciCallStack.png" alt="factorial example" style={{height: 200, marginTop:'20px', marginBottom: '20px'}} />
+
+
+      - **Binary recursion:** Involves two recursive calls. As a result, the calculation depends on two results from two different recursive calls to itself.
+
+      See the above example of the Fibonacci function where in the Recursion Tree Method, we saw that each node has two children.
+
+      - **Nested recursion:** The recursive call takes another recursive call as an argument (e.g., Ackermann function).
+
+- **Indirect recursion:** The procedure invokes another procedure that calls (directly or indirectly) the original procedure.
+   - **Mutual recursion:** A special case of indirect recursion where procedure A calls procedure B, which calls procedure A directly (e.g., even/odd).
+   ```
+   Mutual Recursion Even/Odd function:
+   2 def even(n):
+   3 if n==0: return True
+   4 return odd(n+(-1 if n>0 else +1))
+   5
+   6 def odd(n):
+   7 if n==0: return False
+   8 return even(n + (-1 if n>0 else +1))
+   ```
+   
+- **Infinite recursion:** Occurs when there is no reduction of the problem leading to a base case handled without recursion, which can lead to problems (e.g., stack overflow) if there is no mechanism to "terminate" the recursion.
+
+### **See you in the next post! Stay Tuned!**
