@@ -1,0 +1,263 @@
+---
+title: 'Learn Network System 1'
+publishedAt: '2024-11-20'
+summary: 'Series of learn together Network System'
+---
+
+# **Sistemi di rete**
+
+### **Introduzione**
+Le reti informatiche sono il cuore della comunicazione moderna, collegando dispositivi e persone in tutto il mondo. In questa serie di post, esploreremo i fondamenti dei sistemi di rete, dalle basi della topologia alle configurazioni avanzate. Pronti a iniziare?
+
+## **Componenti della Rete**
+
+### Device
+1. **End device**: Sono la sorgente o la destinazione dei dati, come un PC o un server (produce e consuma informazioni).
+2. **Intermediary device**: Trasmettono le informazioni, come gli switch e i router.
+
+### Media o supporti
+Collegano i device: cavo, fibra ottica, onde radio.
+
+## **Topologia**
+1. **Physical Topology**: Documenta la collocazione fisica di questi device e degli ambienti e dell'infrastruttura, anche con ID univoci.
+2. **Logical Topology**: La configurazione logica, con le caratteristiche ed i parametri dei device.
+
+## **Networks**
+1. **LAN (Local Area Network)**: Rete locale, come in un ufficio.
+2. **WAN (Wide Area Network)**: Rete estesa a livello geografico, gestite da ISP Internet Service Provider esempio Eolo
+3. **IXP (Internet Exchange Point)**: Collegato le varie wan tra loro.
+
+## **La rete in un'azienda**:
+1. Intranet: Dati privati con i soli dipendenti.
+2. Extranet: Dati privati con i clienti o fornitori.
+3. Internet> Dati pubblici e accessibili a tutti.
+
+## **TCP/IP vs OSI**:
+<img src="/img/networkSystem1/osi-tcpip-diagram.jpg" alt="best average worst case" style={{height: 300, marginTop:'20px', marginBottom: '20px'}} />
+
+### **OSI (Open Systems Interconnection)**
+1. L1 Fisica: Attivare, mantenere e disattivare la connessione fisico fra 2 entitá di strato 2.
+2. L2 Linea: Attivare, mantenere e disattivare la connessione fisica fra 2 entitá di strato 3.
+3. L3 Rete: fare arrivare i pacchetti al destinatario scegliendo il percorso migliore. - IP
+4. L4 Trasporto: Fornire canali sicuro end-to-end. (TCP, UDP)
+5. L5 Sessione: Suddivide il dialogo in unita logiche. (HTTP - FTP - DNS ...)
+6. L6 Presentazione: Sintassi e significato dei dati. (HTTP - FTP - DNS ...)
+7. L7 Applicazione: Utente della rete, Rappresenta l'applicazione. (HTTP - FTP - DNS ...)
+
+### **TCP/IP (Transmission Control Protocol/Internet Protocol)**
+1. L1  Fisica - Data Link & Physical: Ethernet, 802.11 (Wi-Fi)
+2. L2  Internet: IP, ICMP
+3. L3  Transport: TCP (Transmission Control Protocl), UDP (User Datagram Protocol).
+4. L4  Application: HTTP, POP3, SMTP -> fornisce servizi al software in eseguzione su un computer, dunque questo livello fornisce un'interfaccia tra il software in esecuzione su un computer e la rete stessa.
+
+<img src="/img/networkSystem1/protocols.png" alt="Protoclos Summary" style={{height: 200, marginBottom: '20px'}} />
+
+### **Application**
+Esempio con HTTP:
+<img src="/img/networkSystem1/webPage.png" alt="http request" style={{height: 200, marginBottom: '20px'}} />
+
+### **Protocolli**
+TCP (Transmission Control Protocol) e UDP (User Datagram Protocol) sono protocolli di trasporto, che si occupano di trasferire i dati tra due host.
+
+TCP è affidabile, UDP no.
+
+TCP Error Recovery: Si occupa anche di correzione degli errori, se un pacchetto non arriva, lo richiede.
+<img src="/img/networkSystem1/TCP-Error-Recovery.png" alt="TCP Error Recovery Image" style={{height: 300, marginTop:'20px', marginBottom: '20px'}} />
+
+### **Network layer**
+Il livello di rete TCP/IP é composto da:
+1. **IP (Internet Protocol)**: Si occupa di instradare i pacchetti tra i nodi della rete e definisce che ognii host deve avere un indirizzo ip univoco,
+per questo utilizza gli indirirri (IP address).
+Nella notazione DDN (Dotted Decimal Notation) un indirizzo IP é composto da 4 numeri separati da punti, ognuno dei quali puó essere compreso tra 0 e 255.
+
+### **Data-link e Fisico**
+Il livello fisico si occupa di aspetti di cablaggio e di segnali elettrici che attraversano i cavi.
+
+<img src="/img/networkSystem1/incapsulamento.png" alt="TCP Error Recovery Image" style={{height: 250, marginTop:'20px', marginBottom: '20px'}} />
+
+<img src="/img/networkSystem1/incapsulamento-terminologia.png" alt="TCP Error Recovery Image" style={{height: 150, marginTop:'20px', marginBottom: '20px'}} />
+
+
+### **Layer Interactions**
+<img src="/img/networkSystem1/layer.png" alt="TCP Error Recovery Image" style={{height: 200, marginBottom: '20px'}} />
+
+
+
+## Ethernet LAN
+Famiglia di standard emessi dall'IEEE (Institute of Electrical and Electronics Engineers) che definiscono le caratteristiche fisiche e di accesso al mezzo per le reti locali.
+
+### Esempio di una rete LAN aziendale:
+<img src="/img/networkSystem1/lan-aziendale.png" alt="Esempio LAN aziendale" style={{height: 300}} />
+
+
+### Standard Ethernet
+<img src="/img/networkSystem1/ethernet-standard.png" alt="Standard Ethernet" style={{height: 200}} />
+
+
+### Cavo in fribra:
+1. **Multimodale**: Il cavo consente piu angoli di trasmissione delle onde luminose nel suo nucleo, dunque trasmette a distanze minori.
+2. **Monomodale**: Ha un nucleo più piccolo e invia la luce con una singola angolazione, dunque trasmette a distanze maggiori.
+
+# CLI
+### Comand Line Interface
+
+Interfaccia testuale dove possiamo inviare comandi, configurare e monitorare i vari device, questa è accessibile tramite console o altri apparati simili come SSH o Telnet.
+
+Connessione possibile con cavo seriale, cavo seriale + convertitore USB, cavo USB
+Per accedere si utilizza un terminale esempio putty
+
+<img src="/img/networkSystem1/terminale-connessione.png" alt="Standard Ethernet" style={{height: 200}} />
+
+Il TE(Terminal Emulator) deve rispettare le configurazioni della porta, di default ha queste impostazioni:
+- 9600 bit/s
+- No HW flow control
+- 8-bit ASCII
+- no parity bit
+- 1 stop bit
+
+E’ possibile utilizzare la CLI anche senza una connessione fisica, in questo caso avremo bisogno di protocolli specializzati, i due device devono condividere la stessa rete IP:
+
+- Telnet, protocollo che invia comandi e password in chiaro sulla rete
+- SSH, Secure Shell, identico a Telnet ma con protocolli di sicurezza
+
+La configurazione degli switch sono salvati in varie memorie del device:
+<img src="/img/networkSystem1/memoria-device.png" alt="Standard Ethernet" style={{height: 200}} />
+
+## Introduzione alla CLI di Switch e Router
+
+Quando si accede alla CLI di uno switch o router, ci si trova inizialmente in **User EXEC mode** (detta anche user mode). Questa modalità è riconoscibile dal simbolo `>` dopo il nome dell'host. In questa fase, l'utente ha accesso limitato e può eseguire solo comandi basilari, come effettuare ping o visualizzare alcune informazioni di rete.
+
+## Passaggio alla modalità privilegiata
+
+Per accedere a un set più ampio di comandi, è necessario digitare il comando `enable`, che consente di entrare nella **Enable mode** (o modalità privilegiata). Questa modalità è identificata dal simbolo `#` e offre pieno controllo sul dispositivo, inclusa la possibilità di accedere alla **Configuration mode** tramite il comando `configure terminal`. La Configuration mode permette di applicare modifiche alla configurazione dello switch o router.
+
+### Differenze tra User mode ed Enable mode
+
+- **User mode (`>`):**
+  - Comandi basilari.
+  - Non permette modifiche o interruzioni nel funzionamento del dispositivo.
+- **Enable mode (`#`):**
+  - Accesso completo a tutti i comandi.
+  - Permette modifiche alla configurazione del dispositivo.
+  - Include la Configuration mode per modifiche approfondite.
+
+## Note aggiuntive
+
+- Il passaggio a Enable mode può richiedere una password, se configurata.
+- I comandi eseguibili in User mode sono sicuri e non influenzano il funzionamento dello switch o router.
+- La CLI offre utilità come:
+  - **Autocompletamento** con il tasto `TAB`.
+  - **Assistenza comandi** tramite il simbolo `?`.
+
+Questa struttura garantisce un approccio sicuro e graduale al controllo e alla configurazione dei dispositivi di rete.
+
+## Configurazione SSH
+Per utilizzare **SSH**, è necessario generare una **crypto key**, che crittografa i pacchetti. Prima di generarla, è obbligatorio configurare un **hostname** e un **dominio**.  
+
+Inoltre, il dispositivo deve avere un **indirizzo IP** per essere raggiungibile via SSH o Telnet. Questo si ottiene configurando una **VLAN** con un IP assegnato, permettendo al dispositivo di comunicare sulla rete.
+
+## Autenticazione con AAA
+Nelle aziende, per gestire accessi su numerosi dispositivi, è consigliato implementare un server di autenticazione **AAA** (Authentication, Authorization, Accounting). Questo approccio riduce il carico sullo switch, che si limita a inoltrare le credenziali al server per la validazione.
+
+I protocolli più comuni per AAA sono **RADIUS** e **TACACS+**, entrambi con trasmissione dei dati criptata.
+
+
+### CLI Commands
+Common commands
+```
+show running-config
+show startup-config
+configure terminal
+exit
+```
+
+Save the current config
+
+```
+copy running-config startup-config
+erase startup-config
+```
+
+Command to select the console port for the configuration of that port
+```
+line con 0
+```
+
+change hostname in config mode
+```
+hostname <name>
+```
+
+Dominion definition
+```
+ip domain-name <name.com>
+```
+
+Crypto key generate
+```
+crypto key generate rsa
+```
+
+Create virtual channel, vty(Virtual Teletype)
+```
+line vty 0 15
+```
+
+With this you create channels from 0 to 15 for a total of 16 channels, other example
+is 0 4 with 5 channels created
+
+
+Command to delete the password
+```
+no password
+```
+
+SSH commands
+```
+ip ssh version 2
+show ip ssh
+```
+
+Create a VLAN and configure a IP address
+```
+interface vlan 1
+ip address 192.168.1.1 255.255.255.0
+```
+
+Otherwise if DHCP is enabled
+```
+ip address dhcp
+no shutdown
+```
+
+Configuration of username and password
+```
+username <name> password <pass>
+```
+
+RADIUS AAA servers commands, config mode
+
+
+This command enable AAA on the device for every lines and interface, exepct for console
+line 0, IMPORTANT configure a user before activating AAA
+```
+aaa new-model
+```
+
+Specify the key and the IP address of the AAA server
+```
+radius-server host <IP address> <key>
+```
+
+
+Determinate the list of method of configuration by default, in this case the groups
+are "group radius" and "local", in case local is not specified and the IP connection
+fail it's impossible to login
+```
+aaa authentication login default group radius local
+line vty 0 5
+login authentication default
+```
+
+
+### **See you in the next post! Stay Tuned!**
