@@ -1,0 +1,200 @@
+---
+title: 'Learn Network System 2'
+publishedAt: '2024-12-18'
+summary: 'Series of learn together Network System'
+---
+
+
+### In questo articolo parleremo di:
+- LAN
+- VLAN
+- Wireless
+
+
+# **LAN**: Local Area Network
+
+possiamo creare tramite l’unione dei vari switch delle aree di rete, 
+in aziende o ambienti educativi possiamo creare delle aree di rete per gli utenti di lavoro, 
+aree per i data center e un’area per gli amministratori e così via.
+
+Il compito principale degli switch è quello di inoltrare i frame verso il corretto MAC address all’interno della rete.
+Per questo motivo i frame Ethernet includono source e destination address all’interno dell’header.
+
+• La porta verso la quale inoltrare il frame viene individuata grazie ad una MAC address table. Questa
+tabella riporta una lista di indirizzi e la relativa porta da utilizzare per raggiungerli.
+
+• La MAC address table può essere chiamata anche switching table.
+
+<img src="/img/networkSystem2/lan.png" alt="Lan" style={{height: 300, marginTop:'20px', marginBottom: '20px'}} />
+
+<img src="/img/networkSystem2/adressTable.png" alt="adress table example" style={{height: 300, marginTop:'20px', marginBottom: '20px'}} />
+
+## Flooding
+Se un indirizzo non è presente nella tabella, una copia del frame viene inoltrata verso ogni porta dello
+switch (ad eccezione di quella dalla quale il frame è stato ricevuto).
+Attenzione che però questo potrebbe portare ad un problema di loop se si è in una topologia con link ridondati
+
+## IEEE 
+dunque, se si andrà a configurare manualmente la porta dell'interfaccia, dovrebbe essere fatto per un motivo specifico.
+
+Esempio IEEE autonegoting se l'autonegoziazione automatica fallisce:
+velocità usare la piu bassa supportata
+Se velocita 10 o 100 usare half senno full
+
+Gli switch Cisco sono in grado di fare auto-sesinf per questo non seguono lo standard IEEE
+
+però se fallisce l'auto-sensig usale la logica IEEE
+
+
+Full -duplex è la normale modalità di funzionamento dei link
+Half - duplex la comunicazione può avvenire in una sola direzione alla volta
+(esempio il wifi funziona cosi)
+
+## Impostazioni di default:
+- Tutte le interfacce sono abilitate e pronte appena un cavo viene collegato
+- STP abilitato
+- Tutte le interfacce appartengono alla VLAN 1
+- La logica di apprendimento dei MAC e di flooding funziona di default
+
+
+Internet range -> per lavorare su molteplici interfaccie
+
+<img src="/img/networkSystem2/lanComand1.png" alt="reacap of Lan comands" style={{height: 300, marginTop:'20px', marginBottom: '20px'}} />
+<img src="/img/networkSystem2/lanComand2.png" alt="reacap of Lan comands" style={{height: 300, marginTop:'20px', marginBottom: '20px'}} />
+
+## Stato:
+
+Runts:  sono frame  più corti della dimensione minima consentita di 64 byte (incluso il preambolo). Possono essere il risultato di collisioni o errori durante la trasmissione.
+
+Giants: sono frame che superano la dimensione massima consentita di 1518 byte
+
+CRC: viene utilizzata per verificare l'integrità dei dati
+
+Collisions: si verificano quando due dispositivi trasmettono contemporaneamente su un segmento Ethernet half-duplex, causando l'interferenza dei segnali. Questo era comune nei sistemi basati su hub o nei vecchi standard Ethernet.
+
+
+# VLAN
+## Virtual Local Area Network
+
+Tutti i device che si trovano sullo stesso broadcast domain,
+
+Utilizzando i settings di default, tutte le interfacce si trovano sullo stesso broadcast domain,
+dunque se si invia un frame in broadcast, tutti i device lo riceveranno.
+
+Invece con l'utilizzo di due vlan un singolo switch puó mantenere due broadcast domain
+
+<img src="/img/networkSystem2/vlan.png" alt="vlan example" style={{height: 300, marginTop:'20px', marginBottom: '20px'}} />
+
+Vantaggi vlan:
+- Limitare i device che ricevono un messaggio in broadcast
+- Aumento della sicurezza grazie al minor numero di device in rete e varie policy VLAN
+- Raggruppare device per tipo permettendo una flessibilità maggiore
+- Trouble Shooting più efficente
+
+## Trunking
+
+La VLAN non è limitata ad un singolo switch infatti possiamo creare una VLAN che comprende più switch,
+per fare ciò dobbiamo collegare fisicamente i vari switch e configurare le porte che collegano i vari switch come trunk.
+
+Utilizza un link di tipo trunking per può supportare innumerevoli vlan
+
+Consiste nel taggare i frame (aggiugnere un header che riporti VLAN ID) prima che essi siano inviati sul trunk (link tra switch)
+
+<img src="/img/networkSystem2/vlanTrunking.png" alt="vlan example" style={{height: 300, marginTop:'20px', marginBottom: '20px'}} />
+
+Il protocollo IEEE 802.1Q definisce una VLAN speciale detta nativa o default, questa è modificabile, questa VLAN 1 non viene taggata in trunking, lo switch che riceve frame non taggati li passa alla VLAN di deafult, 
+questo permette di gestire anche situazioni dove su uno switch il trunking non viene interpetrato correttamente.
+
+Per inoltrare frame ad altre VLAN abbiamo bisogno di un router o un device abilitato, questo perchè gli switch sono Layer 2 e gestiscono la singola VLAN, 
+i device a Layer 3 possono gestire più VLAN, esistono switch multilayer che permettono questa gestione.
+
+<img src="/img/networkSystem2/vlanRouter.png" alt="vlan example" style={{height: 300, marginTop:'20px', marginBottom: '20px'}} />
+
+
+## Comandi utili
+
+Creare la vlan ed entrare nella configurazione della vlan
+```
+vlan <vlan id>
+```
+
+Assegnare un nome alla VLAN 
+```
+name <name>
+```
+
+Command used on the configuration of a interface,
+give access to a VLAN to the interface, make sure to check the mode of the interface
+```
+switchport access vlan <vlan id>
+```
+
+Le interfacce che non fanno trunking sono chiamate access, esempio quelle dedicate ai PC.
+
+La VLAN 1 non può essere eliminata, ma può essere usata.
+Le VLAN 1002-1005 non posso essere né usate né eliminate.
+
+<img src="/img/networkSystem2/vlan1.png" alt="vlan example" style={{height: 300, marginTop:'20px'}} />
+<img src="/img/networkSystem2/vlan2.png" alt="vlan example" style={{ marginBottom: '20px'}} />
+
+## VTP - VLAN Trunking Protocol
+
+Quando una rete cresce, la gestione delle VLAN diventa sempre più complessa,
+VTP è un protocollo che permette di gestire le VLAN in modo centralizzato.
+Protocollo proprietario Cisco
+
+Ogni switch riceve un’assegnazione:
+
+- VTP server mode, lo switch con questo ruolo può creare VLAN e se attivato il VTP può propagare sulla rete, in una rete si può avere un solo server, modalità di default
+- VTP client mode, gli switch con questa modalità non possono modificare, aggiungere o eliminare VLAN, ricevono esclusivamente aggiornamenti dal server
+- VTP transparent mode, gli switch con questa modalità non condividono il VLAN database ma inoltrano le richieste al prossimo nodo, allo stesso tempo però possono creare e eliminare VLAN che rimarranno sullo switch e non saranno mai inviate ad altri switch.
+- VTP mode off, identico alla transparent mode ma non inoltra le richieste
+
+Revision number: ogni volta che una VLAN viene creata, eliminata o modificata, il server incrementa il numero di revisione, questo permette di evitare che una VLAN venga sovrascritta da un server con una revisione più bassa.
+
+VTP Pruning: aiuta a migliorare le prestazioni della rete diminuendo il traffico non necessario, ad esempio il traffico broadcast, multicast ed i pacchetiti unicast sconosciuti.
+
+Una particolare tipologia di VLAN è la voice, i telefoni a cavo utilizzano un indirizzo IP per la comunicazione e si collegano alle porte Ethernet, la porta quindi doveva essere sia access per i device come computer collegati e trunk per le telefonate, per spartire in maniera corretta e per un incapsulamento migliore si è ideato la VLAN voice, questa permette allo switch di gestire la modalità dell’interfaccia in maniera dinamica.
+<img src="/img/networkSystem2/vlanVoice.png" alt="vlan example" style={{ height: 300, marginBottom: '20px'}} />
+
+# Wireless
+
+La comunicazione Wireless avviene nello spazio attraverso l'uso di segnali in radiofrequenza (RF).
+-> i dati devono viaggiare in entrmbe le direzioni
+Half-duplex - per evitare collisioni e dunque solo o invio o ricezione per volta
+
+<img src="/img/networkSystem2/wireless.png" alt="vlan example" style={{ height: 300, marginBottom: '20px'}} />
+
+Importatne dunque il concetto di:
+- fare a turno
+- inviare in altri momenti
+
+L'interferenza amumenta con l'aumentare dei dispositivi connessi
+
+BSS: insieme dei servizi di base, un singolo AP e i device connessi,
+BSA: basic area o cella, area di copertura di un singolo AP
+Associazione: processo di connessione tra un device e un AP
+
+IL BSS rimane stabile e sotto controllo
+
+DS: sistema di distribuzione, insieme di AP collegati tra loro, ethernet cablata a monte dell'AP.
+
+Tramite un sistema di distribuzione, DS, che funge da bridge dati possiamo vedere l’AP come un traduttore fra due mezzi, da cablato a wireless, 
+uno dei compiti dell’AP è quello di mappare la VLAN con un SSID,
+ in un contesto con più AP ogni VLAN ha un proprio SSID e una propria cella di azione.
+
+<img src="/img/networkSystem2/ds.png" alt="vlan example" style={{ height: 300, marginBottom: '20px'}} />
+
+ESS: extend service set
+Capita però che un AP non riesca a coprire un’area geografica, per questo si creano infrastrutture commutate dove gli AP collaborano fra di loro, in modo tale che un device che naviga nelle aree possa mantenere una connessione coerente, questo processo si chiama roaming
+<img src="/img/networkSystem2/ESS.png" alt="vlan example" style={{ height: 300, marginBottom: '20px'}} />
+
+
+IBSS: Independent Basic Service Set, è una rete wireless ad hoc, non ha un AP, i device si collegano direttamente tra di loro,
+
+Il segnale radio viaggia su frequenze, generalmente 2.4 GHz o 5 GHz. La rete a 2.4 GHz ha un raggio maggiore e attraversa meglio ostacoli, mentre la 5 GHz offre velocità più elevate. Le frequenze sono suddivise in canali: nella banda 2.4 GHz tra 2,400 e 2,4835 GHz, e nella banda 5 GHz tra 5,150 e 5,825 GHz.
+
+
+Nella banda a 5 GHz, i canali sono progettati per non sovrapporsi, garantendo una trasmissione più pulita. Al contrario, nella banda a 2.4 GHz, le frequenze dei canali sono più ampie e tendono a sovrapporsi, influenzando i canali adiacenti. Per ridurre le interferenze, si utilizzano generalmente i canali 1, 6 e 11, lasciando 4 canali liberi tra l’uno e l’altro.
+
+### **See you in the next post! Stay Tuned!**
