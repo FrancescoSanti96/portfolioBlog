@@ -1,0 +1,402 @@
+---
+title: "Learn Network System 3"
+publishedAt: "2024-12-20"
+summary: "Series of learn together Network System"
+---
+
+### In questo articolo parleremo di:
+
+- STP
+- Subnetting / IPv4
+- IPv6
+
+# **STP**: Spanning Tree Protocol
+
+<img
+  src="/img/networkSystem3/STP.png"
+  alt="STP loop example"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+In una topologia di rete con link ridondati, alcuni frame potrebbero rimanere in loop per tempo infinito.
+STP impedisce ad alcune porte di innoltrare i frame, in modo da evitare i loop.
+
+In breve STP o RapidSTP bloccano alcune porte in modo che non inoltrino frame.
+
+- Se la porta è in stato forwarding per una vlan, la porta viene usata normalemente per quella vlan.
+- Se la porta è in stato blocking, tutto il traffico di quella vlna non viene ricevuto
+
+Errori dei frame in loop:
+
+- Broadcast storm: Un frame broadcast, multicast o unicast con destinazione sconosciuta rimane in loop nella LAN, saturando la rete.
+- MAC table instability: i frame in loop possono far cambiare continuamente la tabella MAC adress, può portare i frame ad essere inviati nel luogo sbagliato.
+- Multiple copies: ricezione di più copie dello stesso frame, confondendo il destinatario.
+
+Nel dettaglio cosa fa STP/RSTP:
+Mette le porte in forwarding o blocking state.
+
+- Forwarding: la porta inoltra i frame
+- Blocking: non innoltrano i frame e non apprendo indirizzi MAC.
+
+In ambito STP, bridge e switch sono sinonimi.
+
+### Per decidere quale interfaccia lasciare in forwarding STP usa tre criteri:
+
+- Elegge uno switch root e mette tutte le interfacce abilitate in forwarding
+- Ogni switch non root cerca la sua porta con il minor costo tra sè e il root, una volta trovato il root cost viene salvata la root port per quello switch
+- Con due switch collegati, lo siwtch con il root cost più basso viene posto in forwarding, perche è il designed switch con l'interfaccio chiamata designated port.
+- Tutte le altre interfacce vengono messe in blocking state.
+
+### BID: Bridge ID
+
+Valore univoco di 8 byte che identifica univocamente uno switch.
+
+- 2 byte di priority
+- 6 byte di ID basato su MAC address
+
+BPDU: Bridge Protocol Data Unit
+per scambiare informazioni tra gli switch, il più comune è Hello BPDU, questo condivide BID dello switch mittente e la configurazione.
+
+Lo switch con il BID più basso è lo switch root.
+Il processo inizia con tutti gli switch che si considerano root port inviano Hello BPDU, lo switch con il BID più basso diventa root.
+
+Al termine di ciò si procede con la fase per scegliere le root port, il processo è simile a quello per la root switch, ma in questo caso si considera il costo tra lo switch e la root switch.
+
+Tiebreaker, se sono presenti 2 o più percorsi con lo stesso root cost:
+
+- Scegliere fra i bridge vicini quello con ID migliore
+- Scegliere in base alla priorità della porta (più comune)
+- Scegliere in base al numero della porta (meno usato)
+
+Infine per decidere la porta designata si campionano le richieste di Hello BPDU da ogni porta dello switch, quella migliore viene scelta.
+
+STP ogni 2 secondi esegue un processo di controllo:
+
+1. Dal root invia un Hello BPDU con root cost 0 da tutte le sue porte forwarding
+2. Gli switch non root che ricevono Hello aggiungono il loro BID e port cost, poi inoltrano a tutte le porte forwarding
+3. Il processo si ripete fino al termine della rete e il root riceve il pacchetto finale, nel caso le informazioni sono differenti si dovrà eseguire di nuovo tutto il processo di configurazione.
+
+<img
+  src="/img/networkSystem3/stpExample.png"
+  alt="STP example"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+Quando una porta passa da blocking a forwarding, attraversa due stati intermedi transitori:
+
+- Listening: La porta è attiva, non inoltra frame, e rimuove dalla MAC table gli indirizzi associati, prevenendo possibili loop.
+- Learning: La porta non inoltra frame ma apprende i MAC address, aggiornando la MAC table.
+
+<img
+  src="/img/networkSystem3/statoInterfaccie.png"
+  alt="Possibli stati interfaccie"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+RSTP è una versione più veloce di STP, con tempi di convergenza più rapidi.
+
+<img
+  src="/img/networkSystem3/rstpPort.png"
+  alt="Possibli porte RSTP"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+- Utilizza un meccanismo dove si può modificare la root port senza attesa
+- Introduce la alternate port, questa diventa la seconda migliore opzione alla root port, nel caso di problemi si può cambiare velocemente dalla root alla alternate port
+- Può modificare la designated port senza attesa
+- Riduce i tempi dei timer
+
+STP vs RSTP alcune differenze:
+
+<img
+  src="/img/networkSystem3/stp_rstp.png"
+  alt="Possibli porte RSTP"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+EthernetChannel: Fornisce un modo per evitare che la convergenza STP sia necessaria, combina più segmenti paralleli con uguale velocità, di conseguenza se un collegamento fallisce ma almeno uno è atttivo non serve la convergenza.
+
+PortFast: Permette di saltare lo stato di listening e learning, passando direttamente a forwarding, utile per le porte che si connettono a dispositivi finali.
+
+Cisco ha un protocollo proprietario RPVST+ che è una versione migliorata di RSTP
+
+Root Guard: Impedisce che una porta diventi root port.
+
+BPDU Guard: Disabilita la porta se riceve un BPDU se PortFast è abilitato sulla porta.
+
+# **Subnetting**
+
+### Recap PILA TCP/IP:
+
+<img
+  src="/img/networkSystem3/pilaReti.png"
+  alt="PILA TCP/IP"
+  style={{ height: 200, marginBottom: "40px" }}
+/>
+
+### Indirizzo IP
+
+è un numero che identifica un nodo in una rete, esistono delle classi di indirizzi IP, che determinano la dimensione della rete.
+
+<img
+  src="/img/networkSystem3/IPexample.png"
+  alt="PILA TCP/IP"
+  style={{ height: 200, marginBottom: "40px" }}
+/>
+
+### Classi di indirizzi IP maggiormente utilizzate:
+
+- Classe A 1 - 126
+- Classe B 128 - 191
+- Classe C 192 - 223
+
+### Numero di host per classe:
+
+- Classe A: 2^24 - 2 = 16.777.214
+- Classe B: 2^16 - 2 = 65.534
+- Classe C: 2^8 - 2 = 254
+
+### Subnet: Subdivided network (Un sottoinsieme della rete).
+
+### Routing:
+
+- Gli indirizzi nella stessa sottorete non devono essere separati da router, la subnet deve rimanere coesa
+- Gli indirizzi delle varie subnet sono separati da almeno un router, device non possono accedere ad una subnet se si trovano in un’altra subnet
+
+### Analisi delle esigenze per la subnetting:
+
+- Qauli host devono essere raggruppati in una sottorete?
+- Quante sottoreti richiede questa rete?
+- Quanti indirixxi IP host richiede ciascuna sottorete?
+- Tutte le sottoreti avranno la stessa dimensione o no?
+
+Dunque si pianifica la rete prendendo in considerazione le varie vlan, point to point serial link, ethernet wan link, ecc.
+Anche se la subnet è di layer 3 e la vlan di layer 2.
+
+La sottorete deve essere sufficientemente grande, in modo che 2^H - 2 >= numero di host.
+
+Se possibile suddividere le sottoreti in modo che siano uguali, in modo da facilitare la gestione.
+
+La subnet mask o maschera di rete è poi quella che determina la dimensione della sottorete.
+
+### Info
+
+All'inizio degli anni 90, il mondo stava esaurendo le reti IP pubbliche che potevano essere assegante,
+soluzioni;
+
+- Una nuova versione di IP IPv6, con indirizzi molto più grandi (128 bit)
+- Assegnazione di un sottoinsieme di una rete Ip pubblica a un'organizzazione
+- NAT (Network Address Translation) che consente l'utilizzo di reti IP private, consente alle aziende di riutilizzare le stesse reti IP.
+
+In pratica sono stati creati degli indirizzi IP privati che possono essere utilizzati all'interno di una rete aziendale, ma non possono essere utilizzati esternamente e dunque non vanno in conflitto con gli indirizzi IP pubblici.
+
+<img
+  src="/img/networkSystem3/IPprivate.png"
+  alt="PILA TCP/IP"
+  style={{ height: 150, marginBottom: "20px" }}
+/>
+
+<img
+  src="/img/networkSystem3/classiIP.png"
+  alt="PILA TCP/IP"
+  style={{ height: 250, marginBottom: "20px" }}
+/>
+
+Ogni rete ha quattro numeri chiave che la identificano:
+
+- Classe dell'indirizzo: Determinata dal primo ottetto.
+- Ottetti di rete e host:
+  - Classe A: 1° ottetto di rete, 3 ottetti di host.
+  - Classe B: 2 ottetti di rete, 2 ottetti di host.
+  - Classe C: 3 ottetti di rete, 1 ottetto di host.
+- Indirizzo di rete: Ottieni azzerando gli ottetti di host.
+- Indirizzo di broadcast: Ottieni mettendo a 255 gli ottetti di host.
+
+<img
+  src="/img/networkSystem3/example.png"
+  alt="PILA TCP/IP"
+  style={{ height: 200, marginBottom: "20px" }}
+/>
+
+Le subnet mask devono seguire queste regole:
+
+- Deve essere composta da 32 bit
+- 1 e 0 non devono essere alternati
+- Se esistono 1 sono a sinistra
+- Se esistono 0 sono a destra
+
+Subnet mask le devierse notazioni utilizzate:
+
+- Binaria: 11111111.11111111.11111111.00000000
+- DDN (Dotted Decimal Notation): 255.255.255.0
+- prefix: /24
+
+Esempio: 11111111.11111111.11111111.00000000 = 255.255.255.0 = /24
+
+Tabella utile per le conversioni:
+
+<img
+  src="/img/networkSystem3/maskTrick.png"
+  alt="Tabella converrsioni maskP"
+  style={{ height: 300, marginBottom: "20px" }}
+/>
+
+Classless: Utilizza la subnet mask per determinare la dimensione della rete, non si basa sulla classe dell'indirizzo.
+
+Classful: Utilizza la classe dell'indirizzo per determinare la dimensione della rete.
+
+### Esercizi:
+
+<img
+  src="/img/networkSystem3/ESmask.png"
+  alt="Tabella converrsioni maskP"
+  style={{ marginTop: "20px", marginBottom: "20px" }}
+/>
+
+<img
+  src="/img/networkSystem3/ES1.png"
+  alt="Tabella converrsioni maskP"
+  style={{ marginBottom: "20px" }}
+/>
+
+<img
+  src="/img/networkSystem3/ES2.png"
+  alt="Tabella converrsioni maskP"
+  style={{ marginTop: "20px", marginBottom: "20px" }}
+/>
+
+# IPV6
+
+- 128 bit
+- Abbreziazione in esadecimale (8 gruppi di 4) esempio: 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+
+Ancora non molto diffuso. ha bisogno di ulteriori protocolli per funzionare adeguatamente, infatti richiedera poi un aggiornamento dei dispostivi da parte delle aziende.
+
+Un protoccolo che cambia é il:
+ARP: Address Resolution Protocol, scorpre l'indirizzo MAC usato dai vicini, IPV4.
+NDP: Neighbor Discovery Protocol, IPV6.
+
+Rimangono sempre valide le regole di v4, incapsulamento, instradamento e traffico, in ogni parte del percorso bisogna trovare un IPv6 mittente e destinatario, anche se è possibile tradurre da IPv4 a IPv6 tramite il NAT non sempre è possibile eseguire il contrario, quindi è importante scegliere una tecnica e mantenerla su tutta la rete\sottorete.
+
+Routing IPv6 protocols:
+
+<img
+  src="/img/networkSystem3/routingIPV6.png"
+  alt="routing IPV6"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+Conversione in binario di un indirizzo IPv6:
+ogni carattere esadecimale corrisponde a 4 bit
+
+Tabella di conversione:
+
+<img
+  src="/img/networkSystem3/tabellaConversione.png"
+  alt="routing IPV6"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+## Abbreziazione di un indirizzo IPv6:
+
+Regole:
+
+- Eliminare gli zeri iniziali in ogni quartetto (gruppo di 4 cifre esadecimali). Ad esempio, 00AB diventa AB, e 0000 diventa 0.
+- Sostituire sequenze consecutive di quartetti di tutti zeri (0000) con ::. Questo può essere fatto una sola volta nell'indirizzo per evitare ambiguità.
+
+Esempio:
+
+```
+FE00:0000:0000:0001:0000:0000:0000:0056
+FE00:0:0:1:0:0:0:56
+FE00:0:0:1::56
+```
+
+### Prefix lenght:
+
+La lunghezza del prefisso (prefix length) in IPv6 specifica il numero di bit iniziali dell'indirizzo che rappresentano la parte di rete (network), analoga alla subnet mask in IPv4.
+
+/64: La lunghezza del prefisso più comune per le sottoreti IPv6.
+
+In questa configurazione, i primi 64 bit sono dedicati alla parte di rete e i restanti 64 bit sono per gli indirizzi degli host.
+
+<img
+  src="/img/networkSystem3/prefix64.png"
+  alt="prefix lenght 64"
+  style={{ height: 200, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+Si può anche avere una lunghezza del prefisso diversa da 64, si può incontrare come multiplo di 4,
+
+Utile ricordarsi che ongni 4 bit corrispondono ad un carattere esadecimale, cosi da poter trovare il corretto prefisso.
+
+```
+Esempio
+
+2001:0db8:abcd:0000:0000:0000:0000:0000/48
+2001:db8:abcd::/48
+```
+
+## Tipologie di indirizzi IPv6:
+
+- Global Unicast: Funzionano in modo silimare agli indirizzi pubblici in IPv4, questi indirizzi sono globalmente unici, ogni organizzazione puó richiedere un blocco di inidirri IPv6 che nessun altro puó utilizzare e viene assegnato come Global routing prefix.
+- Unique Local: Sono indirizzi IPv6 utilizzati per comunicazioni private all'interno di una rete locale, non vengono utilizzati per il routing pubblico, inizano con FD.
+- Link Local: Utilizzati per la comunicazione tra i dispositivi sulla stessa rete o sottorete, non vengono inoltrati dai router, inizano sempre con FE80.
+- Multicast: Utilizzati per inviare un pacchetto a un gruppo di host, iniziano con FF00.
+- Anycast: Sono indirizzi assegnati a più interfacce, ma i pacchetti inviati a un indirizzo Anycast vengono instradati all'interfaccia più vicina.
+- DEPRECATO -> Site-Local, Indirizzi IPv6 che non sono più utilizzati, inizano con FEC0.
+
+<img
+  src="/img/networkSystem3/recapIPv6.png"
+  alt="prefix lenght 64"
+  style={{ height: 200, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+<img
+  src="/img/networkSystem3/IPv6.png"
+  alt="prefix lenght 64"
+  style={{ height: 200, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+<img
+  src="/img/networkSystem3/IPv6Rete.png"
+  alt="IPv6 rete esempio"
+  style={{ height: 200, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+SLAAC: Stateless Address Autoconfiguration, permette ai dispositivi di ottenere un indirizzo IPv6 senza un server DHCP.
+
+### Entriamo piú nel dettaglio di Unique local unicast address:
+
+non sono registrati pressono nessuna autorità e possono essere utilizzati liberamente da piú organizzazioni
+
+- FD alle prime due cifre esadecimali
+- ID globale unico a 40 bit
+- Utilizzare 16 bit per la sottorete
+
+<img
+  src="/img/networkSystem3/uniqueLocal.png"
+  alt="unique Local"
+  style={{ height: 200, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+Altre informazioni utili:
+
+I device possono ricevere il loro IP statisticamente o dinamicamente tramite DHCP o SLAAC, Stateless Address Autoconfiguration, un protocollo integrato in IPv6.
+
+NDP Neighbor Discovery Protocol, comprende alcune funzioni:
+
+- Neighbour MAC Discovery, funzione che sostiuisce la tabella ARP IPv4
+- Router Discovery, apprendimento dinamico dei router nella sottorete
+  - Router Solicitation, RS, messaggio inviato al multicast chiedendo a tutti i router in LAN di identificarsi
+  - R Advertisement, RA, contiene varie info del router tra cui IPv6
+- SLAAC, tramite i messaggi NDP il device apprende la lunghezza e IP di sottorete
+- DAD, prima di utilizzare l’IP il device invia messaggi NDP per assicurarsi che nessun altro device abbia lo stesso IP
+  - Neighbor S, NS, richiesta di rispondere con un NA
+  - NA, messaggio di risposta a NS che contiene IPv6 e MAC
+
+### Sito molto utile per esercitarsi con IPv4 e IPv6:
+
+- [Improve your IP skills](https://www.ipchalk.com/)
+
+### **See you in the next post! Stay Tuned!**
