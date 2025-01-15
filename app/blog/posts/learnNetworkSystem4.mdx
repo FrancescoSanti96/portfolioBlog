@@ -1,0 +1,401 @@
+---
+title: "Learn Network System 4"
+publishedAt: "2025-01-15"
+summary: "Series of learn together Network System"
+---
+
+### In questo articolo parleremo di:
+
+- Routing
+- Transport
+- DHCP
+- NTP
+- NAT
+- OSPF
+
+# Routing
+
+### Router:
+
+Sono device di rete **Layer 3** (network) che collega due o più reti e instrada i pacchetti di dati tra di esse.
+comunemente utilizzato per connettere reti locali (LAN) e reti (WAN).
+
+Alcune delle caratteristiche principali di un router sono:
+
+- Interfacce Gigabit Ethernet
+- Slot modulari NIM Network Interface Module
+
+La GigabitEthernet0/0 dispone di due porte per una singola interfaccia, non si possono usare contemporaneamente entrambe.
+
+- porta fisica RJ-45 rame per connessione alla LAN
+- altra porta fisica SFP supporta connessioni in fibra ottica, WAN
+
+Inizialmente le interfiaccie dei router cisco sono disabled, inoltre non instrano i pacchetti se non viene configurato IP e maschera.
+
+<img
+  src="/img/networkSystem4/configureTerminal.png"
+  alt="esample configure terminal"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+Sia su router e switch è disponibile una porta ausiliare dove è possibile per un amministratore collegarsi e impartire comandi, si possono collegare anche linee telefoniche, per impartire comandi dalla CLI.
+
+### IP Routing:
+
+è il processo di inoltro dei pacchetti IP, che consente di trasferire i pacchetti attraverso l'intera rete TCP/IP, dal dispositivo che li genera fino al dispositivo di destinazione. In altre parole, l'IP routing consegna i pacchetti IP dall'host mittente all'host destinatario.
+
+### Flusso:
+
+-Instradamento endo to end si basa sulla logica del livello di rete di host e router
+
+Per prima cosa l’host controlla se il pacchetto è diretto alla stessa rete dove è presente, per fare ciò controlla il proprio IP, da qui sceglie fra le due opzioni:
+
+- Se la destinazione è locale, prima recupera il MAC dalla tabella ARP, poi incapsula il pacchetto con un frame data-link con l’indirizzo destinatario
+- Se la destinazione non è locale, recupera il MAC address del gateway, da qui incapsula il pacchetto a livello data-link
+
+Nel secondo caso il router deve eseguire la maggior parte del lavoro;
+
+- Innanzitutto controlla che non ci siano errori secondo il campo FCS (Frame Check Sequence)
+- Indirizzo di destinazione è quello del router o broadcast appropriato
+
+Se ci sono problemi il pacchetto viene scartato
+
+Se supera i controlli;
+
+- viene estrapolato il frame data-link
+- decide l’instradamento secondo la tabella di routing
+- incapsula il frame con le nuove informazioni data-link
+- trasmette il frame
+
+<img
+  src="/img/networkSystem4/routerRecap.png"
+  alt="esample router Instradamento"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+<img
+  src="/img/networkSystem4/router.png"
+  alt="esample router Instradamento"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+### Tabella di routing:
+
+- **connected routes:** configurazione con comando 'ip address', l'interfaccia deve essere in stato funzionante ovvero in modalita up, aggiunge automaticamente la sottorete alla tabella di routing
+- **static routes:** comando 'ip route' sul router locale
+- **protocolli di routing:** permette invece che i vari router possano comunicare dinamicamente e imparare i percorsi
+
+**Tabella ARP:** elenca gli indirizzi IPv4 e gli indirizzi MAC corrispondenti dei vari host connessi alla stessa sottorete del router.
+
+Tipologie di route:
+
+- **network route:** indica una sottorete o un itera rete di calsse
+- **default route:** fa match tutti gli indirizzi IP di destinazione
+- **host route:** indica un host specifico
+
+**Floating static route:** si usa per creare un percorso di backup, se il percorso principale non è disponibile, il router passa al percorso di backup.
+
+<img
+  src="/img/networkSystem4/floatingStaticRoute.png"
+  alt="example floating static route"
+  style={{ marginTop: "10px", marginBottom: "10px" }}
+/>
+
+**Static default route:** innoltrare il pacchetto in base alla rotta predefinita.
+
+Possibili errori:
+
+- percorsi statici errati che appaiono nella tabella di routing
+- percorso statico non appare nella tabella di routing
+
+Quando piu di un percorso fa match viene usato quello con il prefix più maggiore.
+
+<img
+  src="/img/networkSystem4/ipRoutingDesc.png"
+  alt="IP Routing Description"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+### VLAN routing:
+
+- Utilizzo router con interfaccia LAN del router e un cavo lan per ogni VLAN (in genere non utilizzato)
+- ROAS (Router on a stick): un router con un trunk VLAN collegato ad uno switch LAN
+
+  <img
+    src="/img/networkSystem4/ROAS.png"
+    alt="ROAS"
+    style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+  />
+  Utilizza il trunking per creare una logical router interface, ogni vlan deve avere
+  ip/maschera associata
+
+  deve essere configurato manualmente
+
+- Utilizzo di uno switch Layer 3 con switched virtual interfaces (SVI)
+- Utilizzo di uno switch Layer 3 con interfaccie instradate
+
+# OSPF - Open Shortest Path First
+
+**Protocollo di routing**:
+
+Un insieme di messaggi, regole e algoritmi utilizzati dai router per l'apprendimento dei percorsi.
+
+- Rotte statiche
+- Rotte connesse
+- Rotte apprese con routing dinamico
+
+In sintesi:
+
+- Apprendere e Diffondere informazioni di routing
+- Scegliere il percorso migliore
+
+### **Interior gateway protocls IGP:** per singolo sitema autonomo AS
+
+Maggiormente diffuso:
+
+- OSPF
+- EIGRP
+
+Algoritmi maggiormente utilizzati:
+
+- Distance Vector
+  - Routing Information Protocol RIP
+- Distance Vector Avanzato
+- Link-state
+
+<img
+  src="/img/networkSystem4/OSPFtable.png"
+  alt="OSPF table"
+  style={{ marginTop: "20px", marginBottom: "20px" }}
+/>
+
+### **Exterior gateway Protocols EGP:** usato tra diversi sistemi autonomi
+
+Si usa per il Border Gateway Protocol BGP
+
+## Entriamo nel dettaglio di OSPF
+
+organizza le informazioni utilizzando i **link-state** advertisement **LSA** e il database link-state **LSDB**,
+
+sono strutture dati con poche informazioni e localizzata su una porzione di rete o una topologia della rete
+
+Quando la rete esegue un **flooding** di LSA i router man mano che inviano i pacchetti chiedono al router vicino se ha già quel LSA,
+se già presente non lo inoltra altrimenti lo invia, questo permette di evitare loop e traffico, nel caso un LSA cambi informazioni si esegue un reflood,
+i reflood vengono eseguiti in base al timer di ciascun LSA, default 30 min
+
+Utilizza **l’algoritmo di Dijkstra** per elaborare le migliori route, l’analisi avviene su LSDB, ha tre fasi principali:
+
+- Becoming neighbors, relazione diretta fra due router dove si collegano allo stesso link, possono scambiare i propri LSDB
+- Exchanging databases, processo di invio dei LSA ai vicini
+- Adding the best routes, Calcola sulla propria copia del LSDB le route migliori e le aggiunge alla routing table
+
+Per diventare neighbors i router devono avere entrambi OSPF sullo stesso data-link,
+collegati alla stessa VLAN, collegamento seriale e WAN Ethernet,
+poi iniziano a scambiarsi Hello OSPF con dentro tutte le informazioni necessarie.
+Gli Hello contengo il RID, di ciascun router.
+
+per scoprire altri router invia pacchetti OSPF Hello multicast
+
+<img
+  src="/img/networkSystem4/rid.png"
+  alt="RID"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+Una volta che avviene lo scambio e la verifica dei dati OSPF attribuisce lo stato 2-way,
+questo stato significa che entrambi i device rispettano i requisiti per diventare neighbours.
+
+Terminata la fase di neighbours i due router iniziano a scambiarsi LSA finchè non è stato condiviso/ricevuto l’intero LSDB,
+da qui in poi i router per mantenere lo stato di neighbours e LSDB eseguono queste azioni:
+
+- Invio di messaggi Hello secondo il Dead Intervall
+- Flooding LSA per ogni modifica
+- Flooding LSA al termine del timer di vita, default 30 min
+
+Quando completano lo scambio sono in stato full
+
+Per il mantenimento dei vicini, flooding ogni 30 min
+
+**DR:** router designato
+
+**BDR:** router di backup
+
+La migliore rotta si calcola con SPF
+
+**Aree OSPF:** per dividere la rete in aree più piccole
+
+Suddividere LSDB in vari database più piccoli,
+la suddivisione tipica è per area, un’area è come una VLAN, raccoglie diversi device in una sottorete,
+in questa maniera il calcolo delle route è ridotto e il database si limita sulle route dell’area.
+
+<img
+  src="/img/networkSystem4/areaOSPF.png"
+  alt="AREA OSPF"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+<img
+  src="/img/networkSystem4/OSPFRecap.png"
+  alt="OSPF RECAP"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+**Tipologia di LSA:**
+
+<img
+  src="/img/networkSystem4/LSA.png"
+  alt="LSA"
+  style={{ marginTop: "20px", marginBottom: "20px" }}
+/>
+
+Comandi utili:
+
+```
+show ip ospf neighbor
+show ip ospf database
+show ip route
+```
+
+<img
+  src="/img/networkSystem4/ospfCompleteExample.png"
+  alt="ospfCompleteExample"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+OSPF Passive Interface - Interfaccia che non invia né riceve pacchetti OSPF ma la sua rete viene comunque pubblicizzata nel dominio OSPF. Utile per risparmiare banda e aumentare la sicurezza.
+
+OSPF broadcast network - Rete che permette comunicazioni multicast/broadcast dove un router viene eletto DR (Designated Router) per centralizzare e ottimizzare lo scambio di informazioni di routing.
+
+OSPF default routes - Route predefinite che un router OSPF può pubblicizzare nel dominio per indicare il percorso verso reti esterne quando non esiste un percorso specifico.
+
+OSPF Load Balancing - Capacità di OSPF di distribuire il traffico su percorsi multipli con costo uguale verso la stessa destinazione, ottimizzando l'utilizzo delle risorse di rete.
+
+# Transport
+
+Il livello 4 della pila OSI " con importanti funzioni di error recovery e flow control"
+
+### TCP:
+
+Peremette di controllare il flusso e la ritrasmissione.
+
+HEADER:
+
+<img
+  src="/img/networkSystem4/headerTCP.png"
+  alt="HEADER TCP"
+  style={{ marginTop: "20px", marginBottom: "20px" }}
+/>
+
+### UDP:
+
+Necessita di meno byte nella sua intestazione, non rallenta il trasfermimento dei dati,
+inoltre utile per le applicazoni che non richiedono un controllo degli errori esempio VoIP
+
+HEADER:
+
+<img
+  src="/img/networkSystem4/headerUDP.png"
+  alt="HEADER UDP"
+  style={{ marginTop: "20px", marginBottom: "20px" }}
+/>
+
+UDP e TCP:
+
+<img
+  src="/img/networkSystem4/tcpTable.png"
+  alt="TCP e UDP recap table"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+- Multiplexing: indica al computer quali applicazioni devono ricevere le informazioni, utilizzando la destination port per identificarla
+
+Solo TCP:
+
+- Connection Establishment and Termination:
+
+  Instaurazione della connessione con l'inizializazione dei campi Sequence e Acknowledgment
+
+- Error Recovery and Reliability
+
+  Numera i byte utilizzando i campi Sequence e Acknowledgment, per raggiugnere l'affidabilità
+
+<img
+  src="/img/networkSystem4/errorRecovery.png"
+  alt="Error Recovery and Reliability"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+- Flow control using windowing:
+
+  Implementa il controllo del flusso utilizzando il concetto di finestra, si applcia alla quantità.
+
+### IANA:
+
+<img
+  src="/img/networkSystem4/IANA.png"
+  alt="IANA"
+  style={{ marginTop: "20px", marginBottom: "20px" }}
+/>
+
+<img
+  src="/img/networkSystem4/portNumber.png"
+  alt="portNumber"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+# DHCP
+
+Dynamic host configuration protocol
+
+E' un protocollo che fornisce automaticamente un host ip con l'indirizzo ip e altre informazioni di configurazione correlati.
+
+Esistono:
+
+- dinamico: metodo classico, affitto a tempo dell'ip dai vari host
+- automatico: viene scelto dal server da un pool di indirizzi
+- statico: MAC-IP fissa
+
+<img
+  src="/img/networkSystem4/dhcp.png"
+  alt="dhcp"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+Vantaggi:
+
+- Configurazione degli indirizzi ip affidabile
+- Riduzione di amministrazione della rete
+- Configurazione centralizzata configurabile
+- Gestione efficiente delle modifiche
+- Innoltro di messaggi DHCP tramite agente
+
+# NTP - Network Time Protocol
+
+Protocollo per la sincronizzazione di più orologi di rete attraverso un sistema distribuito di cient e server.
+
+Si basa sul protocollo User Datagram Protocol
+
+Con una precisione al nanosecondo, utilizza UTC (cordinated universal time)
+
+Punti forti:
+
+- universale
+- minimizzazione errori
+- scalabile
+- accuratezza
+- non risente di errori temporanei della connessione, lo calcola prendendo i dati del passato
+
+Vesione semplificata SNTP
+
+# NAT - Network Address Translation
+
+In sintesi permette di far comunciare all'esterno anche un host con un ip privato perche li viene assegnato quello del router
+
+- **PAT - Port Address Translation:** il più diffiso permette di usare un solo ip pubblico diferrenziando le connessioni con il numero di porta
+
+- **Static Nat:** Ip privato specifico associato ad un Ip pubblico specifico
+
+- **Dynamic Nat:** similare ma la mappatura è dinamica e non fissa
+
+**Vantaggi:** sicurezza (nasconde ip privati), risparmio ip pubblici.
+
+### **See you in the next post! Stay Tuned!**
