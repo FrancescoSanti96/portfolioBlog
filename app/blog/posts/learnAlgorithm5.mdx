@@ -1,0 +1,572 @@
+---
+title: "Learn Algorithm 5"
+publishedAt: "2025-02-20"
+summary: "Series of learn together algorithms"
+---
+
+# Algortimi di ricerca
+
+- Ricercare elementi all'interno di una struttura dati,
+- Si ua il suo valore e un proprietà che lo identifica.
+- Si puo usare un accesso casuale o sequenziale.
+
+Tuttavia, si richiede che equal rappresenti una relazione di equivalenza:
+
+1. riflessiva: equal (a, a)
+2. simmetrica: equal (a, b) = ⇒ equal (b, a)
+3. transitiva: equal (a, b) ∧equal (b, c) = ⇒ equal (a, c)
+
+# **Ricerca lineare - Linear Search**
+
+**Complessità**: O(n)
+
+- I valori nella stuttura dai non importa che siano ordinati.
+- Scorre in modo sequenziale la struttura dati fino a trovare l'elemento cercato.
+
+### Esempio:
+
+Indovia il numero che sto pensando in un range da 1 a 5?
+
+Ipotizziamo 5 come la soluzione e vediamo quanti tentativi ci vogliono per indovinare.
+
+- Step 1: 1 sbalgiato
+- Step 2: 2 sbalgiato
+- …
+- Step 5: 5 corretto
+
+### Codice di esempio in python:
+
+```
+
+def linear_search(list, target):
+for i in range(len(array)):
+if list[i] == target:
+return i
+return None
+
+```
+
+### Andiamo a vedere altri 2 esempi calati nel codice
+
+```
+/*
+Caso 1
+
+Struttura dati = [31, -7, 2, 8, 44, 0, -1, 5]
+
+Cerca il valore 8
+Controlla: 31 → -7 → 2 → 8 ✓
+Trova 8 in posizione 3
+Restituisce 3
+
+
+Caso 2:
+
+Cerca il valore 99
+Controlla: 31 → -7 → 2 → 8 → 44 → 0 → -1 → 5
+Non trova 99 dopo aver controllato tutto l'array
+Restituisce None
+*/
+```
+
+### Andiamo a vedere il codice in python con l'utilizzo della ricorsione
+
+```
+
+def linear_search_recursive(list, target, index=0):
+   if index >= len(list):
+       return None
+   if list[index] == target:
+       return index
+   return linear_search_recursive(list, target, index + 1)
+
+```
+
+# **Ricerca binaria**
+
+La ricerca binaria:
+
+- Complessità: O(log n) -> più efficiente della ricerca lineare O(n) per grandi dataset.
+- Richiede un array ordinato
+
+**Flusso:**
+
+- Divide l'array a metà ad ogni passo
+- Confronta l'elemento centrale con il valore cercato
+- Scarta metà dell'array ad ogni iterazione
+- (L'algoritmo dimezza l'area di ricerca ad ogni passo, da cui la complessità O(log n).)
+- Con elementi duplicati si può restituire qualsiasi indice corrispondente all'elemento cercato e non necessariamente il primo o l'ultimo.
+
+### Esempio
+
+indovia il numero che sto pensando in un range da 1 a 100
+Ipotizziamo 100 come la soluzione e vediamo quanti tentativi ci vogliono per indovinare.
+
+- Step 1: 50 sbalgiato è piu alto
+- Step 2: 75 sbalgiato è piu alto
+- Step 3: 88 sbalgiato è piu alto
+- Step 4: 94 sabgliato è piu alto
+- Step 5: 97 sabgliato è piu alto
+- Step 6: 99 sbalgiato è piu alto
+- Step 7: 100 corretto
+
+In questo caso il lineare avrebbe impiagato 100 step invece questo binario solamente 7
+
+### Codice di esempio in python:
+
+```
+
+def binary_search(list, target):
+    first = 0
+    last = len(list) - 1
+
+    while first <= last:
+        midpoint = (first + last) // 2
+
+        if list[midpoint] == target:
+            return midpoint
+        elif list[midpoint] < target:
+            first = midpoint + 1
+        else:
+            last = midpoint - 1
+
+    return None
+```
+
+### Altri esempi
+
+```
+/*
+strutturaDati = [1, 3, 5, 7, 9, 11, 13]
+
+
+Se cercassimo 7:
+
+1. Prima iterazione:
+   - left = 0, right = 6
+   - mid = (0 + 6) // 2 = 3
+   - arr[3] = 7 → trovato! Ritorna 3
+
+Se cercassimo 11:
+
+1. Prima iterazione:
+
+   - mid = 3
+   - arr[3] = 7 < 11
+   - left = mid + 1 = 4
+
+2. Seconda iterazione:
+   - left = 4, right = 6
+   - mid = (4 + 6) // 2 = 5
+   - arr[5] = 11 → trovato! Ritorna 5
+*/
+```
+
+### Codice di esempio in python:
+
+```
+
+def binary_search(list, target):
+    first = 0
+    last = len(list) - 1
+
+    while first <= last:
+        midpoint = (first + last) // 2
+
+        if list[midpoint] == target:
+            return midpoint
+        elif list[midpoint] < target:
+            first = midpoint + 1
+        else:
+            last = midpoint - 1
+
+    return None
+```
+
+### Andiamo a vedere il codice in python con l'utilizzo della ricorsione
+
+```
+
+def binary_search_rec(list, target):
+    if len(list) == 0:
+        return None
+    else:
+        midpoint = len(list) // 2
+
+        if list[midpoint] == target:
+            return midpoint
+        else:
+            if list[midpoint] < target:
+                return binary_search_rec(list[midpoint + 1:], target)
+            else:
+                return binary_search_rec(list[:midpoint], target)
+
+```
+
+# **Ricerca per iterpolazione**
+
+- Similare al binary search,
+- Invece di dividere a metà usa una formula di interpolazione per stimare la posizione
+- Assume distribuzione uniforme dei dati
+
+### Complessità:
+
+- O(1) caso migliore
+- O(log log n) caso medio con dati uniformi
+- O(n) caso peggiore
+
+# Algoritmi di ordinamento
+
+# Selection Sort
+
+- Opera trovando ripetutamente il minimo elemento nella parte non ordinata dell'array e posizionandolo all'inizio.
+
+### complessita:
+
+- Caso medio/peggiore/migliore: O(n²)
+- Spazio: O(1)
+
+### Codice di esempio in python:
+
+```
+
+def selection_sort(arr):
+    for i in range(len(arr)):
+        min_idx = i
+        for j in range(i+1, len(arr)):
+            if arr[j] < arr[min_idx]:
+            min_idx = j
+            arr[i], arr[min_idx] = arr[min_idx], arr[i]
+
+```
+
+### Esempio
+
+```
+/*
+StrutturaDati = [64, 25, 12, 22, 11]
+
+Passi dell'esempio:
+
+[64, 25, 12, 22, 11] → [11, 25, 12, 22, 64] (trova 11)
+[11, 25, 12, 22, 64] → [11, 12, 25, 22, 64] (trova 12)
+[11, 12, 25, 22, 64] → [11, 12, 22, 25, 64] (trova 22)
+[11, 12, 22, 25, 64] → [11, 12, 22, 25, 64] (trova 25)
+
+Output: [11, 12, 22, 25, 64]
+
+Complessità: O(n²) in tutti i casi.
+*/
+```
+
+# Insertion Sort
+
+- Funziona inserendo sequenzialmente ogni elemento nella posizione corretta all'interno della porzione già ordinata dell'array.
+
+### complessita:
+
+- Caso medio/peggiore (array ordinato al contrario): O(n²)
+- Caso migliore (array già ordinato): O(n)
+- Spazio: O(1)
+
+### Codice di esempio in python:
+
+```
+
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+    key = arr[i]
+    j = i - 1
+    while j >= 0 and arr[j] > key:
+        arr[j + 1] = arr[j]
+        j -= 1
+        arr[j + 1] = key
+```
+
+### Esempio
+
+```
+/*
+strutturaDati = [64, 25, 12, 22, 11]
+
+Passi dell'esempio:
+
+[64, 25, 12, 22, 11] → [25, 64, 12, 22, 11] (inserisce 25)
+[25, 64, 12, 22, 11] → [12, 25, 64, 22, 11] (inserisce 12)
+[12, 25, 64, 22, 11] → [12, 22, 25, 64, 11] (inserisce 22)
+[12, 22, 25, 64, 11] → [11, 12, 22, 25, 64] (inserisce 11)
+
+Output: [11, 12, 22, 25, 64]
+*/
+```
+
+# Bubble Sort
+
+- confronta ripetutamente coppie di elementi adiacenti
+- li scambia se sono nell'ordine sbagliato.
+
+**Complessità:**
+
+- Best case (array ordinato): O(n)
+- Worst case: O(n²)
+
+### Info:
+
+- La presenza di elementi grandi all’inizio non è problematica in quanto questi raggiungo la parte finale dell’array in poche scansioni
+- La presenza di elementi piccoli alla fine invece è più problematica, in quanto questi si sposteranno di poco ad ogni scansione
+
+<img
+  src="/img/algorithm5/bubleSort.png"
+  alt="flowchart factorial"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+### Codice di esempio in python:
+
+```
+def bubble_sort(arr):
+    n = len(arr)
+    swapped = True
+    while swapped: # Continua finché non vengono fatti scambi in una passata
+        swapped = False
+        for i in range(n-1): # Scorre l'array confrontando elementi adiacenti
+            if arr[i] > arr[i+1]: # Se l'elemento corrente è maggiore del successivo # Scambia gli elementi
+                arr[i], arr[i+1] = arr[i+1], arr[i]
+                swapped = True # Segna che è stato fatto uno scambio
+                n -= 1 # Riduce la dimensione da controllare (l'ultimo elemento è già ordinato)
+```
+
+### Codice Versione ricorsiva
+
+```
+
+def bubble_sort_recursive(arr, n=None): # Inizializzazione della dimensione al primo chiamata
+if n is None:
+n = len(arr)
+
+    # Caso base: se la dimensione è 1 o meno, l'array è ordinato
+    if n <= 1:
+        return
+
+    # Fase di "bolla": fa "galleggiare" l'elemento più grande fino alla fine
+    for i in range(n-1):
+        if arr[i] > arr[i+1]:
+            arr[i], arr[i+1] = arr[i+1], arr[i]
+
+    # Chiamata ricorsiva sulla porzione non ordinata (tutti tranne l'ultimo)
+    bubble_sort_recursive(arr, n-1)
+```
+
+### Esempio
+
+```
+strutturaDati = [64, 34, 25, 12, 22]
+
+Passaggi degli esempi [64, 34, 25, 12, 22]:
+
+[34, 25, 12, 22, 64] # 64 "galleggia" alla fine
+[25, 12, 22, 34, 64] # 34 trova la sua posizione
+[12, 22, 25, 34, 64] # 25 trova la sua posizione
+[12, 22, 25, 34, 64] # Ultima passata per verificare
+
+Output [12, 22, 25, 34, 64]
+
+```
+
+# Merge Sort
+
+Il merge sort è un algoritmo di ordinamento che usa la strategia divide-et-impera:
+
+- Divide l'array a metà ricorsivamente finché non ottiene singoli elementi
+- Merge (fonde) le parti ordinate in modo crescente
+- Opera out-of-place usando array temporanei per il merge
+
+Caratteristiche principali:
+
+- Stabile (mantiene ordine relativo di elementi uguali)
+- **Complessità sempre O(n log n)**
+- **Richiede memoria extra O(n)**
+- Efficiente su input molto grandi
+- Parallelizzabile
+
+<img
+  src="/img/algorithm5/mergeSort.png"
+  alt="flowchart factorial"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+### Codice esempio con ricorsione in python
+
+```
+def merge_sort(arr):
+
+// Caso base: array vuoto o singolo elemento già ordinato
+
+    if len(arr) <= 1:
+        return
+
+    mid = len(arr) // 2 # Divide l'array a metà
+    left = arr[:mid]
+    right = arr[mid:]
+
+// Ricorsione sulle due metà
+
+    merge_sort(left)
+    merge_sort(right)
+
+// Fusione delle parti ordinate
+
+    i = j = k = 0
+
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            arr[k] = left[i]
+            i += 1
+        else:
+            arr[k] = right[j]
+            j += 1
+            k += 1
+
+// Gestione elementi rimanenti
+
+    while i < len(left):
+        arr[k] = left[i]
+        i += 1
+        k += 1
+
+    while j < len(right):
+        arr[k] = right[j]
+        j += 1
+        k += 1
+```
+
+### Esempio
+
+```
+Esempio passo-passo con [38, 27, 43, 3]:
+
+Divide: [38, 27] [43, 3]
+Divide ancora: [38] [27] [43] [3]
+Merge: [27, 38] [3, 43]
+Merge finale: [3, 27, 38, 43]
+
+Output: [3, 27, 38, 43]
+
+```
+
+# Quick Sort
+
+Funzionamento QuickSort:
+
+- Scelta del pivot (solitamente primo elemento, elemento centrale o casuale)
+- Partizionamento dell'array intorno al pivot
+- Ricorsione sulle due parti (sinistra e destra del pivot)
+
+Complessità:
+
+- **Caso medio: O(n log n)**
+- **Caso peggiore: O(n²)** quando:
+
+- Array già ordinato e pivot sempre minimo/massimo
+- Array ordinato al contrario
+- Tutti elementi uguali
+
+Caso migliore: O(n log n)
+
+```
+def quick_sort(arr):
+
+    // Caso base: array vuoto o con un elemento è già ordinato
+    if len(arr) <= 1:
+        return arr
+
+    // Scelta del pivot (primo elemento)
+    pivot = arr[0]
+
+    // Partizionamento array in 3 sottoliste:
+    // elementi minori del pivot, elementi uguali al pivot, elementi maggiori del pivot
+
+    lesser = [x for x in arr[1:] if x < pivot]
+    equal = [x for x in arr if x == pivot]
+    greater = [x for x in arr[1:] if x > pivot]
+
+    // Ricorsione sulle parti minori e maggiori del pivot e concatenazione finale dei risultati
+
+    return quick_sort(lesser) + equal + quick_sort(greater)
+
+```
+
+```
+    // Esempio di utilizzo
+
+    arr = [3, 6, 8, 10, 1, 2, 1]
+    print("Array originale:", arr)
+    sorted_arr = quick_sort(arr)
+    print("Array ordinato:", sorted_arr)
+
+    // Processo di partizionamento per arr = [3,6,8,10,1,2,1]:
+    // Pivot = 3
+    // lesser = [1,2,1] # elementi < 3
+    // equal = [3] # elementi = 3
+    // greater = [6,8,10] # elementi > 3
+    // Ricorsione su [1,2,1]:
+    // Pivot = 1
+    // lesser = []
+    // equal = [1,1]
+    // greater = [2]
+    // Ricorsione su [6,8,10]:
+    // Pivot = 6
+    // lesser = []
+    // equal = [6]
+    // greater = [8,10]
+
+```
+
+Il pivot è un elemento dell'array scelto come riferimento per il partizionamento. Intorno ad esso, l'array viene riorganizzato in modo che:
+
+elementi minori del pivot vadano a sinistra
+elementi maggiori del pivot vadano a destra
+
+### Altro esempio
+
+```
+/*
+Passo 1: Pivot = 7
+[7] 2 1 6 8 5 3 4
+Partizionamento:
+[2,1,6,5,3,4] [7] [8]
+
+Passo 2: Lavoro sulla parte sinistra, pivot = 2
+[2] 1 6 5 3 4
+Partizionamento:
+[1] [2] [6,5,3,4]
+
+Passo 3: Lavoro sulla parte [6,5,3,4], pivot = 6
+[6] 5 3 4
+Partizionamento:
+[5,3,4] [6] []
+
+Passo 4: Lavoro su [5,3,4], pivot = 5
+[5] 3 4
+Partizionamento:
+[3,4] [5] []
+
+Passo 5: Lavoro su [3,4], pivot = 3
+[3] 4
+Partizionamento:
+[] [3] [4]
+
+Risultato finale:
+[1] [2] [3] [4] [5] [6] [7] [8]
+*/
+```
+
+### Taballa comparativa tra i vari algoritmi visti finora
+
+<img
+  src="/img/algorithm5/ordinamentoRecap.png"
+  alt="flowchart factorial"
+  style={{ height: 300, marginBottom: "20px" }}
+/>
+
+`### **See you in the next post! Stay Tuned!**`

@@ -1,0 +1,796 @@
+---
+title: "Learn Algorithm 6"
+publishedAt: "2025-02-25"
+summary: "Series of learn together algorithms"
+---
+
+# Strutture dati:
+
+- statica: se ha dimensione fissa
+- dinamica: se ha dimensione variabile a run-time
+
+### Utili in c:
+
+- **malloc:** Alloca un blocco di memoria nell'heap di dimensione specificata in bytes
+- **free:** Dealloca la memoria precedentemente allocata con malloc
+- **realloc:** serve per ridimensionare un blocco di memoria allocato dinamicamente
+
+# **Array dinamici:**
+
+**Motivazione:**
+
+- Superare i limiti degli array statici permettendo dimensione variabile a runtime.
+
+### Implementazione:
+
+Si tiene traccia di:
+
+- capacity: spazio allocato
+- size: elementi effettivamente presenti
+
+Due strategie di espansione:
+
+- Lineare, Complessità ammortizzata: Θ(n)
+- Geometrica, Complessità ammortizzata: Θ(1)
+
+Esempio in python
+
+```
+# Array dinamico usando list built-in
+lst = []
+lst.append(42)    # Aggiunge in coda
+lst.insert(0,99)  # Inserisce in posizione
+lst.pop()         # Rimuove da coda
+```
+
+# Pile (Stack)
+
+### Struttura dati LIFO (Last In First Out)
+
+Caratteristiche:
+
+- Accesso solo dalla cima
+- Push e pop in O(1)
+- Utile per gestire chiamate di funzioni ricorsive
+- Può essere implementato con array o liste concatenate
+
+### Esempio in c
+
+```
+typedef struct {
+   int* items;     // Array che contiene gli elementi dello stack
+   int top;        // Indice dell'elemento in cima (-1 se vuoto)
+   int size;       // Dimensione massima dello stack
+} Stack;
+
+void push(Stack* s, int x) {
+   if(s->top < s->size-1)     // Controlla se c'è spazio
+       s->items[++s->top] = x; // Incrementa top e inserisce x
+}
+
+int pop(Stack* s) {
+   if(s->top >= 0)                    // Controlla se stack non vuoto
+       return s->items[s->top--];     // Restituisce e decrementa top
+   return -1;                         // Segnala stack vuoto
+}
+
+int top(Stack* s) {
+   return s->items[s->top];    // Restituisce elemento in cima senza rimuoverlo
+}
+```
+
+Esempio in python
+
+```
+# Stack usando list di Python
+stack = []          // Inizializza stack vuoto
+
+stack.append(42)    // Push: aggiunge elemento 42 in cima allo stack
+
+value = stack.pop() // Pop: rimuove e restituisce ultimo elemento (42), stack ora è [], value contiene 42
+
+stack.append(1)     // [1]
+stack.append(2)     // [1,2]
+stack.append(3)     // [1,2,3]
+
+top = stack[-1]    // Top/Peek: consulta elemento in cima (3),  senza rimuoverlo, stack rimane [1,2,3]
+```
+
+# Liste
+
+struttura dati che immagazzina un insieme di elementi in ordine
+
+- Le linked list sono strutture dati composte da nodi collegati attraverso puntatori.
+
+In una lista, l’ordine degli elementi non è dato dal piazzamento fisico in
+memoria (come negli array), quanto dai collegamenti esistenti fra gli elementi
+
+### Codice di esempio in C
+
+```
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+// Create new node
+Node* create_node(int data) {
+    Node* new_node = (Node*)malloc(sizeof(Node));
+    new_node->data = data;
+    new_node->next = NULL;
+    return new_node;
+}
+
+// Insert at beginning
+Node* push_front(Node* head, int data) {
+    Node* new_node = create_node(data);
+    new_node->next = head;
+    return new_node;
+}
+```
+
+- Una lista doppia (doubly-linked list) è una linked list dove ogni nodo contiene
+  anche un collegamento all’elemento precedente
+
+### Codice di esempio in c
+
+```
+typedef struct DNode {
+    int data;
+    struct DNode* next;
+    struct DNode* prev;
+} DNode;
+
+DNode* insert_after(DNode* node, int data) {
+    DNode* new_node = (DNode*)malloc(sizeof(DNode));
+    new_node->data = data;
+    new_node->next = node->next;
+    new_node->prev = node;
+
+    if(node->next)
+        node->next->prev = new_node;
+    node->next = new_node;
+
+    return new_node;
+}
+```
+
+- Una lista circolare (circular list) è una linked list dove l’elemento in coda è
+  collegato all’elemento in testa
+
+### Codice di esempio in c
+
+```
+typedef struct CNode {
+    int data;
+    struct CNode* next;
+} CNode;
+
+CNode* create_circular(int data) {
+    CNode* node = (CNode*)malloc(sizeof(CNode));
+    node->data = data;
+    node->next = node; // Points to itself
+    return node;
+}
+
+void insert_after(CNode* node, int data) {
+    CNode* new_node = (CNode*)malloc(sizeof(CNode));
+    new_node->data = data;
+    new_node->next = node->next;
+    node->next = new_node;
+}
+```
+
+### Possiamo distinguere tre nozioni di ordinamento nelle liste:
+
+- ordine strutturale: l’ordine risultante dai collegamenti fra i nodi
+- ordine logico: l’ordine esistente tra gli elementi sulla base di una relazione d’ordine
+- ordine fisico: l’ordine degli elementi in memoria (rilevante ad es. per gli array ma non per le liste collegate)
+
+### Complessità:
+
+- O(n) for n nodes
+
+<img
+  src="/img/algorithm6/listeVSarray.png"
+  alt="flowchart factorial"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+# HashTable
+
+struttura dati che permette di memorizzare coppie chiave-valore con accesso in tempo mediamente costante.
+
+### Spiegazione con esempio:
+
+Immagina una rubrica telefonica dove vuoi salvare i numeri di telefono delle persone.
+Una tabella hash funziona come un grande armadio con cassetti numerati.
+Abbiamo due modi per gestire il caso in cui due nomi finiscono nello stesso cassetto:
+
+- Concatenamento
+
+È come mettere una cartellina nel cassetto
+Se due persone finiscono nello stesso cassetto, aggiungi una nuova pagina alla cartellina
+Esempio: Nel cassetto 2 possiamo avere "Mario: 555-1234" e "Luigi: 555-5678"
+
+<img
+  src="/img/algorithm6/concatenato.png"
+  alt="flowchart factorial"
+  style={{ height: 200, marginBottom: "20px" }}
+/>
+
+### Codice di esempio in C
+
+```
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TABLE_SIZE 10
+
+typedef struct Node {
+    char* key;
+    int value;
+    struct Node* next;
+} Node;
+
+typedef struct {
+    Node* table[TABLE_SIZE];
+} HashTable;
+
+// Hash function
+unsigned int hash(char* key) {
+    unsigned int hash = 0;
+    for(int i = 0; key[i] != '\0'; i++) {
+        hash = hash * 31 + key[i];
+    }
+    return hash % TABLE_SIZE;
+}
+
+// Create new node
+Node* create_node(char* key, int value) {
+    Node* node = (Node*)malloc(sizeof(Node));
+    node->key = strdup(key);
+    node->value = value;
+    node->next = NULL;
+    return node;
+}
+
+// Insert key-value pair
+void insert(HashTable* ht, char* key, int value) {
+    unsigned int index = hash(key);
+    Node* current = ht->table[index];
+
+    // Check if key exists
+    while(current != NULL) {
+        if(strcmp(current->key, key) == 0) {
+            current->value = value; // Update value
+            return;
+        }
+        current = current->next;
+    }
+
+    // Insert new node at beginning of list
+    Node* newNode = create_node(key, value);
+    newNode->next = ht->table[index];
+    ht->table[index] = newNode;
+}
+
+// Search for key
+int search(HashTable* ht, char* key) {
+    unsigned int index = hash(key);
+    Node* current = ht->table[index];
+
+    while(current != NULL) {
+        if(strcmp(current->key, key) == 0) {
+            return current->value;
+        }
+        current = current->next;
+    }
+    return -1; // Not found
+}
+
+```
+
+- Indirizzamento Aperto
+
+È come avere solo uno spazio per cassetto
+Se il cassetto è occupato, provi col prossimo cassetto libero
+Esempio: Volevi mettere "Luigi" nel cassetto 2 ma è occupato, allora lo metti nel 3
+
+Il vantaggio principale è la velocità: in media, trovare un numero è velocissimo perché sai esattamente in quale cassetto guardare (o da quale cassetto iniziare a cercare).
+
+<img
+  src="/img/algorithm6/aperto.png"
+  alt="flowchart factorial"
+  style={{ height: 200, marginBottom: "20px" }}
+/>
+
+### Codice di esempio in C
+
+```
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TABLE_SIZE 10
+#define DELETED_NODE (Node*)(0xFFFFFFFFFFFFFFFFUL)
+
+typedef struct {
+    char* key;
+    int value;
+} Node;
+
+typedef struct {
+    Node* table[TABLE_SIZE];
+} HashTable;
+
+// Hash function
+unsigned int hash(char* key, int i) {
+    unsigned int hash = 0;
+    for(int j = 0; key[j] != '\0'; j++) {
+        hash = hash * 31 + key[j];
+    }
+    // Linear probing
+    return (hash + i) % TABLE_SIZE;
+}
+
+// Insert key-value pair
+int insert(HashTable* ht, char* key, int value) {
+    int i = 0;
+
+    while(i < TABLE_SIZE) {
+        unsigned int index = hash(key, i);
+
+        if(ht->table[index] == NULL || ht->table[index] == DELETED_NODE) {
+            Node* node = (Node*)malloc(sizeof(Node));
+            node->key = strdup(key);
+            node->value = value;
+            ht->table[index] = node;
+            return 1;
+        }
+
+        if(ht->table[index] != NULL &&
+           strcmp(ht->table[index]->key, key) == 0) {
+            ht->table[index]->value = value; // Update value
+            return 1;
+        }
+
+        i++;
+    }
+    return 0; // Table is full
+}
+
+// Search for key
+int search(HashTable* ht, char* key) {
+    int i = 0;
+
+    while(i < TABLE_SIZE) {
+        unsigned int index = hash(key, i);
+
+        if(ht->table[index] == NULL) {
+            return -1; // Not found
+        }
+
+        if(ht->table[index] != DELETED_NODE &&
+           strcmp(ht->table[index]->key, key) == 0) {
+            return ht->table[index]->value;
+        }
+
+        i++;
+    }
+    return -1; // Not found
+}
+
+// Delete key
+int delete(HashTable* ht, char* key) {
+    int i = 0;
+
+    while(i < TABLE_SIZE) {
+        unsigned int index = hash(key, i);
+
+        if(ht->table[index] == NULL) {
+            return 0; // Key not found
+        }
+
+        if(ht->table[index] != DELETED_NODE &&
+           strcmp(ht->table[index]->key, key) == 0) {
+            free(ht->table[index]->key);
+            free(ht->table[index]);
+            ht->table[index] = DELETED_NODE;
+            return 1;
+        }
+
+        i++;
+    }
+    return 0; // Key not found
+}
+```
+
+Le due tecniche sono diverse:
+
+```
+
+/\*
+Indirizzamento Diretto
+
+Usa la chiave direttamente come indice dell'array
+Non serve funzione hash
+Spreca memoria perché serve un array grande quanto l'universo delle chiavi
+Es: se le chiavi sono numeri 0-999, serve array di 1000 elementi
+
+Indirizzamento Indiretto
+
+Usa una funzione hash per mappare la chiave in un indice più piccolo
+Riduce spazio memoria richiesto
+Gestisce collisioni con:
+
+Concatenamento: liste concatenate
+Indirizzamento aperto: ricerca slot libero
+
+Es: chiavi 0-999 possono essere mappate in array di 100 elementi
+
+L'indirizzamento diretto è un caso speciale molto semplice ma poco pratico. L'indirizzamento indiretto è quello usato nelle hash table reali.
+\*/
+
+```
+
+Racap:
+
+```
+
+/\*
+Struttura e Scopo
+
+Collezione di coppie chiave-valore
+Accesso in tempo O(1) medio tramite funzione hash
+Due tipi di indirizzamento: diretto (array di dimensione pari all'universo delle chiavi) e indiretto (array più piccolo con funzione hash)
+
+Indirizzamento aperto:
+
+Complessità
+Caso medio: O(1) per inserimento, ricerca, rimozione
+Caso peggiore: O(n)
+Spazio: O(n)
+
+Prestazioni dipendono da:
+Qualità funzione hash
+Fattore di carico
+Strategia gestione collisioni
+\*/
+
+```
+
+# Grafo
+
+Un grafo è un insieme di nodi (o vertici) e collegamenti (o archi) tra nodi
+
+Tipologie di arco:
+
+- Grafo non orientato o indiretto: un arco (a, b) è equivalente a un arco (b, a)
+- Grafo orientato o diretto: un arco (a, b) non è equivalente a un arco (b, a)
+
+- Concetti base: adiacenza, grado dei nodi, cammini, cicli
+- Un grafo è connesso se esiste un cammino tra ogni coppia di nodi
+
+Rappresentazione:
+
+- Liste di adiacenza: per ogni nodo si elencano i nodi adiacenti
+- Matrice di adiacenza: matrice booleana n×n dove 1 indica presenza di arco
+- Liste più efficienti per grafi sparsi, matrici per grafi densi
+
+Tipologie di algoritmi:
+
+# Visita in Ampiezza (BFS - Breadth First Search)
+
+- Usa una coda (FIFO)
+- Visita tutti i nodi alla distanza k prima di passare a distanza k+1
+- Trova il cammino più breve tra due nodi
+- Visita "a livelli" espandendo progressivamente la frontiera
+- Esempio: A -> B,C -> D,E,F,G
+
+Esempio:
+
+<img
+  src="/img/algorithm6/BFS.png"
+  alt="flowchart factorial"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+Spiegazione:
+
+Primo il nodo radice (1)
+Poi tutti i nodi al livello 1 (2,3)
+Infine tutti i nodi al livello 2 (4,5,6,7)
+
+# Visita in Profondità (DFS - Depth First Search)
+
+- Usa ricorsione (o uno stack esplicito)
+- Esplora un ramo fino in fondo prima di tornare indietro
+- Buona per trovare cicli o componenti connesse
+- Visita "in verticale" seguendo un percorso fino alla fine
+- Esempio: A -> B -> D -> E -> C -> F -> G
+
+Esempio:
+
+<img
+  src="/img/algorithm6/DFS.png"
+  alt="flowchart factorial"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+Spiegazione: Parte dalla radice (1) Scende completamente lungo il primo ramo (2,3,4)
+Risale e completa gli altri rami (5,6,7)
+
+# Alberi
+
+- Grafi indiretti: un albero è un grafo indiretto connesso aciclico.
+- Grafi diretti: un albero diretto è un grafo diretto aciclico (DAG) il cui grafo
+  indiretto associato è un albero (da cui: connessione + 1 padre + aciclicità)
+- Una foresta è una unione disgiunta di alberi.
+
+## Terminologia
+
+- Radice: unico nodo senza padre
+- Foglia: nodo senza figli
+- Nodo interno: nodo con almeno un figlio
+- Profondità D(n): numero archi tra radice e nodo
+- Altezza H(n): massimo percorso tra nodo e foglia
+
+## Implementazione
+
+```
+
+typedef struct SNode {
+TInfo info;
+struct SNode *left;
+struct SNode *right;
+} TNode;
+
+```
+
+## Tipi di Alberi Binari:
+
+# BST (Binary Search Tree)
+
+albero binario ordinato.
+
+- Nodo sinistro < nodo corrente
+- Nodo destro > nodo corrente
+- Ricerca efficiente O(log n)
+
+```
+
+binarytree_create()
+binarytree_destroy()
+binarytree_visit()
+binarytree_search()
+binarytree_insert()
+binarytree_delete()
+
+```
+
+## Albero Bilanciato
+
+- Differenza altezza sottoalberi ≤ 1
+- Garantisce operazioni in O(log n)
+
+## Albero Completo
+
+- Tutti i livelli pieni tranne l'ultimo
+- L'ultimo livello riempito da sinistra
+
+## Albero Perfetto
+
+- Tutti i nodi interni hanno grado 2
+- Tutte le foglie stessa profondità
+
+Visite
+
+- In-order (simmetrica): SX-NODO-DX
+- Pre-order: NODO-SX-DX
+- Post-order: SX-DX-NODO
+
+### Complessità BST
+
+- Caso medio: Θ(log n)
+- Caso peggiore: Θ(n)
+
+### Codice di esempio in C
+
+```
+typedef struct TNode {
+   int data;
+   struct TNode *left;
+   struct TNode *right;
+} TNode;
+
+// Create new node
+TNode* node_create(int value) {
+   TNode* node = malloc(sizeof(TNode));
+   node->data = value;
+   node->left = node->right = NULL;
+   return node;
+}
+
+// Insert value maintaining BST property
+TNode* bst_insert(TNode* root, int value) {
+   if (root == NULL) return node_create(value);
+
+   if (value < root->data)
+       root->left = bst_insert(root->left, value);
+   else if (value > root->data)
+       root->right = bst_insert(root->right, value);
+
+   return root;
+}
+
+// Search for value in BST
+TNode* bst_search(TNode* root, int value) {
+   if (root == NULL || root->data == value)
+       return root;
+
+   if (value < root->data)
+       return bst_search(root->left, value);
+   return bst_search(root->right, value);
+}
+
+// Find minimum value node
+TNode* bst_min(TNode* root) {
+   if (root == NULL) return NULL;
+   while (root->left != NULL)
+       root = root->left;
+   return root;
+}
+
+// Delete node with given value
+TNode* bst_delete(TNode* root, int value) {
+   if (root == NULL) return root;
+
+   if (value < root->data)
+       root->left = bst_delete(root->left, value);
+   else if (value > root->data)
+       root->right = bst_delete(root->right, value);
+   else {
+       // One or no child
+       if (root->left == NULL) {
+           TNode* temp = root->right;
+           free(root);
+           return temp;
+       } else if (root->right == NULL) {
+           TNode* temp = root->left;
+           free(root);
+           return temp;
+       }
+       // Two children
+       TNode* temp = bst_min(root->right);
+       root->data = temp->data;
+       root->right = bst_delete(root->right, temp->data);
+   }
+   return root;
+}
+
+// Tree traversals
+void inorder(TNode* root) {
+   if (root != NULL) {
+       inorder(root->left);
+       printf("%d ", root->data);
+       inorder(root->right);
+   }
+}
+
+void preorder(TNode* root) {
+   if (root != NULL) {
+       printf("%d ", root->data);
+       preorder(root->left);
+       preorder(root->right);
+   }
+}
+
+void postorder(TNode* root) {
+   if (root != NULL) {
+       postorder(root->left);
+       postorder(root->right);
+       printf("%d ", root->data);
+   }
+}
+
+// Free entire tree
+void bst_destroy(TNode* root) {
+   if (root != NULL) {
+       bst_destroy(root->left);
+       bst_destroy(root->right);
+       free(root);
+   }
+}
+```
+
+# BST Auto-bilancianti
+
+Red-Black Trees
+
+- AVL Trees
+- Mantengono altezza logaritmica
+
+Proprietà Matematiche
+
+Albero perfetto di altezza h:
+
+- Ha 2^h foglie
+- Ha 2^(h+1) - 1 nodi totali
+
+Albero completo di altezza h:
+
+- Numero nodi tra [2^h, 2^(h+1) - 1]
+
+Relazione tra BST e Ricerca
+
+Facilita ricerca binaria su dati dinamici
+Mantiene ordinamento durante inserimenti/cancellazioni
+Garantisce ricerca O(log n) se bilanciato
+
+# Algoritmo di Dijkstra
+
+- Trova il cammino più breve da un nodo sorgente a tutti gli altri
+- Funziona solo con pesi non negativi
+- Trova il cammino minimo da una sorgente a tutti gli altri nodi
+- Implementazione più efficiente con coda di priorità: O((V+E)logV)
+- Usa strategia greedy: ad ogni passo sceglie il nodo non visitato più vicino
+- Per ricostruire il cammino serve array di predecessori
+
+### Complessità:
+
+- Tempo: O(V^2) con matrice di adiacenza
+- Spazio: O(V)
+
+### Codice di esempio in C
+
+```
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define V 9 // Numero di vertici nel grafo
+#define INF INT_MAX
+
+// Trova il vertice con distanza minima tra quelli non visitati
+int minDistance(int dist[], bool visited[]) {
+   int min = INF, min_index;
+   for (int v = 0; v < V; v++) {
+       if (!visited[v] && dist[v] <= min) {
+           min = dist[v];
+           min_index = v;
+       }
+   }
+   return min_index;
+}
+
+void dijkstra(int graph[V][V], int src) {
+   int dist[V];     // Distanze minime dalla sorgente
+   bool visited[V]; // Nodi già visitati
+
+   // Inizializzazione
+   for (int i = 0; i < V; i++) {
+       dist[i] = INF;
+       visited[i] = false;
+   }
+   dist[src] = 0; // Distanza della sorgente da se stessa
+
+   // Trova cammini minimi per tutti i vertici
+   for (int count = 0; count < V-1; count++) {
+       int u = minDistance(dist, visited);
+       visited[u] = true;
+
+       // Aggiorna dist[] per i vertici adiacenti non visitati
+       for (int v = 0; v < V; v++) {
+           if (!visited[v] && graph[u][v] &&
+               dist[u] != INF &&
+               dist[u] + graph[u][v] < dist[v]) {
+               dist[v] = dist[u] + graph[u][v];
+           }
+       }
+   }
+}
+```
+
+`See you in the next
+post! Stay Tuned!`

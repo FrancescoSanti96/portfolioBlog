@@ -1,0 +1,35 @@
+---
+title: "Learn Algorithm 4"
+publishedAt: "2024-11-02"
+summary: "Series of learn together algorithms"
+---
+
+## **Complexity of Recursive Functions**:
+
+from a program we can calucale it's complexity by counting the sum of the contributions,
+but for recursive functions it's a bit more complex, because we need to account for the cost of the recursive call itself.
+
+## Major Families of Techniques for resolving Recurrence:
+
+1. **Iterative Method:**  
+   The equation is expanded step by step until a closed-form expression (a function of _n_ and constants) is determined.
+
+   <img
+     src="/img/algorithm2/iterative.png"
+     alt="flowchart factorial"
+     style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+   />
+
+2. **Substitution Method:**  
+   An estimated bound (e.g., O(n²)) is assumed, then mathematical induction is used to verify the guess.
+
+3. **Recursion Tree Method:**  
+   A recursion tree is constructed, where the nodes represent the costs at various levels of recursion.  
+   We saw an example of this tree in the Fibonacci case.
+
+   - It can help in formulating a good "guess" for the substitution method.
+
+4. **Master Theorem Method:**  
+   Based on the Master Theorem, useful for divide-and-conquer algorithms of the form T(n) = aT(n/b) + f(n).
+
+### **See you in the next post! Stay Tuned!**
