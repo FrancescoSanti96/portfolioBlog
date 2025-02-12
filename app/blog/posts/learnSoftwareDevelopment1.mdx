@@ -1,0 +1,172 @@
+---
+title: "Learn Software Development"
+publishedAt: "2025-02-28"
+summary: "Series of learn together algorithms"
+---
+
+# Build Systems
+
+## La costruzione del software include:
+
+- Manipolazione e pre-processing del sorgente
+- Verifica della qualità del codice
+- Gestione delle dipendenze
+- Compilazione
+- Testing e misurazione della copertura
+- Generazione della documentazione
+
+## Build automation
+
+1.  **Imperativo/Personalizzato:**
+
+        - Realizzato con script di programmazione
+        - Flessibile ma difficile da adattare/riusare
+
+2.  **Dichiarativo/Standardizzato:**
+
+        - Usa file di configurazione dedicati
+        - Portabile e comprensibile
+        - Limitato dalle opzioni disponibili
+
+## Convention over Configuration
+
+- Standard di fatto
+- Riduce le ripetizioni
+- Aumenta la portabilità
+
+## Automatori ibridi
+
+Sono sistemi che cercano di combinare il meglio dei sistemi dichiarativi e imperativi.
+
+### Esempi:
+
+    - Sbt, che si appoggia su Scala
+    - Gradle, che si appoggia su Groovy
+
+## Domain-Specific languages
+
+Essere flessibili da permettere dicostruire un linguaggio dentro al linguaggio.
+
+## Gradle
+
+- Usa Kotlin o Groovy
+- Build system Ibrido
+- Supporta Java, C/C++, Scala, Kotlin
+- Usato nell'ecosistema Android
+
+Concetti fondamentali:
+
+1. Progetto, contiene build.gradle.kts (logica di costruzione) e/o settings.gradle.kts (nome al progetto), detti build file.
+2. Task, Operazione atomica del processo di build
+3. Plugin, task pronti all'uso
+
+## Dipendeza del software:
+
+Le applicazioni hanno un albero di dipendenze!
+
+## Dipendendeze transitive:
+
+Sono le dipendenze indirette (dipendenze delle dipendenze).
+
+## Maven
+
+Java non definisce alcuno standard per i nomi di libreria, per sopperire a questo problema è nato Maven.
+
+che è poi divento lo standard de facto per la gestione delle dipendenze in Java nei build system.
+
+- Maven Central Repository (Sonatype OSSRH)
+
+### Maven naming convention:
+
+    - groupId: identifica progetto/gruppo (es: com.google)
+    - artifactId: identifica libreria specifica
+    - version: versione della libreria
+
+È il repository di default di Maven, contiene milioni di librerie.
+
+### Gestione delle dipendenze in gradle
+
+Grande consente di gestirle, potremmo avere anche delle librerie da utilizzare solo per i test,
+che poi non useremo in produzione.
+
+- Maven Central è un membro speciale, e la sua con×gurazione è semplificata, è suÓciente con×gurare build.gradle.kts
+
+```kotlin
+plugins { java } // Carica il necessario per Java
+repositories { mavenCentral() } // Configura Gradle per cercare e scaricare da Maven Central
+```
+
+Trovare su Maven Central la libreria che intendiamo usare e annotare groupId, artifactId, e version
+per questo esempio: la libreria OMDB di “Omertron
+
+Gradle consente di (costringe a) dire chiaramente “a cosa serve” una certa libreria:
+
+- implementation: sia per compilare che per eseguire il codice
+- testImplementation: compilare e eseguire i test
+- testRuntimeOnly: solo eseguzione test
+
+Esempio:
+
+```kotlin
+plugins { java } // Carica il necessario per Java
+repositories { mavenCentral() } // Configura Gradle per cercare e scaricare da Maven Central
+dependencies {
+implementation("com.omertron:API-OMDB:1.5") //libreria
+}
+```
+
+### Lanciare app java da Gradle
+
+```kotlin
+plugins {
+java // Carica il necessario per la compilazione di Java
+application // Carica il necessario per l'esecuzione di classi con la JVM
+}r
+epositories { mavenCentral() } // Configura Gradle per cercare e scaricare da Maven Central
+dependencies { // Elenco di librerie che ci servono
+implementation("com.omertron:API-OMDB:1.5")
+}a
+pplication { // Configurazione dell'esecuzione, la main class è sufficiente
+mainClass.set("it.unibo.sampleapp.SimplerRateAMovie")
+}
+```
+
+## GRADLE WRAPPER
+
+Caratteristiche:
+
+1. Garantisce consistenza della versione di Gradle
+2. Permette coesistenza di diverse versioni
+3. Automatizza download e installazione
+
+Componenti:
+
+- gradlew (script Unix)
+- gradlew.bat (script Windows)
+- gradle/wrapper/gradle-wrapper.properties
+- gradle/wrapper/gradle-wrapper.jar
+
+Vantaggi:
+
+- Non richiede installazione manuale di Gradle
+- Garantisce compatibilità tra sviluppatori
+- Semplifica la gestione di progetti multipli
+
+Comandi principali:
+
+- ./gradlew build - compila il progetto
+- ./gradlew test - esegue i test
+- ./gradlew clean - pulisce la build
+- ./gradlew tasks - mostra i task disponibili
+
+PUNTI CHIAVE PER L'ORALE
+
+- Saper spiegare perché è necessario un build system
+- Comprendere la differenza tra approcci imperativi e dichiarativi
+- Conoscere i concetti base di Gradle (project, plugin, task)
+- Capire come funziona la gestione delle dipendenze
+- Saper spiegare l'importanza del Gradle Wrapper
+- Comprendere il principio "Convention over Configuration"
+
+`See you in the next
+post! Stay Tuned!`

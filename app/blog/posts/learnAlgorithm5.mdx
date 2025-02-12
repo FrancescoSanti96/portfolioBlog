@@ -7,8 +7,8 @@ summary: "Series of learn together algorithms"
 # Algortimi di ricerca
 
 - Ricercare elementi all'interno di una struttura dati,
-- Si ua il suo valore e un proprietà che lo identifica.
-- Si puo usare un accesso casuale o sequenziale.
+- Si usa il suo valore e un proprietà che lo identifica.
+- Si può usare un accesso casuale o sequenziale.
 
 Tuttavia, si richiede che equal rappresenti una relazione di equivalenza:
 
@@ -38,11 +38,11 @@ Ipotizziamo 5 come la soluzione e vediamo quanti tentativi ci vogliono per indov
 
 ```
 
-def linear_search(list, target):
-for i in range(len(array)):
-if list[i] == target:
-return i
-return None
+def linear_search(array, elem, eq = lambda x, y: x == y):
+    for i in range(len(array)):
+        if eq(array[i],elem):
+            return i
+    return -1
 
 ```
 
@@ -73,12 +73,13 @@ Restituisce None
 
 ```
 
-def linear_search_recursive(list, target, index=0):
-   if index >= len(list):
-       return None
-   if list[index] == target:
-       return index
-   return linear_search_recursive(list, target, index + 1)
+def linear_search_rec(array, x, start=None, to=None, eq = lambda x, y: x == y):
+    if start is None or to is None:
+        start = 0
+        to = len(array)-1
+    if start > to: return -1
+    if eq(array[start], x): return start
+    return linear_search_rec(array, x, start+1, to, eq)
 
 ```
 
@@ -116,21 +117,16 @@ In questo caso il lineare avrebbe impiagato 100 step invece questo binario solam
 
 ```
 
-def binary_search(list, target):
-    first = 0
-    last = len(list) - 1
+def binary_search_iter(array, x, start, to, eq = lambda x, y: x == y, less = lambda x, y: x < y):
+    while start <= to:
+        m = (start + to) // 2
+        if eq(array[m], x): return m
+        elif less(array[m], x): start = m+1
+        else: to = m-1
+    return -1
 
-    while first <= last:
-        midpoint = (first + last) // 2
-
-        if list[midpoint] == target:
-            return midpoint
-        elif list[midpoint] < target:
-            first = midpoint + 1
-        else:
-            last = midpoint - 1
-
-    return None
+def binary_search(array, x):
+    return binary_search_iter(array, x, 0, len(array)-1)
 ```
 
 ### Altri esempi
@@ -162,45 +158,18 @@ Se cercassimo 11:
 */
 ```
 
-### Codice di esempio in python:
-
-```
-
-def binary_search(list, target):
-    first = 0
-    last = len(list) - 1
-
-    while first <= last:
-        midpoint = (first + last) // 2
-
-        if list[midpoint] == target:
-            return midpoint
-        elif list[midpoint] < target:
-            first = midpoint + 1
-        else:
-            last = midpoint - 1
-
-    return None
-```
-
 ### Andiamo a vedere il codice in python con l'utilizzo della ricorsione
 
 ```
-
-def binary_search_rec(list, target):
-    if len(list) == 0:
-        return None
-    else:
-        midpoint = len(list) // 2
-
-        if list[midpoint] == target:
-            return midpoint
-        else:
-            if list[midpoint] < target:
-                return binary_search_rec(list[midpoint + 1:], target)
-            else:
-                return binary_search_rec(list[:midpoint], target)
-
+def binary_search_recur(array, x, start, to, eq = lambda x, y: x == y, less = lambda x, y: x < y):
+    if to < start: return -1
+    if start == to:
+        return start if eq(array[start], x)  else -1
+    mid = start + (to - start)//2
+    print(f"from={start}; to={to}; mid={mid}")
+    if eq(array[mid], x): return mid
+    elif less(array[mid], x): return binary_search_recur(array, x, mid+1, to)
+    else: return binary_search_recur(array, x, start, mid-1)
 ```
 
 # **Ricerca per iterpolazione**
@@ -229,15 +198,17 @@ def binary_search_rec(list, target):
 ### Codice di esempio in python:
 
 ```
+def min_index(a, index_from, index_to):
+    min_idx = index_from
+    for i in range(index_from+1, index_to):
+        if a[i] < a[min_idx]:
+            min_idx = i
+    return min_idx
 
-def selection_sort(arr):
-    for i in range(len(arr)):
-        min_idx = i
-        for j in range(i+1, len(arr)):
-            if arr[j] < arr[min_idx]:
-            min_idx = j
-            arr[i], arr[min_idx] = arr[min_idx], arr[i]
-
+def selection_sort(a):
+    for i in range(len(a)-1):
+        min_idx = min_index(a, i, len(a))
+        a[i], a[min_idx] = a[min_idx], a[i]
 ```
 
 ### Esempio
@@ -272,15 +243,16 @@ Complessità: O(n²) in tutti i casi.
 ### Codice di esempio in python:
 
 ```
+def insert_in_order(arr, n, e):
+    pos = n
+    while pos > 0 and arr[pos-1] > e:
+        arr[pos] = arr[pos-1]
+        pos -= 1
+    arr[pos] = e
 
-def insertion_sort(arr):
-    for i in range(1, len(arr)):
-    key = arr[i]
-    j = i - 1
-    while j >= 0 and arr[j] > key:
-        arr[j + 1] = arr[j]
-        j -= 1
-        arr[j + 1] = key
+def insertion_sort(a):
+    for i in range(1,len(a)):
+        insert_in_order(a, i, a[i])
 ```
 
 ### Esempio
@@ -324,16 +296,17 @@ Output: [11, 12, 22, 25, 64]
 ### Codice di esempio in python:
 
 ```
-def bubble_sort(arr):
-    n = len(arr)
-    swapped = True
-    while swapped: # Continua finché non vengono fatti scambi in una passata
-        swapped = False
-        for i in range(n-1): # Scorre l'array confrontando elementi adiacenti
-            if arr[i] > arr[i+1]: # Se l'elemento corrente è maggiore del successivo # Scambia gli elementi
-                arr[i], arr[i+1] = arr[i+1], arr[i]
-                swapped = True # Segna che è stato fatto uno scambio
-                n -= 1 # Riduce la dimensione da controllare (l'ultimo elemento è già ordinato)
+def bubble_sort(a):
+    swap = True
+    n = len(a)
+    i = 0
+    while swap and i < n-1:
+        swap = False
+        for j in range(n-1-i):
+            if a[j] > a[j+1]:
+                swap = True
+                a[j], a[j+1] = a[j+1], a[j]
+        i += 1
 ```
 
 ### Codice Versione ricorsiva
@@ -398,36 +371,32 @@ Caratteristiche principali:
 ### Codice esempio con ricorsione in python
 
 ```
-def merge_sort(arr):
+def merge(a, b, r):
+    i, j, k = 0, 0, 0
+    # print(f"merge {a} and {b} into {r}")
+    while i < len(a) and j < len(b):
+        if a[i] <= b[j]:
+            r[k] = a[i]
+            i = i + 1
+        else:
+            r[k] = b[j]
+            j = j + 1
+        k = k + 1
+    for i in range(i,len(a)):
+        r[k] = a[i]
+        k = k + 1
+    for i in range(j,len(b)):
+        r[k] = b[i]
+        k = k + 1
 
-// Caso base: array vuoto o singolo elemento già ordinato
-
-    if len(arr) <= 1:
-        return
-
-    mid = len(arr) // 2 # Divide l'array a metà
-    left = arr[:mid]
-    right = arr[mid:]
-
-// Ricorsione sulle due metà
-
+def merge_sort(a):
+    if len(a)<=1: return
+    m = len(a)//2
+    left = a[:m] # beware: it's a copy
+    right = a[m:] # beware: it's a copy
     merge_sort(left)
     merge_sort(right)
-
-// Fusione delle parti ordinate
-
-    i = j = k = 0
-
-    while i < len(left) and j < len(right):
-        if left[i] <= right[j]:
-            arr[k] = left[i]
-            i += 1
-        else:
-            arr[k] = right[j]
-            j += 1
-            k += 1
-
-// Gestione elementi rimanenti
+    merge(left, right, a)
 
     while i < len(left):
         arr[k] = left[i]
@@ -474,24 +443,25 @@ Complessità:
 Caso migliore: O(n log n)
 
 ```
-def quick_sort(arr):
+def partition(a,start,to):
+    pivot = a[start]
+    k = start+1
+    for i in range(start+1,to):
+        if a[i] < pivot:
+            a[i], a[k] = a[k], a[i]
+            k += 1
+    a[start] = a[k-1]
+    a[k-1] = pivot
+    return k-1
 
-    // Caso base: array vuoto o con un elemento è già ordinato
-    if len(arr) <= 1:
-        return arr
-
-    // Scelta del pivot (primo elemento)
-    pivot = arr[0]
-
-    // Partizionamento array in 3 sottoliste:
-    // elementi minori del pivot, elementi uguali al pivot, elementi maggiori del pivot
-
-    lesser = [x for x in arr[1:] if x < pivot]
-    equal = [x for x in arr if x == pivot]
-    greater = [x for x in arr[1:] if x > pivot]
-
-    // Ricorsione sulle parti minori e maggiori del pivot e concatenazione finale dei risultati
-
+# sort array
+def quick_sort(array, start=None, to=None):
+    start = 0 if start==None else start
+    to = len(array) if to==None else to
+    if start < to:
+        pivot_index = partition(array,start,to)
+        quick_sort(array,start,pivot_index)
+        quick_sort(array,pivot_index+1,to)
     return quick_sort(lesser) + equal + quick_sort(greater)
 
 ```
