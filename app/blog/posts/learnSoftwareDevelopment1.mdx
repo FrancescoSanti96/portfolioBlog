@@ -168,5 +168,458 @@ PUNTI CHIAVE PER L'ORALE
 - Saper spiegare l'importanza del Gradle Wrapper
 - Comprendere il principio "Convention over Configuration"
 
-`See you in the next
-post! Stay Tuned!`
+# Stile e formattazione del codice
+
+Importanza di uno stile uniforme, consistente, Standard.
+
+- Indentazione 4 caratteri
+- Lunghezza linee non più di 90 caratteri
+
+Commenti:
+
+- // ... su una linea
+- /_ ... _/ su più linee per commentare sezioni
+- /\*_ ... _/ su più linee per commenti che generano documentazione
+
+Utili:
+
+- Definizione di variabile: una per linea, meglio se a inizio del metodo
+- Meglio inizializzare sempre le variabili!
+- Una sola istruzione per riga
+- Blocchi e parentesi graffe, anche per blocchi ad uno statement
+
+Nomi:
+
+- Classi (e interface): PascalCase
+- Metodi, campi, variabili: camelCase
+- Package: lowercase
+- Campi costanti: UPPERCASE
+
+Ordine degli elementi della classe:
+
+- Campi statici (pubblici, poi privati – ovvero, dal più aperto al più chiuso)
+- Campi istanza (pubblici, poi privati)
+- Costruttori (pubblici, poi privati)
+- Metodi (raggruppati per ruolo, NON per Ûsibilità, NON alfabeticamente)
+
+Metodi getter/setter:
+
+- Un metodo getter è un metodo che senza input restituisce un valore, una proprietà dell’oggetto
+- Un metodo setter è un metodo che restituisce void e accetta un valore che modifica una proprietà
+  dell’oggetto
+
+Convenzioni nel nome:
+
+```
+- Getter non booleano: T getXYZ(){...}
+- Getter booleano: boolean getXYZ(){...} o anche boolean isXYZ() {...}
+- Setter: void setXYZ() {...}
+```
+
+Esempio lamp
+
+```java
+public class Lamp {
+    ...
+    // Setter per proprieta' Intensity di tipo double
+    public void setIntensity(double value) {
+    ...
+    } /
+    / Getter per proprieta' Intensity di tipo double
+    public double getIntensity() {
+    ...
+    } /
+    / Getter per proprieta' SwitchedOn di tipo boolean
+    public boolean isSwitchedOn() {
+    ...
+    }
+}
+```
+
+lampUtilities
+
+```java
+public class LampUtilities {
+    /* Costruisco una fila di lampadine */
+    public static Lamp[] buildLampRow(final int size) {
+        final Lamp[] array = new Lamp[size];
+        for (int index = 0; index < size; index++) {
+        array[index] = new Lamp();
+        }
+        return array;
+    } /
+    * Accendo/spengo una fila di lampadine */
+    public static void switchAll(final boolean switchedOn, final Lamp[] array) {
+        for (Lamp l : array) {
+        if (switchedOn) {
+            l.switchOn();
+        } else {
+            l.switchOff();
+        }
+    }
+    }
+}
+```
+
+### Checkstyle
+
+Si occupa di trovare errori di stile e formattazione del codice.
+
+Si dichiara lo stile desiderato in un ×le checkstyle.xml e poi si esegue il comando.
+
+Si integra anche con Gradle e poi di defualt fallisce la build se non si rispettano le regole.
+
+# Testing
+
+Il testing del software è quell’attività di ricerca di anomalie al fine di localizzare e rimuovere i difetti
+nel software
+
+### Definizioni:
+
+- Errore: l’azione che ha causato una falla
+- Falla (bug): causa di un’anomalia
+- Fallimento (anomalia): differenza tra risultato atteso e attuale
+- Testing: attività di ricerca anomalie per localizzare/rimuovere difetti
+
+Errore -> Difetto/Bug -> Fallimento
+
+- Verifica: controllo correttezza rispetto a specifiche
+- Validazione: controllo adeguatezza rispetto aspettative stakeholder
+
+## JUNIT 5: FRAMEWORK DI TESTING
+
+UUT: unit under test
+
+### Architettura JUnit 5:
+
+- JUnit Platform: piattaforma per esecuzione test
+- JUnit Jupiter: API per scrivere test
+- JUnit Vintage: supporto per test JUnit 4
+
+### Pattern AAA:
+
+- Arrange: setup del contesto del test
+- Act: esecuzione della funzionalità da testare
+- Assert: verifica del risultato
+
+### Annotazioni principali:
+
+Le annotazione sono un meccanismo di Java per fornire informazioni aggiuntive ai costrutti del
+programma
+
+- @Test: marca un metodo come test ( può espiremere uno più test case)
+- @BeforeEach: eseguito prima di ogni test
+- @AfterEach: eseguito dopo ogni test
+- @BeforeAll: eseguito una volta prima di tutti i test
+- @AfterAll: eseguito una volta dopo tutti i test
+
+### Esempio:
+
+```java
+assertEquals(expected, actual)
+assertTrue(condition)
+assertFalse(condition)
+assertNull(object)
+assertNotNull(object)
+assertArrayEquals(expectedArray, actualArray)
+```
+
+Unit testing: la pratica di testare una unità funzionale in isolamento
+
+Integration testing: verificare la correttezza dell’integrazione di diverse unità
+
+## TDD
+
+1. RED: si scrive un test per catturare la funzionalità che si vuole realizzare (visto che è ancora da implementare,
+   questa fallirà)
+2. GREEN: si implementa la funzionalità ×no a che il test passa
+3. REFACTOR: eventualmente, si migliora l’implementazione
+   rieseguendo i test, saremo sicuri che questi interventi non causano regressioni
+
+Terminata un’iterazione RED-GREEN-REFACTOR, si può procedere a un’altra iterazione, ovvero alla
+realizzazione di un incremento di funzionalità
+
+Principi fondamentali:
+
+- Test isolati e indipendenti
+- Un assert per test (quando possibile)
+- Test deterministici
+- No logica nei test
+
+# MVC - Model-View-Controller
+
+Promuovere il riuso, la modularità, l’estensibilità, la manutenibilità del soÚware
+
+Model: metodi di dominio chiamati da Controller
+incapsula dati e logica relativi al dominio della applicazione
+
+- Modello del dominio applicativo
+- Incapsula dati e logica di business
+- Indipendente da visualizzazione e controllo
+
+View: metodi void chiamati da View (azioni utente)
+incapsula la GUI, le sue sottoparti, e la logica di notifica
+
+- Gestisce interazioni con l'utente
+- Si occupa di input e output
+- Presenta i dati del Model
+- Notifica il Controller delle azioni utente
+
+Controller: metodi void chiamati da Controller (richieste visualizzazione)
+intercetta gli eventi della View, comanda le modi×che al modello, cambia di conseguenza la View
+
+- Coordina Model e View
+- Intercetta eventi dalla View
+- Comanda modifiche al Model
+- Aggiorna la View in base ai cambiamenti
+
+ESEMPIO PRATICO (DrawNumber):
+
+```java
+// Model Interface
+public interface DrawNumber {
+    void reset();
+    DrawResult attempt(int n);
+}
+
+// View Interface
+public interface DrawNumberView {
+    void setObserver(DrawNumberViewObserver observer);
+    void start();
+    void numberIncorrect();
+    void result(DrawResult res);
+}
+
+// Controller (observer)
+public interface DrawNumberViewObserver {
+    void newAttempt(int n);
+    void resetGame();
+    void quit();
+}
+```
+
+VANTAGGI DEL PATTERN
+
+- Separazione delle responsabilità
+- Facilità di testing (componenti testabili separatamente)
+- Possibilità di modificare un componente senza impattare gli altri
+- Supporto al lavoro in team
+- Codice più organizzato e mantenibile
+
+# VCS - Version Control Systems
+
+Le prime forme di controllo versione erano centralizzate:
+
+- Concurrent Versioning System (CVS) - 1986
+- Apache Subversion (SVN)
+
+Modello client-server (centralizzato)
+
+Tracking delle modifiche:
+
+- Evitare perdita di progressi, Documentare lo sviluppo, Possibilità di rollback
+
+Collaborazione:
+
+- Lavoro concorrente, Integrazione modifiche, Risoluzione conflitti
+
+Git - DVCS ( Decentralized Version Control System)
+
+Repository: Contiene intero progetto/storia e metadata
+
+Commit: Snapshot dello stato del progetto
+
+Best Praticies:
+
+- Commit piccoli e frequenti
+- Un branch per feature
+- Main branch sempre stabile
+- Pull prima del lavoro
+
+Comandi principali:
+
+- Git fetch:
+- Git pull
+- Git push
+- Git add
+
+checkout, merging, rebase
+
+```bash
+Configurazione:
+
+git config --global user.name "Nome"
+git config --global user.email "email"
+git config --global init.defaultbranch main
+
+git init
+```
+
+```bash
+Stage e Commit
+
+git add <files>     # Stage
+git reset <files>   # Unstage
+git commit -m "msg" # Commit
+```
+
+```bash
+Status e History
+
+git status  # Stato repository
+git log     # Storia commit
+git diff    # Differenze
+
+```
+
+```bash
+Branch
+
+git branch nome     # Crea branch
+git checkout nome   # Switch branch
+git checkout -b new # Crea e switch
+
+```
+
+```bash
+Merge
+git merge target    # Unisce target nel branch corrente
+```
+
+```bash
+Setup
+
+git remote add origin URL
+git clone URL
+```
+
+```bash
+Sync
+
+git fetch origin
+git pull origin branch
+git push origin branch
+```
+
+Gitignore: File .gitignore per escludere files
+
+# OOP - Object-oriented programming
+
+Un paradigma di programmazione basato su oggetti
+
+Un modello astratto è la rappresentazione formale di idee e
+conoscenze relative a un fenomeno o a un'entità.
+
+La classe è il costrutto utilizzato in un linguaggio object oriented per definire e
+modellare un'entità software.
+Contiene:
+
+- informazioni (attributi)
+- comportamento (metodi)
+
+Esempio:
+Tutti i Pokemon possiedono certe
+capacità (metodi) e caratteristiche
+(attributi).
+
+src="/img/learnSoftwareDevelopment/ooo.png"
+alt="flowchart factorial"
+style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+## Livelli di accessibilità:
+
+- public: accessibile da qualsiasi classe
+- private: accessibile solo dalla stessa classe
+- protected: accessibile solo dal codice nello stessa classe o in una classe derivata
+- internal: accessibile solo dal codice nello stesso assembly
+
+## Tecniche
+
+- Incapsulamento: Combinazione di dati e metodi che li manipolano in un'unica unità (classe),
+  hiding the internal state of an object and only exposing necessary operations.
+- Ereditarietà: Meccanismo per estendere classi esistenti
+  Esempio:
+  Il Cane è un'entità concreta e
+  dettagliata, "figlia" dell'entità più
+  astratta Mammifero, la quale si
+  può ricondurre all'entità ancora
+  più astratta Animale.
+- Polimorfismo: Capacità di un oggetto di assumere diverse forme
+- Astrazione: Nascondere dettagli di implementazione
+
+## Concetti fondamentali
+
+- Classe: Modello per creare oggetti
+- Oggetto: Istanza di una classe
+
+- Costruttore: Metodo per inizializzare un oggetto
+
+- Interfacce:
+  - espongono i servizi offerti da una classe ai suoi utilizzatori
+  - devono essere rispettate in modo obbligatorio dalla classe
+  - aggiungono capacità alla classe che le implementa
+  - L'interfaccia è un contratto che deve essere rispettato dalle classi che decidono di implementarlo.
+
+# AGILE SOFTWARE DEVELOPMENT
+
+- Insieme principi/pratiche per rispondere al cambiamento
+- Approcci iterativi/incrementali
+- Cicli brevi per feedback frequente
+- Focus sulla qualità
+
+## Manifesto Agile
+
+"Valorizzare:
+
+- Individui e interazioni più che processi e strumenti
+- Software funzionante più che documentazione esaustiva
+- Collaborazione col cliente più che negoziazione contratti
+- Rispondere al cambiamento più che seguire un piano"
+
+# Design Patterns
+
+## Cos'è un Pattern
+
+è una soluzione a un problema ricorrente
+
+- Soluzione notevole a problemi ricorrenti
+- Codifica esperienza in forma riusabile
+- Pattern GoF (23 pattern famosi)
+
+### Ha 4 elementi principali:
+
+1 Il nome del pattern
+2 Il problema, descrive quando applicare il pattern
+3 La soluzione, descrive gli elementi del design e le loro relazioni
+4 Le conseguenze, descrive gli effetti collaterali e i trade-off
+
+### Classificazione
+
+## Per proposito:
+
+- Creazionali (creazione oggetti)
+- Strutturali (composizione classi/oggetti)
+- Comportamentali (interazione/responsabilità)
+
+## Per scope:
+
+- Classi (relazioni compile-time)
+- Oggetti (relazioni run-time)
+
+Pattern Richiesti
+
+- Factory Method (creazionale)
+- Singleton (creazionale)
+- Decorator (strutturale)
+- Template Method (comportamentale)
+- Iterator (comportamentale)
+- Observer (comportamentale)
+- Strategy (comportamentale)
+- Visitor (comportamentale)
+
+### Differenza tra architettura e design dettaglio
+
+- L'architettura ti dice "questi sono i macro-componenti e come interagiscono"
+- Il design di dettaglio ti dice "questo è come funziona internamente uno specifico componente"
+  `See you in the next post! Stay Tuned!`
