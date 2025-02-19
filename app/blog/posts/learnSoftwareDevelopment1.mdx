@@ -503,6 +503,22 @@ git push origin branch
 
 Gitignore: File .gitignore per escludere files
 
+# AGILE SOFTWARE DEVELOPMENT
+
+- Insieme principi/pratiche per rispondere al cambiamento
+- Approcci iterativi/incrementali
+- Cicli brevi per feedback frequente
+- Focus sulla qualità
+
+## Manifesto Agile
+
+"Valorizzare:
+
+- Individui e interazioni più che processi e strumenti
+- Software funzionante più che documentazione esaustiva
+- Collaborazione col cliente più che negoziazione contratti
+- Rispondere al cambiamento più che seguire un piano"
+
 # OOP - Object-oriented programming
 
 Un paradigma di programmazione basato su oggetti
@@ -551,53 +567,44 @@ capacità (metodi) e caratteristiche
 
 ## Concetti fondamentali
 
-- Classe: Modello per creare oggetti
-- Oggetto: Istanza di una classe
+Classe:
 
-- Costruttore: Metodo per inizializzare un oggetto
+- È un "template" o "blueprint"
+- Definisce la struttura e il comportamento
+- Descrive cosa un oggetto conterrà e come si comporterà
+- È come il progetto di una casa
 
-- Interfacce:
-  - espongono i servizi offerti da una classe ai suoi utilizzatori
-  - devono essere rispettate in modo obbligatorio dalla classe
-  - aggiungono capacità alla classe che le implementa
-  - L'interfaccia è un contratto che deve essere rispettato dalle classi che decidono di implementarlo.
+Oggetto:
 
-# AGILE SOFTWARE DEVELOPMENT
+- È un'ISTANZA di una classe
+- È la realizzazione concreta della classe
+- Contiene dati reali
+- È come una casa costruita seguendo il progetto
 
-- Insieme principi/pratiche per rispondere al cambiamento
-- Approcci iterativi/incrementali
-- Cicli brevi per feedback frequente
-- Focus sulla qualità
+Esempio:
+Classe = ricetta della torta / Oggetto = torta effettivamente preparata
 
-## Manifesto Agile
+Costruttore: Metodo per inizializzare un oggetto
 
-"Valorizzare:
+Interfacce:
 
-- Individui e interazioni più che processi e strumenti
-- Software funzionante più che documentazione esaustiva
-- Collaborazione col cliente più che negoziazione contratti
-- Rispondere al cambiamento più che seguire un piano"
+- espongono i servizi offerti da una classe ai suoi utilizzatori
+- devono essere rispettate in modo obbligatorio dalla classe
+- aggiungono capacità alla classe che le implementa
+- L'interfaccia è un contratto che deve essere rispettato dalle classi che decidono di implementarlo.
 
 # Design Patterns
 
-## Cos'è un Pattern
-
-è una soluzione a un problema ricorrente
-
-- Soluzione notevole a problemi ricorrenti
-- Codifica esperienza in forma riusabile
-- Pattern GoF (23 pattern famosi)
+Sono una soluzione a dei problema ricorrente nel software design.
 
 ### Ha 4 elementi principali:
 
-1 Il nome del pattern
-2 Il problema, descrive quando applicare il pattern
-3 La soluzione, descrive gli elementi del design e le loro relazioni
-4 Le conseguenze, descrive gli effetti collaterali e i trade-off
+1. Il nome del pattern
+2. Il problema, descrive quando applicare il pattern
+3. La soluzione, descrive gli elementi del design e le loro relazioni
+4. Le conseguenze, descrive gli effetti collaterali e i trade-off
 
 ### Classificazione
-
-## Per proposito:
 
 - Creazionali (creazione oggetti)
 - Strutturali (composizione classi/oggetti)
@@ -605,13 +612,100 @@ capacità (metodi) e caratteristiche
 
 ## Per scope:
 
-- Classi (relazioni compile-time)
-- Oggetti (relazioni run-time)
+- A livello di classe: Pattern che riguardano principalmente le relazioni tra classi (aspetti statici)
+- A livello di oggetto: Pattern che riguardano principalmente le relazioni tra oggetti (aspetti dinamici)
 
-Pattern Richiesti
+## Pattern più comuni:
 
-- Factory Method (creazionale)
-- Singleton (creazionale)
+### Factory Method (creazionale)
+
+- Delega la creazione effettiva degli oggetti alle sottoclassi
+- Sostituisce le chiamate dirette al costruttore (new) con chiamate a un metodo factory
+
+Quando usarlo:
+
+- Quando non sai in anticipo quali tipi di oggetti dovrai creare
+- Quando vuoi delegare la creazione di oggetti alle sottoclassi
+- Quando hai bisogno di creare famiglie di oggetti correlati
+- Quando vuoi nascondere la logica di creazione degli oggetti
+
+### Pro
+
+- ✅ Evita un forte accoppiamento tra il creatore e i prodotti concreti
+- ✅ Single Responsibility Principle: sposta il codice di creazione in un posto
+- ✅ Open/Closed Principle: puoi aggiungere nuovi tipi di prodotti senza rompere il codice esistente
+- ✅ Rende il codice più flessibile e riusabile
+
+### Contro
+
+- ❌ Può portare a una proliferazione di sottoclassi se servono molti tipi diversi di oggetti
+- ❌ Può rendere il codice più complesso introducendo molte nuove interfacce e classi
+- ❌ Potrebbe essere "overkill" per casi semplici dove una semplice creazione diretta sarebbe sufficiente
+
+Esempio:
+
+```java
+
+// Questa è la nostra pizza (il prodotto)
+interface Pizza {
+    void prepare();
+    void bake();
+    void box();
+}
+
+// Queste sono i tipi specifici di pizza
+class Margherita implements Pizza {
+    public void prepare() { System.out.println("Preparazione Margherita: pomodoro e mozzarella"); }
+    public void bake() { System.out.println("Cottura a 300 gradi"); }
+    public void box() { System.out.println("Inscatolamento pizza margherita"); }
+}
+
+class Pepperoni implements Pizza {
+    public void prepare() { System.out.println("Preparazione Pepperoni: pomodoro, mozzarella e salame"); }
+    public void bake() { System.out.println("Cottura a 300 gradi"); }
+    public void box() { System.out.println("Inscatolamento pizza pepperoni"); }
+}
+
+// Questa è la nostra fabbrica di pizze
+class PizzaFactory {
+    // Questo è il Factory Method!
+    public Pizza createPizza(String type) {
+        Pizza pizza = null;
+
+        if (type.equals("margherita")) {
+            pizza = new Margherita();
+        } else if (type.equals("pepperoni")) {
+            pizza = new Pepperoni();
+        }
+
+        return pizza;
+    }
+}
+
+public class Pizzeria {
+    public static void main(String[] args) {
+        PizzaFactory factory = new PizzaFactory();
+
+        // Voglio una margherita
+        Pizza miaPizza = factory.createPizza("margherita");
+        miaPizza.prepare();
+        miaPizza.bake();
+        miaPizza.box();
+
+        // Voglio un pepperoni
+        Pizza altraPizza = factory.createPizza("pepperoni");
+        altraPizza.prepare();
+        altraPizza.bake();
+        altraPizza.box();
+    }
+}
+
+```
+
+È come andare in pizzeria: tu ordini solo "una margherita" e non ti preoccupi di come viene fatta - ci pensa la cucina (la nostra factory)!
+
+### Singleton (creazionale)
+
 - Decorator (strutturale)
 - Template Method (comportamentale)
 - Iterator (comportamentale)
