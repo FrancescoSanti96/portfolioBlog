@@ -4,6 +4,15 @@ publishedAt: "2025-02-28"
 summary: "Series of learn together algorithms"
 ---
 
+### In questo articolo parleremo di:
+
+- Build Systems
+- Stile e formattazione del codice
+- Testing
+- MVC - Model-View-Controller
+- VCS - Version Control Systems
+- AGILE SOFTWARE DEVELOPMENT
+
 # Build Systems
 
 ## La costruzione del software include:
@@ -25,8 +34,7 @@ summary: "Series of learn together algorithms"
 2.  **Dichiarativo/Standardizzato:**
 
         - Usa file di configurazione dedicati
-        - Portabile e comprensibile
-        - Limitato dalle opzioni disponibili
+        - Portabile e comprensibile, ma limitato dalle opzioni disponibili
 
 ## Convention over Configuration
 
@@ -62,11 +70,11 @@ Concetti fondamentali:
 
 ## Dipendeza del software:
 
-Le applicazioni hanno un albero di dipendenze!
+- Le applicazioni hanno un albero di dipendenze!
 
 ## Dipendendeze transitive:
 
-Sono le dipendenze indirette (dipendenze delle dipendenze).
+- Sono le dipendenze indirette (dipendenze delle dipendenze).
 
 ## Maven
 
@@ -76,28 +84,27 @@ che è poi divento lo standard de facto per la gestione delle dipendenze in Java
 
 - Maven Central Repository (Sonatype OSSRH)
 
-### Maven naming convention:
+### Maven naming convention: È il repository di default di Maven, contiene milioni di librerie.
 
-    - groupId: identifica progetto/gruppo (es: com.google)
-    - artifactId: identifica libreria specifica
-    - version: versione della libreria
-
-È il repository di default di Maven, contiene milioni di librerie.
+- groupId: identifica progetto/gruppo (es: com.google)
+- artifactId: identifica libreria specifica
+- version: versione della libreria
 
 ### Gestione delle dipendenze in gradle
 
 Grande consente di gestirle, potremmo avere anche delle librerie da utilizzare solo per i test,
 che poi non useremo in produzione.
 
-- Maven Central è un membro speciale, e la sua con×gurazione è semplificata, è suÓciente con×gurare build.gradle.kts
-
 ```kotlin
 plugins { java } // Carica il necessario per Java
 repositories { mavenCentral() } // Configura Gradle per cercare e scaricare da Maven Central
 ```
 
-Trovare su Maven Central la libreria che intendiamo usare e annotare groupId, artifactId, e version
-per questo esempio: la libreria OMDB di “Omertron
+Trovare su Maven Central la libreria che intendiamo usare e annotare:
+
+- groupId
+- artifactId
+- version
 
 Gradle consente di (costringe a) dire chiaramente “a cosa serve” una certa libreria:
 
@@ -105,29 +112,19 @@ Gradle consente di (costringe a) dire chiaramente “a cosa serve” una certa l
 - testImplementation: compilare e eseguire i test
 - testRuntimeOnly: solo eseguzione test
 
-Esempio:
-
-```kotlin
-plugins { java } // Carica il necessario per Java
-repositories { mavenCentral() } // Configura Gradle per cercare e scaricare da Maven Central
-dependencies {
-implementation("com.omertron:API-OMDB:1.5") //libreria
-}
-```
-
 ### Lanciare app java da Gradle
 
 ```kotlin
 plugins {
-java // Carica il necessario per la compilazione di Java
-application // Carica il necessario per l'esecuzione di classi con la JVM
-}r
-epositories { mavenCentral() } // Configura Gradle per cercare e scaricare da Maven Central
+    java // Carica il necessario per la compilazione di Java
+    application // Carica il necessario per l'esecuzione di classi con la JVM
+}
+repositories { mavenCentral() } // Configura Gradle per cercare e scaricare da Maven Central
 dependencies { // Elenco di librerie che ci servono
-implementation("com.omertron:API-OMDB:1.5")
-}a
-pplication { // Configurazione dell'esecuzione, la main class è sufficiente
-mainClass.set("it.unibo.sampleapp.SimplerRateAMovie")
+    implementation("com.omertron:API-OMDB:1.5") //libreria
+}
+application { // Configurazione dell'esecuzione, la main class è sufficiente
+    mainClass.set("it.unibo.sampleapp.SimplerRateAMovie")
 }
 ```
 
@@ -158,15 +155,6 @@ Comandi principali:
 - ./gradlew test - esegue i test
 - ./gradlew clean - pulisce la build
 - ./gradlew tasks - mostra i task disponibili
-
-PUNTI CHIAVE PER L'ORALE
-
-- Saper spiegare perché è necessario un build system
-- Comprendere la differenza tra approcci imperativi e dichiarativi
-- Conoscere i concetti base di Gradle (project, plugin, task)
-- Capire come funziona la gestione delle dipendenze
-- Saper spiegare l'importanza del Gradle Wrapper
-- Comprendere il principio "Convention over Configuration"
 
 # Stile e formattazione del codice
 
@@ -263,16 +251,14 @@ public class LampUtilities {
 
 ### Checkstyle
 
-Si occupa di trovare errori di stile e formattazione del codice.
-
-Si dichiara lo stile desiderato in un ×le checkstyle.xml e poi si esegue il comando.
+- Si occupa di trovare errori di stile e formattazione del codice.
+- Si dichiara lo stile desiderato in un file checkstyle.xml e poi si esegue il comando.
 
 Si integra anche con Gradle e poi di defualt fallisce la build se non si rispettano le regole.
 
 # Testing
 
-Il testing del software è quell’attività di ricerca di anomalie al fine di localizzare e rimuovere i difetti
-nel software
+Il testing del software è quell’attività di ricerca di anomalie al fine di localizzare e rimuovere i difetti nel software
 
 ### Definizioni:
 
@@ -302,18 +288,9 @@ UUT: unit under test
 - Act: esecuzione della funzionalità da testare
 - Assert: verifica del risultato
 
-### Annotazioni principali:
+### Esempio di asserizone:
 
-Le annotazione sono un meccanismo di Java per fornire informazioni aggiuntive ai costrutti del
-programma
-
-- @Test: marca un metodo come test ( può espiremere uno più test case)
-- @BeforeEach: eseguito prima di ogni test
-- @AfterEach: eseguito dopo ogni test
-- @BeforeAll: eseguito una volta prima di tutti i test
-- @AfterAll: eseguito una volta dopo tutti i test
-
-### Esempio:
+per confrontare il risultato atteso con quello effettivo:
 
 ```java
 assertEquals(expected, actual)
@@ -324,17 +301,31 @@ assertNotNull(object)
 assertArrayEquals(expectedArray, actualArray)
 ```
 
-Unit testing: la pratica di testare una unità funzionale in isolamento
+### Annotazioni principali:
+
+Le annotazione sono informazioni aggiuntive ai costrutti del programma
+
+- @Test: marca un metodo come test ( può espiremere uno più test case)
+- @BeforeEach: eseguito prima di ogni test
+- @AfterEach: eseguito dopo ogni test
+- @BeforeAll: eseguito una volta prima di tutti i test
+- @AfterAll: eseguito una volta dopo tutti i test
+
+Unit testing: la pratica di testare una unità funzionale in isolamento (funzioni, metodi, classi).
+
+    - Esempio: testare una funzione che calcola lo sconto su un prezzo
 
 Integration testing: verificare la correttezza dell’integrazione di diverse unità
+
+    - Esempio: testare l'integrazione tra il modulo ordini e il modulo pagamenti
 
 ## TDD
 
 1. RED: si scrive un test per catturare la funzionalità che si vuole realizzare (visto che è ancora da implementare,
    questa fallirà)
-2. GREEN: si implementa la funzionalità ×no a che il test passa
+2. GREEN: si implementa la funzionalità fino a che il test passa
 3. REFACTOR: eventualmente, si migliora l’implementazione
-   rieseguendo i test, saremo sicuri che questi interventi non causano regressioni
+   rieseguendo i test, sempre sicuri che questi interventi non causano regressioni
 
 Terminata un’iterazione RED-GREEN-REFACTOR, si può procedere a un’altra iterazione, ovvero alla
 realizzazione di un incremento di funzionalità
@@ -348,16 +339,26 @@ Principi fondamentali:
 
 # MVC - Model-View-Controller
 
-Promuovere il riuso, la modularità, l’estensibilità, la manutenibilità del soÚware
+Modello architetturale che divide un'applicazione in tre componenti principali per separare le responsabilità.
 
-Model: metodi di dominio chiamati da Controller
+Per esempio, in un'app di note:
+
+- Model: gestisce il salvataggio e modifica delle note
+- View: mostra la lista delle note e il form per crearne di nuove
+- Controller: gestisce le azioni come "crea nota" o "elimina nota"
+
+### Promuovere il riuso, la modularità, l’estensibilità, la manutenibilità del software
+
+## Model: metodi di dominio chiamati da Controller
+
 incapsula dati e logica relativi al dominio della applicazione
 
 - Modello del dominio applicativo
 - Incapsula dati e logica di business
 - Indipendente da visualizzazione e controllo
 
-View: metodi void chiamati da View (azioni utente)
+## View: metodi void chiamati da View (azioni utente)
+
 incapsula la GUI, le sue sottoparti, e la logica di notifica
 
 - Gestisce interazioni con l'utente
@@ -365,7 +366,8 @@ incapsula la GUI, le sue sottoparti, e la logica di notifica
 - Presenta i dati del Model
 - Notifica il Controller delle azioni utente
 
-Controller: metodi void chiamati da Controller (richieste visualizzazione)
+## Controller: metodi void chiamati da Controller (richieste visualizzazione)
+
 intercetta gli eventi della View, comanda le modi×che al modello, cambia di conseguenza la View
 
 - Coordina Model e View
@@ -408,22 +410,47 @@ VANTAGGI DEL PATTERN
 
 # VCS - Version Control Systems
 
-Le prime forme di controllo versione erano centralizzate:
+Evoluzione del controllo versione:
+
+- Centralizzato
+- Distribuito
+
+Centralizzato:
 
 - Concurrent Versioning System (CVS) - 1986
 - Apache Subversion (SVN)
 
-Modello client-server (centralizzato)
+Pain:
+
+- Single Point of Failure
+- Connettività, necessaria la connessione per quasi tutte le operazioni
+- Difficile collaborazione
+- Performance
+
+Distribuito DVCS(Distributed Version Control System):
+
+- Git - 2005
+- Mercurial
+
+Scopo:
+
+- Gestione delle modifiche
+- Collaborazione
+- Tracciabilità
 
 Tracking delle modifiche:
 
-- Evitare perdita di progressi, Documentare lo sviluppo, Possibilità di rollback
+- Evitare perdita di progressi
+- Documentare lo sviluppo
+- Possibilità di rollback
 
 Collaborazione:
 
-- Lavoro concorrente, Integrazione modifiche, Risoluzione conflitti
+- Lavoro concorrente
+- Integrazione modifiche
+- Risoluzione conflitti
 
-Git - DVCS ( Decentralized Version Control System)
+### Git
 
 Repository: Contiene intero progetto/storia e metadata
 
@@ -436,72 +463,68 @@ Best Praticies:
 - Main branch sempre stabile
 - Pull prima del lavoro
 
-Comandi principali:
-
-- Git fetch:
-- Git pull
-- Git push
-- Git add
-
-checkout, merging, rebase
+### Configurazione Inizale:
 
 ```bash
-Configurazione:
-
+# Setup identità
 git config --global user.name "Nome"
 git config --global user.email "email"
 git config --global init.defaultbranch main
+```
 
+### Operazioni Base Repository
+
+```bash
+# Inizializzazione e setup
 git init
-```
-
-```bash
-Stage e Commit
-
-git add <files>     # Stage
-git reset <files>   # Unstage
-git commit -m "msg" # Commit
-```
-
-```bash
-Status e History
-
-git status  # Stato repository
-git log     # Storia commit
-git diff    # Differenze
-
-```
-
-```bash
-Branch
-
-git branch nome     # Crea branch
-git checkout nome   # Switch branch
-git checkout -b new # Crea e switch
-
-```
-
-```bash
-Merge
-git merge target    # Unisce target nel branch corrente
-```
-
-```bash
-Setup
-
 git remote add origin URL
 git clone URL
 ```
 
-```bash
-Sync
+### Gestione Modifiche
 
-git fetch origin
-git pull origin branch
-git push origin branch
+```bash
+# Stage e commit
+git add .           # Stage tutte le modifiche
+git add <file>      # Stage file specifico
+git commit -m "messaggio"
+git reset HEAD <file>
 ```
 
-Gitignore: File .gitignore per escludere files
+### Sincronizzazione
+
+```bash
+# Comandi remote
+git fetch           # Scarica modifiche
+git pull            # Scarica e merge
+git push            # Carica modifiche
+```
+
+### Branch Management
+
+```bash
+# Gestione branch
+git branch nome     # Crea branch
+git checkout nome   # Switch branch
+git checkout -b new # Crea e switch
+git merge branch    # Unisce branch
+git rebase main     # Rebase su main
+```
+
+### Monitoraggio
+
+```bash
+# Stato e storia
+git status          # Stato corrente
+git log             # Storia commit
+git diff            # Mostra modifiche
+```
+
+## GitHub
+
+- Servizio di hosting per repository Git
+
+### Gitignore: File .gitignore per escludere files
 
 # AGILE SOFTWARE DEVELOPMENT
 
@@ -512,1050 +535,11 @@ Gitignore: File .gitignore per escludere files
 
 ## Manifesto Agile
 
-"Valorizzare:
+### Valorizzare:
 
 - Individui e interazioni più che processi e strumenti
 - Software funzionante più che documentazione esaustiva
 - Collaborazione col cliente più che negoziazione contratti
 - Rispondere al cambiamento più che seguire un piano"
 
-# OOP - Object-oriented programming
-
-Un paradigma di programmazione basato su oggetti
-
-Un modello astratto è la rappresentazione formale di idee e
-conoscenze relative a un fenomeno o a un'entità.
-
-La classe è il costrutto utilizzato in un linguaggio object oriented per definire e
-modellare un'entità software.
-Contiene:
-
-- informazioni (attributi)
-- comportamento (metodi)
-
-Esempio:
-Tutti i Pokemon possiedono certe
-capacità (metodi) e caratteristiche
-(attributi).
-
-<img
-  src="/img/learnSoftwareDevelopment/ooo.png"
-  alt="flowchart factorial"
-  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
-/>
-
-## Livelli di accessibilità:
-
-- public: accessibile da qualsiasi classe
-- private: accessibile solo dalla stessa classe
-- protected: accessibile solo dal codice nello stessa classe o in una classe derivata
-- internal: accessibile solo dal codice nello stesso assembly
-
-## Tecniche
-
-- Incapsulamento: Combinazione di dati e metodi che li manipolano in un'unica unità (classe),
-  hiding the internal state of an object and only exposing necessary operations.
-- Ereditarietà: Meccanismo per estendere classi esistenti
-  Esempio:
-  Il Cane è un'entità concreta e
-  dettagliata, "figlia" dell'entità più
-  astratta Mammifero, la quale si
-  può ricondurre all'entità ancora
-  più astratta Animale.
-- Polimorfismo: Capacità di un oggetto di assumere diverse forme
-- Astrazione: Nascondere dettagli di implementazione
-
-## Concetti fondamentali
-
-Classe:
-
-- È un "template" o "blueprint"
-- Definisce la struttura e il comportamento
-- Descrive cosa un oggetto conterrà e come si comporterà
-- È come il progetto di una casa
-
-Oggetto:
-
-- È un'ISTANZA di una classe
-- È la realizzazione concreta della classe
-- Contiene dati reali
-- È come una casa costruita seguendo il progetto
-
-Esempio:
-Classe = ricetta della torta / Oggetto = torta effettivamente preparata
-
-Costruttore: Metodo per inizializzare un oggetto
-
-Interfacce:
-
-- espongono i servizi offerti da una classe ai suoi utilizzatori
-- devono essere rispettate in modo obbligatorio dalla classe
-- aggiungono capacità alla classe che le implementa
-- L'interfaccia è un contratto che deve essere rispettato dalle classi che decidono di implementarlo.
-
-# Design Patterns
-
-Sono una soluzione a dei problema ricorrente nel software design.
-
-### Ha 4 elementi principali:
-
-1. Il nome del pattern
-2. Il problema, descrive quando applicare il pattern
-3. La soluzione, descrive gli elementi del design e le loro relazioni
-4. Le conseguenze, descrive gli effetti collaterali e i trade-off
-
-### Classificazione
-
-- Creazionali (creazione oggetti)
-- Strutturali (composizione classi/oggetti)
-- Comportamentali (interazione/responsabilità)
-
-## Per scope:
-
-- A livello di classe: Pattern che riguardano principalmente le relazioni tra classi (aspetti statici)
-- A livello di oggetto: Pattern che riguardano principalmente le relazioni tra oggetti (aspetti dinamici)
-
-## Pattern più comuni:
-
-### Factory Method (creazionale)
-
-- Delega la creazione effettiva degli oggetti alle sottoclassi
-- Sostituisce le chiamate dirette al costruttore (new) con chiamate a un metodo factory
-
-Quando usarlo:
-
-- Quando non sai in anticipo quali tipi di oggetti dovrai creare
-- Quando vuoi delegare la creazione di oggetti alle sottoclassi
-- Quando hai bisogno di creare famiglie di oggetti correlati
-- Quando vuoi nascondere la logica di creazione degli oggetti
-
-### Pro
-
-- ✅ Evita un forte accoppiamento tra il creatore e i prodotti concreti
-- ✅ Single Responsibility Principle: sposta il codice di creazione in un posto
-- ✅ Open/Closed Principle: puoi aggiungere nuovi tipi di prodotti senza rompere il codice esistente
-- ✅ Rende il codice più flessibile e riusabile
-
-### Contro
-
-- ❌ Può portare a una proliferazione di sottoclassi se servono molti tipi diversi di oggetti
-- ❌ Può rendere il codice più complesso introducendo molte nuove interfacce e classi
-- ❌ Potrebbe essere "overkill" per casi semplici dove una semplice creazione diretta sarebbe sufficiente
-
-Esempio:
-
-```java
-
-// Questa è la nostra pizza (il prodotto)
-interface Pizza {
-    void prepare();
-    void bake();
-    void box();
-}
-
-// Queste sono i tipi specifici di pizza
-class Margherita implements Pizza {
-    public void prepare() { System.out.println("Preparazione Margherita: pomodoro e mozzarella"); }
-    public void bake() { System.out.println("Cottura a 300 gradi"); }
-    public void box() { System.out.println("Inscatolamento pizza margherita"); }
-}
-
-class Pepperoni implements Pizza {
-    public void prepare() { System.out.println("Preparazione Pepperoni: pomodoro, mozzarella e salame"); }
-    public void bake() { System.out.println("Cottura a 300 gradi"); }
-    public void box() { System.out.println("Inscatolamento pizza pepperoni"); }
-}
-
-// Questa è la nostra fabbrica di pizze
-class PizzaFactory {
-    // Questo è il Factory Method!
-    public Pizza createPizza(String type) {
-        Pizza pizza = null;
-
-        if (type.equals("margherita")) {
-            pizza = new Margherita();
-        } else if (type.equals("pepperoni")) {
-            pizza = new Pepperoni();
-        }
-
-        return pizza;
-    }
-}
-
-public class Pizzeria {
-    public static void main(String[] args) {
-        PizzaFactory factory = new PizzaFactory();
-
-        // Voglio una margherita
-        Pizza miaPizza = factory.createPizza("margherita");
-        miaPizza.prepare();
-        miaPizza.bake();
-        miaPizza.box();
-
-        // Voglio un pepperoni
-        Pizza altraPizza = factory.createPizza("pepperoni");
-        altraPizza.prepare();
-        altraPizza.bake();
-        altraPizza.box();
-    }
-}
-
-```
-
-È come andare in pizzeria: tu ordini solo "una margherita" e non ti preoccupi di come viene fatta - ci pensa la cucina (la nostra factory)!
-
-### Singleton (creazionale)
-
-Garantisce che una classe abbia una sola istanza, fornisce un punto di accesso globale a quella istanza, spesso usato per gestire risorse condivise
-
-Quando usarlo:
-
-- Quando deve esistere una sola istanza di una classe
-- Quando quella istanza deve essere accessibile da un punto di accesso globale
-- Per gestire risorse condivise (es. connessioni DB, configurazioni, pool di oggetti)
-- Quando vuoi controllare strettamente come e quando l'istanza viene creata
-
-Pro
-
-- ✅ Garantisce che una classe abbia una sola istanza
-- ✅ Fornisce un punto di accesso globale a quella istanza
-- ✅ L'oggetto singleton viene inizializzato solo quando serve (lazy loading)
-- ✅ Facile da implementare
-
-Contro
-
-- ❌ Viola il Single Responsibility Principle (gestisce sia l'unicità che la funzionalità)
-- ❌ Può rendere il codice difficile da testare
-- ❌ Può nascondere dipendenze nel codice
-- ❌ Richiede trattamento speciale in ambiente multi-thread
-
-Esempio:
-
-```java
-public class Configuration {
-    // L'istanza statica e privata
-    private static Configuration instance;
-
-    // Configurazioni
-    private String dbUrl;
-    private String apiKey;
-
-    // Costruttore privato!
-    private Configuration() {
-        // Carica configurazioni
-        dbUrl = "jdbc:mysql://localhost:3306/mydb";
-        apiKey = "abc123";
-    }
-
-    // Metodo pubblico per ottenere l'istanza
-    public static Configuration getInstance() {
-        if (instance == null) {
-            instance = new Configuration();
-        }
-        return instance;
-    }
-
-    // Metodi per accedere alle configurazioni
-    public String getDbUrl() {
-        return dbUrl;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
-}
-
-// Uso del singleton
-public class Application {
-    public static void main(String[] args) {
-        Configuration config = Configuration.getInstance();
-        System.out.println("DB URL: " + config.getDbUrl());
-
-        // Otteniamo la stessa istanza!
-        Configuration config2 = Configuration.getInstance();
-        System.out.println("Sono la stessa istanza? " + (config == config2));  // true
-    }
-}
-```
-
-È come avere un'unica copia delle chiavi di casa: tutti sanno dove trovarla (getInstance()) ma ne esiste una sola!
-
-### Decorator (strutturale)
-
-- Permette di aggiungere nuove funzionalità a oggetti esistenti dinamicamente
-- Fornisce un'alternativa flessibile all'ereditarietà per estendere le funzionalità
-- Avvolge l'oggetto originale in oggetti decoratori che aggiungono comportamenti
-
-Quando usarlo:
-
-- Quando vuoi aggiungere responsabilità a oggetti dinamicamente e in modo trasparente
-- Quando l'ereditarietà non è pratica o possibile
-- Quando hai bisogno di combinare diverse funzionalità in modo flessibile
-- Quando vuoi evitare una gerarchia di classi troppo profonda
-
-Pro
-
-- ✅ Maggiore flessibilità rispetto all'ereditarietà statica
-- ✅ Single Responsibility Principle: dividi la funzionalità tra classi
-- ✅ Aggiungi/rimuovi responsabilità a runtime
-- ✅ Combina comportamenti in modo flessibile
-
-Contro
-
-- ❌ È facile avere troppi decoratori piccoli e simili
-- ❌ L'ordine di decorazione può essere importante e difficile da gestire
-- ❌ Il codice può diventare complesso con molti decoratori
-- ❌ Può essere difficile rimuovere uno specifico wrapper
-
-Esempio:
-
-```java
-// Componente base
-interface Coffee {
-    String getDescription();
-    double getCost();
-}
-
-// Implementazione concreta base
-class SimpleCoffee implements Coffee {
-    @Override
-    public String getDescription() {
-        return "Caffè semplice";
-    }
-
-    @Override
-    public double getCost() {
-        return 1.0;
-    }
-}
-
-// Decorator astratto
-abstract class CoffeeDecorator implements Coffee {
-    protected Coffee decoratedCoffee;
-
-    public CoffeeDecorator(Coffee coffee) {
-        this.decoratedCoffee = coffee;
-    }
-
-    public String getDescription() {
-        return decoratedCoffee.getDescription();
-    }
-
-    public double getCost() {
-        return decoratedCoffee.getCost();
-    }
-}
-
-// Decoratori concreti
-class Milk extends CoffeeDecorator {
-    public Milk(Coffee coffee) {
-        super(coffee);
-    }
-
-    public String getDescription() {
-        return decoratedCoffee.getDescription() + ", con latte";
-    }
-
-    public double getCost() {
-        return decoratedCoffee.getCost() + 0.5;
-    }
-}
-
-class Sugar extends CoffeeDecorator {
-    public Sugar(Coffee coffee) {
-        super(coffee);
-    }
-
-    public String getDescription() {
-        return decoratedCoffee.getDescription() + ", con zucchero";
-    }
-
-    public double getCost() {
-        return decoratedCoffee.getCost() + 0.2;
-    }
-}
-
-// Uso del pattern
-public class CoffeeShop {
-    public static void main(String[] args) {
-        // Ordiniamo un caffè con latte e zucchero
-        Coffee coffee = new SimpleCoffee();
-        coffee = new Milk(coffee);
-        coffee = new Sugar(coffee);
-
-        System.out.println("Descrizione: " + coffee.getDescription());
-        System.out.println("Costo: €" + coffee.getCost());
-
-        // Proviamo una combinazione diversa
-        Coffee anotherCoffee = new Sugar(new Sugar(new SimpleCoffee()));
-        System.out.println("Descrizione: " + anotherCoffee.getDescription());
-        System.out.println("Costo: €" + anotherCoffee.getCost());
-    }
-}
-```
-
-È come personalizzare un caffè al bar: parti da un caffè semplice e poi aggiungi gli extra che vuoi (latte, zucchero, etc.)! Ogni extra è un decoratore che "avvolge" il caffè base e aggiunge qualcosa.
-Nel mondo reale, il pattern Decorator è molto usato in:
-
-- Java I/O (BufferedReader, InputStreamReader, etc.)
-- UI Frameworks (per aggiungere bordi, scrollbar, etc.)
-- Web services (per aggiungere caching, logging, autenticazione)
-
-### Template Method (comportamentale)
-
-- Definisce lo scheletro di un algoritmo in un metodo
-- Delega alcuni passi alle sottoclassi
-- Permette alle sottoclassi di ridefinire certi passi dell'algoritmo senza cambiarne la struttura
-
-Quando usarlo:
-
-- Quando hai un algoritmo che ha una struttura fissa ma passi variabili
-- Quando vuoi evitare duplicazione di codice tra classi simili
-- Quando vuoi permettere alle sottoclassi di estendere solo certi passi dell'algoritmo
-- Per implementare parti invarianti una sola volta nella classe base
-
-Pro
-
-- ✅ Elimina la duplicazione del codice
-- ✅ Permette variazioni controllate dell'algoritmo
-- ✅ Facilita il riuso del codice
-- ✅ Implementa il principio "Hollywood" (don't call us, we'll call you)
-
-Contro
-
-- ❌ Può essere difficile da capire il flusso di controllo
-- ❌ Alcune implementazioni possono violare il Principio di Liskov
-- ❌ La manutenzione può diventare difficile con molte classi
-- ❌ Limita la flessibilità a ciò che il template method permette
-
-Esempio:
-
-```java
-// Classe astratta che definisce il template method
-abstract class DataMiner {
-    // Questo è il template method!
-    public final void mine() {
-        openFile();
-        extractData();
-        parseData();
-        analyzeData();
-        sendReport();
-        closeFile();
-    }
-
-    // Metodi comuni a tutte le implementazioni
-    private void openFile() {
-        System.out.println("Apertura file...");
-    }
-
-    private void closeFile() {
-        System.out.println("Chiusura file...");
-    }
-
-    private void sendReport() {
-        System.out.println("Invio report...");
-    }
-
-    // Metodi che devono essere implementati dalle sottoclassi
-    protected abstract void extractData();
-    protected abstract void parseData();
-    protected abstract void analyzeData();
-}
-
-// Implementazione concreta per CSV
-class CSVDataMiner extends DataMiner {
-    @Override
-    protected void extractData() {
-        System.out.println("Estrazione dati da CSV...");
-    }
-
-    @Override
-    protected void parseData() {
-        System.out.println("Parsing dati CSV...");
-    }
-
-    @Override
-    protected void analyzeData() {
-        System.out.println("Analisi dati CSV...");
-    }
-}
-
-// Implementazione concreta per PDF
-class PDFDataMiner extends DataMiner {
-    @Override
-    protected void extractData() {
-        System.out.println("Estrazione dati da PDF...");
-    }
-
-    @Override
-    protected void parseData() {
-        System.out.println("Parsing dati PDF...");
-    }
-
-    @Override
-    protected void analyzeData() {
-        System.out.println("Analisi dati PDF...");
-    }
-}
-
-// Uso del pattern
-public class DataMiningApp {
-    public static void main(String[] args) {
-        DataMiner csvMiner = new CSVDataMiner();
-        DataMiner pdfMiner = new PDFDataMiner();
-
-        System.out.println("Mining CSV:");
-        csvMiner.mine();
-
-        System.out.println("\nMining PDF:");
-        pdfMiner.mine();
-    }
-}
-```
-
-È come seguire una ricetta di cucina: ci sono passi fissi (aprire il frigo, prendere gli ingredienti, pulire) e passi che variano in base al piatto (tagliare, cuocere, impiattare). Il Template Method definisce i passi fissi e lascia che le sottoclassi implementino quelli variabili!
-
-Esempi nel mondo reale:
-
-- Framework di testing (JUnit)
-- Framework web (metodi del ciclo di vita di servlet/componenti)
-- Operazioni di database (apertura/chiusura connessioni)
-
-### Iterator (comportamentale)
-
-- Fornisce un modo per accedere agli elementi di una collezione sequenzialmente
-- Nasconde la struttura interna della collezione
-- Sposta la responsabilità di navigazione dalla collezione all'iteratore
-
-Quando usarlo:
-
-- Quando vuoi accedere agli elementi di una collezione senza esporre la sua struttura interna
-- Quando vuoi supportare diversi tipi di attraversamento per la stessa collezione
-- Quando vuoi avere un'interfaccia uniforme per attraversare diverse strutture dati
-- Quando hai bisogno di più iteratori attivi contemporaneamente sulla stessa collezione
-
-Pro
-
-- ✅ Single Responsibility Principle: separa l'attraversamento dalla collezione
-- ✅ Open/Closed Principle: nuovi tipi di collezioni e iteratori senza modificare il codice esistente
-- ✅ Supporta diversi tipi di attraversamento contemporaneamente
-- ✅ Semplifica il codice client unificando l'accesso alle collezioni
-
-Contro
-
-- ❌ Può essere esagerato per collezioni semplici
-- ❌ Usare un iteratore non è efficiente come attraversare alcuni tipi di collezioni direttamente
-- ❌ Può creare troppi oggetti iteratore in memoria
-- ❌ Può essere complesso da implementare per strutture dati non lineari
-
-Esempio:
-
-```java
-// Interfaccia per l'iteratore
-interface Iterator<T> {
-    boolean hasNext();
-    T next();
-}
-
-// Interfaccia per oggetti iterabili
-interface Container<T> {
-    Iterator<T> getIterator();
-}
-
-// Implementazione di una collezione specifica
-class BookShelf implements Container<String> {
-    private String[] books;
-    private int size;
-
-    public BookShelf(int size) {
-        this.books = new String[size];
-        this.size = 0;
-    }
-
-    public void addBook(String book) {
-        if (size < books.length) {
-            books[size] = book;
-            size++;
-        }
-    }
-
-    @Override
-    public Iterator<String> getIterator() {
-        return new BookShelfIterator();
-    }
-
-    // Implementazione concreta dell'iteratore
-    private class BookShelfIterator implements Iterator<String> {
-        private int index;
-
-        @Override
-        public boolean hasNext() {
-            return index < size;
-        }
-
-        @Override
-        public String next() {
-            if (this.hasNext()) {
-                return books[index++];
-            }
-            return null;
-        }
-    }
-}
-
-// Uso del pattern
-public class Library {
-    public static void main(String[] args) {
-        BookShelf bookShelf = new BookShelf(4);
-
-        bookShelf.addBook("Design Patterns");
-        bookShelf.addBook("Clean Code");
-        bookShelf.addBook("Refactoring");
-        bookShelf.addBook("Clean Architecture");
-
-        // Uso dell'iteratore
-        Iterator<String> iterator = bookShelf.getIterator();
-        System.out.println("Libri nella libreria:");
-        while (iterator.hasNext()) {
-            String book = iterator.next();
-            System.out.println("- " + book);
-        }
-
-        // Possiamo avere più iteratori contemporaneamente
-        Iterator<String> iterator1 = bookShelf.getIterator();
-        Iterator<String> iterator2 = bookShelf.getIterator();
-
-        System.out.println("\nPrimo libro con iterator1: " + iterator1.next());
-        System.out.println("Primo libro con iterator2: " + iterator2.next());
-    }
-}
-```
-
-È come sfogliare un libro: non ti interessa come sono organizzate le pagine internamente, usi solo il segnalibro per tenere traccia della posizione e vai avanti pagina dopo pagina!
-
-Esempi nel mondo reale:
-
-- Java Collections Framework (List, Set, Map)
-- Database cursors
-- File systems (per attraversare directory)
-- Tutti i foreach loops in Java (utilizzano implicitamente l'Iterator pattern)
-
-### Observer (comportamentale)
-
-- Definisce una dipendenza uno-a-molti tra oggetti
-- Quando un oggetto cambia stato, tutti i suoi dipendenti vengono notificati e aggiornati automaticamente
-- Implementa il pattern di pubblicazione/sottoscrizione
-
-Quando usarlo:
-
-- Quando una modifica a un oggetto richiede modifiche ad altri oggetti
-- Quando non sai quanti oggetti devono essere aggiornati
-- Quando vuoi accoppiamento debole tra oggetti
-- Per implementare comunicazione event-driven tra componenti
-
-Pro
-
-- ✅ Accoppiamento debole tra subject e observer
-- ✅ Supporta il broadcast di comunicazioni
-- ✅ Open/Closed Principle: puoi aggiungere nuovi observer senza modificare il subject
-- ✅ Stabilisce relazioni oggetto a runtime
-
-Contro
-
-- ❌ Gli observer possono essere notificati in ordine casuale
-- ❌ Se non gestito bene, può causare memory leaks (observer non rimossi)
-- ❌ Se usato male, può causare update circolari infiniti
-- ❌ Può diventare complesso con molti observer o livelli di osservazione
-
-Esempio:
-
-```java
-import java.util.ArrayList;
-import java.util.List;
-
-// Interfaccia Observer
-interface NewsObserver {
-    void update(String news);
-}
-
-// Interfaccia Subject
-interface NewsAgency {
-    void registerObserver(NewsObserver observer);
-    void removeObserver(NewsObserver observer);
-    void notifyObservers();
-}
-
-// Implementazione concreta del Subject
-class NewsChannel implements NewsAgency {
-    private List<NewsObserver> observers = new ArrayList<>();
-    private String news;
-
-    @Override
-    public void registerObserver(NewsObserver observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(NewsObserver observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyObservers() {
-        for (NewsObserver observer : observers) {
-            observer.update(news);
-        }
-    }
-
-    // Metodo che modifica lo stato e notifica gli observer
-    public void setNews(String news) {
-        this.news = news;
-        notifyObservers();
-    }
-}
-
-// Implementazioni concrete degli Observer
-class TVChannel implements NewsObserver {
-    private String name;
-
-    public TVChannel(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public void update(String news) {
-        System.out.println(name + " ha ricevuto la notizia: " + news);
-    }
-}
-
-class NewsWebsite implements NewsObserver {
-    private String url;
-
-    public NewsWebsite(String url) {
-        this.url = url;
-    }
-
-    @Override
-    public void update(String news) {
-        System.out.println(url + " ha aggiornato il sito con: " + news);
-    }
-}
-
-// Uso del pattern
-public class NewsSystem {
-    public static void main(String[] args) {
-        // Creiamo il subject
-        NewsChannel newsAgency = new NewsChannel();
-
-        // Creiamo gli observer
-        TVChannel tg1 = new TVChannel("TG1");
-        TVChannel tg2 = new TVChannel("TG2");
-        NewsWebsite website = new NewsWebsite("www.news.com");
-
-        // Registriamo gli observer
-        newsAgency.registerObserver(tg1);
-        newsAgency.registerObserver(tg2);
-        newsAgency.registerObserver(website);
-
-        // Pubblichiamo una notizia
-        newsAgency.setNews("Breaking News: nuovo pattern Observer scoperto!");
-
-        // Rimuoviamo un observer
-        System.out.println("\nRimuoviamo TG2...");
-        newsAgency.removeObserver(tg2);
-
-        // Pubblichiamo un'altra notizia
-        newsAgency.setNews("Ultima ora: il pattern Observer funziona benissimo!");
-    }
-}
-```
-
-È come un servizio di notizie: l'agenzia di stampa (Subject) pubblica notizie e tutti gli abbonati (Observer) le ricevono automaticamente!
-
-Esempi nel mondo reale:
-
-- GUI event handling
-- Social media notifications
-- Reactive programming frameworks (RxJava)
-- Sistemi di eventi in JavaScript
-- Sistemi di notifiche push
-
-### Strategy (comportamentale)
-
-- Permette di definire una famiglia di algoritmi, incapsularli e renderli intercambiabili
-- Gli algoritmi possono variare indipendentemente dai client che li usano
-- Consente di selezionare l'algoritmo a runtime
-
-Quando usarlo:
-
-- Quando hai una famiglia di algoritmi simili
-- Quando vuoi poter cambiare l'algoritmo a runtime
-- Quando un algoritmo usa dati che i client non dovrebbero conoscere
-- Quando hai una classe con molti comportamenti che appaiono come statement condizionali
-
-Pro
-
-- ✅ Scambio di algoritmi a runtime
-- ✅ Isola l'algoritmo dalla logica che lo usa
-- ✅ Evita condizionali complicati
-- ✅ Principio di Open/Closed: puoi introdurre nuove strategie senza modificare il codice esistente
-
-Contro
-
-❌ Aumenta il numero di oggetti nel sistema
-❌ Il client deve conoscere le differenze tra le strategie
-❌ Potrebbe essere overkill per un numero limitato di algoritmi
-❌ Alcune strategie potrebbero non usare tutti i parametri che ricevono
-
-Esempio:
-
-```java
-// Strategy Interface
-interface PaymentStrategy {
-    void pay(int amount);
-}
-
-// Concrete Strategies
-class CreditCardPayment implements PaymentStrategy {
-    private String cardNumber;
-    private String cvv;
-    private String dateExpiry;
-
-    public CreditCardPayment(String cardNumber, String cvv, String dateExpiry) {
-        this.cardNumber = cardNumber;
-        this.cvv = cvv;
-        this.dateExpiry = dateExpiry;
-    }
-
-    @Override
-    public void pay(int amount) {
-        System.out.println(amount + "€ pagati con carta di credito");
-    }
-}
-
-class PayPalPayment implements PaymentStrategy {
-    private String email;
-    private String password;
-
-    public PayPalPayment(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    @Override
-    public void pay(int amount) {
-        System.out.println(amount + "€ pagati con PayPal");
-    }
-}
-
-class BankTransferPayment implements PaymentStrategy {
-    private String accountNumber;
-    private String bankCode;
-
-    public BankTransferPayment(String accountNumber, String bankCode) {
-        this.accountNumber = accountNumber;
-        this.bankCode = bankCode;
-    }
-
-    @Override
-    public void pay(int amount) {
-        System.out.println(amount + "€ pagati con bonifico bancario");
-    }
-}
-
-// Context
-class ShoppingCart {
-    private PaymentStrategy paymentStrategy;
-
-    public void setPaymentStrategy(PaymentStrategy strategy) {
-        this.paymentStrategy = strategy;
-    }
-
-    public void checkout(int amount) {
-        paymentStrategy.pay(amount);
-    }
-}
-
-// Client code
-public class OnlineStore {
-    public static void main(String[] args) {
-        ShoppingCart cart = new ShoppingCart();
-
-        // Cliente vuole pagare con carta di credito
-        cart.setPaymentStrategy(new CreditCardPayment("1234-5678", "789", "12/24"));
-        cart.checkout(100);
-
-        // Cliente cambia idea e vuole usare PayPal
-        cart.setPaymentStrategy(new PayPalPayment("example@email.com", "password"));
-        cart.checkout(100);
-
-        // Un altro cliente paga con bonifico
-        cart.setPaymentStrategy(new BankTransferPayment("IT123456789", "ABCDEF"));
-        cart.checkout(200);
-    }
-}
-```
-
-È come scegliere il metodo di pagamento in un negozio online: puoi pagare con carta, PayPal o bonifico, e puoi cambiare idea fino all'ultimo momento. Il carrello (ShoppingCart) non si preoccupa di come viene effettuato il pagamento, sa solo che deve essere pagato!
-
-Esempi nel mondo reale:
-
-- Algoritmi di compressione (zip, rar, etc.)
-- Algoritmi di ordinamento (bubble sort, quick sort, etc.)
-- Strategie di cache (LRU, FIFO, etc.)
-- Strategie di autenticazione (password, OAuth, biometrica)
-- Algoritmi di routing in applicazioni di navigazione
-
-### Visitor (comportamentale)
-
-- Permette di separare gli algoritmi dagli oggetti su cui operano
-- Consente di aggiungere nuove operazioni agli oggetti senza modificarli
-- Implementa la double dispatch per selezionare la corretta operazione in base al tipo concreto dell'oggetto
-
-Quando usarlo:
-
-- Quando hai una struttura di oggetti stabile ma devi spesso aggiungere nuove operazioni su di essa
-- Quando hai operazioni correlate su oggetti di classi diverse
-- Quando le classi della struttura di oggetti hanno interfacce diverse
-- Quando vuoi evitare di "sporcare" le classi con operazioni che non sono loro responsabilità primaria
-
-Pro
-
-- ✅ Open/Closed Principle: puoi aggiungere nuove operazioni senza modificare le classi esistenti
-- ✅ Single Responsibility Principle: operazioni correlate sono raggruppate in un visitor
-- ✅ Accumula stato mentre visita la struttura
-- ✅ Può operare su oggetti di classi diverse
-
-Contro
-
-- ❌ Viola l'incapsulamento delle classi visitate
-- ❌ Complesso da implementare se la gerarchia di classi cambia spesso
-- ❌ Può essere difficile da capire al primo impatto
-- ❌ Richiede double dispatch che alcuni linguaggi non supportano nativamente
-
-Esempio:
-
-```java
-// Element interface
-interface Shape {
-    void accept(ShapeVisitor visitor);
-}
-
-// Concrete elements
-class Circle implements Shape {
-    private double radius;
-
-    public Circle(double radius) {
-        this.radius = radius;
-    }
-
-    public double getRadius() {
-        return radius;
-    }
-
-    @Override
-    public void accept(ShapeVisitor visitor) {
-        visitor.visit(this);
-    }
-}
-
-class Rectangle implements Shape {
-    private double width;
-    private double height;
-
-    public Rectangle(double width, double height) {
-        this.width = width;
-        this.height = height;
-    }
-
-    public double getWidth() { return width; }
-    public double getHeight() { return height; }
-
-    @Override
-    public void accept(ShapeVisitor visitor) {
-        visitor.visit(this);
-    }
-}
-
-// Visitor interface
-interface ShapeVisitor {
-    void visit(Circle circle);
-    void visit(Rectangle rectangle);
-}
-
-// Concrete visitors
-class AreaCalculator implements ShapeVisitor {
-    private double totalArea = 0;
-
-    @Override
-    public void visit(Circle circle) {
-        totalArea += Math.PI * circle.getRadius() * circle.getRadius();
-    }
-
-    @Override
-    public void visit(Rectangle rectangle) {
-        totalArea += rectangle.getWidth() * rectangle.getHeight();
-    }
-
-    public double getTotalArea() {
-        return totalArea;
-    }
-}
-
-class PerimeterCalculator implements ShapeVisitor {
-    private double totalPerimeter = 0;
-
-    @Override
-    public void visit(Circle circle) {
-        totalPerimeter += 2 * Math.PI * circle.getRadius();
-    }
-
-    @Override
-    public void visit(Rectangle rectangle) {
-        totalPerimeter += 2 * (rectangle.getWidth() + rectangle.getHeight());
-    }
-
-    public double getTotalPerimeter() {
-        return totalPerimeter;
-    }
-}
-
-// Client code
-public class Drawing {
-    public static void main(String[] args) {
-        List<Shape> shapes = Arrays.asList(
-            new Circle(5),
-            new Rectangle(4, 6),
-            new Circle(3)
-        );
-
-        // Calcola l'area totale
-        AreaCalculator areaCalculator = new AreaCalculator();
-        for (Shape shape : shapes) {
-            shape.accept(areaCalculator);
-        }
-        System.out.println("Area totale: " + areaCalculator.getTotalArea());
-
-        // Calcola il perimetro totale
-        PerimeterCalculator perimeterCalculator = new PerimeterCalculator();
-        for (Shape shape : shapes) {
-            shape.accept(perimeterCalculator);
-        }
-        System.out.println("Perimetro totale: " + perimeterCalculator.getTotalPerimeter());
-    }
-}
-```
-
-È come un ispettore che visita diverse case: ogni casa ha caratteristiche diverse (stanze, giardino, etc.) e l'ispettore può fare diverse valutazioni (sicurezza, valore immobiliare, etc.) senza che le case debbano sapere come vengono valutate!
-
-Esempi nel mondo reale:
-
-- Compilatori (per visitare AST)
-- Validatori XML
-- Document processors
-- UI frameworks (per traversare widget trees)
-
-### Differenza tra architettura e design dettaglio
-
-- L'architettura ti dice "questi sono i macro-componenti e come interagiscono"
-- Il design di dettaglio ti dice "questo è come funziona internamente uno specifico componente"
+### **See you in the next post! Stay Tuned!**
