@@ -11,49 +11,7 @@ summary: "Series of learn together algorithms"
 
 # OOP - Object-oriented programming
 
-Un paradigma di programmazione basato su oggetti
-
-Un modello astratto è la rappresentazione formale di idee e
-conoscenze relative a un fenomeno o a un'entità.
-
-La classe è il costrutto utilizzato in un linguaggio object oriented per definire e
-modellare un'entità software.
-Contiene:
-
-- informazioni (attributi)
-- comportamento (metodi)
-
-Esempio:
-Tutti i Pokemon possiedono certe
-capacità (metodi) e caratteristiche
-(attributi).
-
-<img
-  src="/img/learnSoftwareDevelopment/ooo.png"
-  alt="flowchart factorial"
-  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
-/>
-
-## Livelli di accessibilità:
-
-- public: accessibile da qualsiasi classe
-- private: accessibile solo dalla stessa classe
-- protected: accessibile solo dal codice nello stessa classe o in una classe derivata
-- internal: accessibile solo dal codice nello stesso assembly
-
-## Tecniche
-
-- Incapsulamento: Combinazione di dati e metodi che li manipolano in un'unica unità (classe),
-  hiding the internal state of an object and only exposing necessary operations.
-- Ereditarietà: Meccanismo per estendere classi esistenti
-  Esempio:
-  Il Cane è un'entità concreta e
-  dettagliata, "figlia" dell'entità più
-  astratta Mammifero, la quale si
-  può ricondurre all'entità ancora
-  più astratta Animale.
-- Polimorfismo: Capacità di un oggetto di assumere diverse forme
-- Astrazione: Nascondere dettagli di implementazione
+Paradigma di programmazione basato su oggetti
 
 ## Concetti fondamentali
 
@@ -64,6 +22,11 @@ Classe:
 - Descrive cosa un oggetto conterrà e come si comporterà
 - È come il progetto di una casa
 
+  Contiene:
+
+- informazioni (attributi)
+- comportamento (metodi)
+
 Oggetto:
 
 - È un'ISTANZA di una classe
@@ -72,9 +35,18 @@ Oggetto:
 - È come una casa costruita seguendo il progetto
 
 Esempio:
-Classe = ricetta della torta / Oggetto = torta effettivamente preparata
 
-Costruttore: Metodo per inizializzare un oggetto
+In questo caso abbiamo una classe `Pokemon` con capacità (metodi) e caratteristiche (attributi) e una istanza di questa classe chiamata `pikachu`.
+
+<img
+  src="/img/learnSoftwareDevelopment/ooo.png"
+  alt="flowchart factorial"
+  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+/>
+
+Costruttore:
+
+- Metodo per inizializzare un oggetto
 
 Interfacce:
 
@@ -82,6 +54,26 @@ Interfacce:
 - devono essere rispettate in modo obbligatorio dalla classe
 - aggiungono capacità alla classe che le implementa
 - L'interfaccia è un contratto che deve essere rispettato dalle classi che decidono di implementarlo.
+
+## Livelli di accessibilità:
+
+- public: accessibile da qualsiasi classe
+- private: accessibile solo dalla stessa classe
+- protected: accessibile solo dal codice nello stessa classe o in una classe derivata
+- internal: accessibile solo dal codice nello stesso assembly
+
+## Tecniche
+
+- Incapsulamento: Raggruppa dati e metodi in una classe, nasconde l'implementazione interna, espone solo l'interfaccia necessaria
+
+- Ereditarietà: Meccanismo per estendere classi esistenti, crea gerarchie di classi.
+
+  Esempio:
+
+  Il Cane è un'entità concreta e dettagliata, "figlia" dell'entità più astratta Mammifero, la quale si può ricondurre all'entità ancora più astratta Animale.
+
+- Polimorfismo: Capacità di un oggetto di assumere diverse forme
+- Astrazione: Nascondere dettagli di implementazione, focus su cosa fa, non come lo fa
 
 # Design Patterns
 
@@ -107,15 +99,16 @@ Sono una soluzione a dei problema ricorrente nel software design.
 
 ## Pattern più comuni:
 
-### Factory Method (creazionale)
+# Factory Method (creazionale)
+
+- Delega la creazione effettiva degli oggetti alle sottoclassi
+- Sostituisce le chiamate dirette al costruttore (new) con chiamate a un metodo factory
 
 <img
   src="/img/learnSoftwareDevelopment/factory.png"
   alt="flowchart factorial"
-  style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
+  style={{ height: 250, marginTop: "20px", marginBottom: "20px" }}
 />
-- Delega la creazione effettiva degli oggetti alle sottoclassi - Sostituisce le chiamate
-dirette al costruttore (new) con chiamate a un metodo factory
 
 Quando usarlo:
 
@@ -197,17 +190,21 @@ public class Pizzeria {
 
 ```
 
-È come andare in pizzeria: tu ordini solo "una margherita" e non ti preoccupi di come viene fatta - ci pensa la cucina (la nostra factory)!
+### In sintesi:
 
-### Singleton (creazionale)
+È come andare in pizzeria: tu ordini solo "una margherita" e non ti preoccupi di come viene fatta ci pensa la cucina (la nostra factory)!
+
+# Singleton (creazionale)
+
+Garantisce che una classe abbia una sola istanza, fornisce un punto di accesso globale a quella istanza
+
+- spesso usato per gestire risorse condivise
 
 <img
   src="/img/learnSoftwareDevelopment/singleton.png"
   alt="flowchart factorial"
   style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
 />
-
-Garantisce che una classe abbia una sola istanza, fornisce un punto di accesso globale a quella istanza, spesso usato per gestire risorse condivise
 
 Quando usarlo:
 
@@ -233,55 +230,66 @@ Contro
 Esempio:
 
 ```java
-public class Configuration {
-    // L'istanza statica e privata
-    private static Configuration instance;
+// Classe Singleton per gestire un contatore globale
+public class Counter {
+   // Singola istanza della classe (statica e privata)
+   private static Counter instance;
 
-    // Configurazioni
-    private String dbUrl;
-    private String apiKey;
+   // Il valore del contatore
+   private int count;
 
-    // Costruttore privato!
-    private Configuration() {
-        // Carica configurazioni
-        dbUrl = "jdbc:mysql://localhost:3306/mydb";
-        apiKey = "abc123";
-    }
+   // Costruttore privato - impedisce la creazione di nuove istanze
+   private Counter() {
+       count = 0;
+   }
 
-    // Metodo pubblico per ottenere l'istanza
-    public static Configuration getInstance() {
-        if (instance == null) {
-            instance = new Configuration();
-        }
-        return instance;
-    }
+   // Metodo pubblico per ottenere l'istanza
+   // Se non esiste la crea, se esiste la restituisce
+   public static Counter getInstance() {
+       if (instance == null) {
+           instance = new Counter();
+       }
+       return instance;
+   }
 
-    // Metodi per accedere alle configurazioni
-    public String getDbUrl() {
-        return dbUrl;
-    }
+   // Metodi per usare il contatore
+   public void increment() {
+       count++;
+   }
 
-    public String getApiKey() {
-        return apiKey;
-    }
+   public int getCount() {
+       return count;
+   }
 }
 
-// Uso del singleton
-public class Application {
-    public static void main(String[] args) {
-        Configuration config = Configuration.getInstance();
-        System.out.println("DB URL: " + config.getDbUrl());
+// Esempio di utilizzo
+public class Main {
+   public static void main(String[] args) {
+       // Ottiene la prima istanza
+       Counter counter1 = Counter.getInstance();
+       counter1.increment();  // count = 1
 
-        // Otteniamo la stessa istanza!
-        Configuration config2 = Configuration.getInstance();
-        System.out.println("Sono la stessa istanza? " + (config == config2));  // true
-    }
+       // Ottiene la seconda istanza (è la stessa!)
+       Counter counter2 = Counter.getInstance();
+       counter2.increment();  // count = 2
+
+       // Stampa il valore (sarà 2 per entrambi perché è la stessa istanza)
+       System.out.println(counter1.getCount());  // Output: 2
+       System.out.println(counter2.getCount());  // Output: 2
+
+       // Verifica che sono la stessa istanza
+       System.out.println(counter1 == counter2);  // Output: true
+   }
 }
 ```
 
+Un Counter Singleton è come un contatore globale unico: chiunque lo richieda (getInstance) ottiene sempre lo stesso contatore, permettendo di tenere traccia di un valore condiviso in tutta l'applicazione.
+
+### In sintesi:
+
 È come avere un'unica copia delle chiavi di casa: tutti sanno dove trovarla (getInstance()) ma ne esiste una sola!
 
-### Decorator (strutturale)
+# Decorator (strutturale)
 
 - Permette di aggiungere nuove funzionalità a oggetti esistenti dinamicamente
 - Fornisce un'alternativa flessibile all'ereditarietà per estendere le funzionalità
@@ -395,14 +403,19 @@ public class CoffeeShop {
 }
 ```
 
-È come personalizzare un caffè al bar: parti da un caffè semplice e poi aggiungi gli extra che vuoi (latte, zucchero, etc.)! Ogni extra è un decoratore che "avvolge" il caffè base e aggiunge qualcosa.
+### In sintesi:
+
+È come personalizzare un caffè al bar:
+
+parti da un caffè semplice e poi aggiungi gli extra che vuoi (latte, zucchero, etc.)! Ogni extra è un decoratore che "avvolge" il caffè base e aggiunge qualcosa.
+
 Nel mondo reale, il pattern Decorator è molto usato in:
 
 - Java I/O (BufferedReader, InputStreamReader, etc.)
 - UI Frameworks (per aggiungere bordi, scrollbar, etc.)
 - Web services (per aggiungere caching, logging, autenticazione)
 
-### Template Method (comportamentale)
+# Template Method (comportamentale)
 
 - Definisce lo scheletro di un algoritmo in un metodo
 - Delega alcuni passi alle sottoclassi
@@ -429,102 +442,15 @@ Contro
 - ❌ La manutenzione può diventare difficile con molte classi
 - ❌ Limita la flessibilità a ciò che il template method permette
 
-Esempio:
-
-```java
-// Classe astratta che definisce il template method
-abstract class DataMiner {
-    // Questo è il template method!
-    public final void mine() {
-        openFile();
-        extractData();
-        parseData();
-        analyzeData();
-        sendReport();
-        closeFile();
-    }
-
-    // Metodi comuni a tutte le implementazioni
-    private void openFile() {
-        System.out.println("Apertura file...");
-    }
-
-    private void closeFile() {
-        System.out.println("Chiusura file...");
-    }
-
-    private void sendReport() {
-        System.out.println("Invio report...");
-    }
-
-    // Metodi che devono essere implementati dalle sottoclassi
-    protected abstract void extractData();
-    protected abstract void parseData();
-    protected abstract void analyzeData();
-}
-
-// Implementazione concreta per CSV
-class CSVDataMiner extends DataMiner {
-    @Override
-    protected void extractData() {
-        System.out.println("Estrazione dati da CSV...");
-    }
-
-    @Override
-    protected void parseData() {
-        System.out.println("Parsing dati CSV...");
-    }
-
-    @Override
-    protected void analyzeData() {
-        System.out.println("Analisi dati CSV...");
-    }
-}
-
-// Implementazione concreta per PDF
-class PDFDataMiner extends DataMiner {
-    @Override
-    protected void extractData() {
-        System.out.println("Estrazione dati da PDF...");
-    }
-
-    @Override
-    protected void parseData() {
-        System.out.println("Parsing dati PDF...");
-    }
-
-    @Override
-    protected void analyzeData() {
-        System.out.println("Analisi dati PDF...");
-    }
-}
-
-// Uso del pattern
-public class DataMiningApp {
-    public static void main(String[] args) {
-        DataMiner csvMiner = new CSVDataMiner();
-        DataMiner pdfMiner = new PDFDataMiner();
-
-        System.out.println("Mining CSV:");
-        csvMiner.mine();
-
-        System.out.println("\nMining PDF:");
-        pdfMiner.mine();
-    }
-}
-```
-
 È come seguire una ricetta di cucina: ci sono passi fissi (aprire il frigo, prendere gli ingredienti, pulire) e passi che variano in base al piatto (tagliare, cuocere, impiattare). Il Template Method definisce i passi fissi e lascia che le sottoclassi implementino quelli variabili!
 
-Altro esempio:
+### Esempio:
 
 <img
-  src="/img/learnSoftwareDevelopment/templateMethod.png"
-  alt="flowchart factorial"
-  style={{ height: 500, marginTop: "20px", marginBottom: "20px" }}
+  src="/img/learnSoftwareDevelopment/templeMethod.png"
+  alt="template method"
+  style={{ height: 350, marginTop: "20px", marginBottom: "20px" }}
 />
-
-codice:
 
 ```java
 abstract class Hamburger {
@@ -600,7 +526,7 @@ Esempi nel mondo reale:
 - Framework web (metodi del ciclo di vita di servlet/componenti)
 - Operazioni di database (apertura/chiusura connessioni)
 
-### Iterator (comportamentale)
+# Iterator (comportamentale)
 
 - Fornisce un modo per accedere agli elementi di una collezione sequenzialmente
 - Nasconde la struttura interna della collezione
@@ -626,6 +552,14 @@ Contro
 - ❌ Usare un iteratore non è efficiente come attraversare alcuni tipi di collezioni direttamente
 - ❌ Può creare troppi oggetti iteratore in memoria
 - ❌ Può essere complesso da implementare per strutture dati non lineari
+
+Un esempio di grafico
+
+<img
+  src="/img/learnSoftwareDevelopment/iterator.png"
+  alt="flowchart factorial"
+  style={{ height: 500, marginTop: "20px", marginBottom: "20px" }}
+/>
 
 Esempio:
 
@@ -710,13 +644,7 @@ public class Library {
 }
 ```
 
-Un esempio di grafico
-
-<img
-  src="/img/learnSoftwareDevelopment/iterator.png"
-  alt="flowchart factorial"
-  style={{ height: 500, marginTop: "20px", marginBottom: "20px" }}
-/>
+### In sintesi:
 
 È come sfogliare un libro: non ti interessa come sono organizzate le pagine internamente, usi solo il segnalibro per tenere traccia della posizione e vai avanti pagina dopo pagina!
 
@@ -727,7 +655,7 @@ Esempi nel mondo reale:
 - File systems (per attraversare directory)
 - Tutti i foreach loops in Java (utilizzano implicitamente l'Iterator pattern)
 
-### Observer (comportamentale)
+# Observer (comportamentale)
 
 - Definisce una dipendenza uno-a-molti tra oggetti
 - Quando un oggetto cambia stato, tutti i suoi dipendenti vengono notificati e aggiornati automaticamente
@@ -755,6 +683,12 @@ Contro
 - ❌ Può diventare complesso con molti observer o livelli di osservazione
 
 Esempio:
+
+<img
+  src="/img/learnSoftwareDevelopment/observer.png"
+  alt="flowchart factorial"
+  style={{ height: 500, marginTop: "20px", marginBottom: "20px" }}
+/>
 
 ```java
 import java.util.ArrayList;
@@ -857,11 +791,7 @@ public class NewsSystem {
 }
 ```
 
-<img
-  src="/img/learnSoftwareDevelopment/observer.png"
-  alt="flowchart factorial"
-  style={{ height: 500, marginTop: "20px", marginBottom: "20px" }}
-/>
+### In sintesi:
 
 È come un servizio di notizie: l'agenzia di stampa (Subject) pubblica notizie e tutti gli abbonati (Observer) le ricevono automaticamente!
 
@@ -873,7 +803,7 @@ Esempi nel mondo reale:
 - Sistemi di eventi in JavaScript
 - Sistemi di notifiche push
 
-### Strategy (comportamentale)
+# Strategy (comportamentale)
 
 - Permette di definire una famiglia di algoritmi, incapsularli e renderli intercambiabili
 - Gli algoritmi possono variare indipendentemente dai client che li usano
@@ -989,15 +919,18 @@ public class OnlineStore {
 }
 ```
 
+### In sintesi:
+
 È come scegliere il metodo di pagamento in un negozio online: puoi pagare con carta, PayPal o bonifico, e puoi cambiare idea fino all'ultimo momento. Il carrello (ShoppingCart) non si preoccupa di come viene effettuato il pagamento, sa solo che deve essere pagato!
 
-```
+Altro esemmpio:
+
 Immagina di avere un'app che deve ordinare una lista di numeri. Puoi ordinarli in modi diversi:
 
-Dal più piccolo al più grande
-Dal più grande al più piccolo
-Solo i pari prima, poi i dispari
-ecc.
+- Dal più piccolo al più grande
+- Dal più grande al più piccolo
+- Solo i pari prima, poi i dispari
+- ecc.
 
 Il pattern Strategy ti permette di:
 
@@ -1006,13 +939,13 @@ Incapsulare ciascun algoritmo (cioè mettere il codice di ogni tipo di ordinamen
 Rendere gli algoritmi intercambiabili (puoi cambiare il tipo di ordinamento senza modificare il resto del codice)
 Esempi nel mondo reale:
 
-```
-
 <img
   src="/img/learnSoftwareDevelopment/strategy.png"
   alt="flowchart factorial"
   style={{ height: 300, marginTop: "20px", marginBottom: "20px" }}
 />
+
+Esempio di utilizzo nel mondo reale:
 
 - Algoritmi di compressione (zip, rar, etc.)
 - Algoritmi di ordinamento (bubble sort, quick sort, etc.)
@@ -1020,7 +953,7 @@ Esempi nel mondo reale:
 - Strategie di autenticazione (password, OAuth, biometrica)
 - Algoritmi di routing in applicazioni di navigazione
 
-### Visitor (comportamentale)
+# Visitor (comportamentale)
 
 <img
   src="/img/learnSoftwareDevelopment/visitor.png"
@@ -1103,13 +1036,12 @@ public class Main {
     }
 }
 
-Gli elementi (Animal) dichiarano un metodo accept che accetta un visitor
-Il visitor dichiara un metodo visit per ogni tipo di elemento
-Quando aggiungi una nuova operazione, crei solo un nuovo visitor
-Non devi modificare le classi degli elementi esistenti
 ```
 
-È come un ispettore che visita diverse case: ogni casa ha caratteristiche diverse (stanze, giardino, etc.) e l'ispettore può fare diverse valutazioni (sicurezza, valore immobiliare, etc.) senza che le case debbano sapere come vengono valutate!
+Gli elementi (Animal) dichiarano un metodo accept che accetta un visitor (veterinario)
+Il visitor dichiara un metodo visit per ogni tipo di elemento
+Quando aggiungi una nuova operazione (misurare la temperatura, vaccino), crei solo un nuovo visitor
+Non devi modificare le classi degli elementi esistenti
 
 Esempi nel mondo reale:
 
@@ -1118,7 +1050,7 @@ Esempi nel mondo reale:
 - Document processors
 - UI frameworks (per traversare widget trees)
 
-### Differenza tra architettura e design dettaglio
+# Differenza tra architettura e design di dettaglio
 
 - L'architettura ti dice "questi sono i macro-componenti e come interagiscono"
 - Il design di dettaglio ti dice "questo è come funziona internamente uno specifico componente"
