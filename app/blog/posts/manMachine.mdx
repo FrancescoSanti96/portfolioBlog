@@ -1,0 +1,1084 @@
+---
+title: "Interfaccia Uomo-Macchina"
+publishedAt: "2025-03-25"
+summary: "Series of learn together"
+---
+
+# Laboratorio di Interfaccia Uomo-Macchina - Appunti Completi
+
+## 1. Introduzione al corso
+
+### Informazioni di base
+
+- **Docente**: Andrea Bianchi (andrea.bianchi35@unibo.it)
+
+### Obiettivi del corso
+
+- Raccogliere i requisiti e progettare il design di un caso d'uso
+- Conoscere i principi di User Experience
+- Realizzazione e validazione del mockup con Figma
+- Valutazione dell'usabilità e accessibilità
+- Conoscere l'ambiente di sviluppo Visual Studio 2022
+- Implementazione del caso d'uso con tecnologia Asp.NET Core MVC
+
+### Prerequisiti
+
+- Aver svolto il corso di Fondamenti dei sistemi Web
+- Aver svolto il corso di Basi di Dati
+- Conoscere Html5, Css3, Vue.js, Bootstrap5, JavaScript, Git
+
+### Modalità d'esame
+
+- **Progetto di gruppo**: Fino a 27/30
+  - Consegna remota una settimana prima della prova orale
+  - Gruppi di 2 persone (max 3 in casi particolari)
+- **Prova orale**: (+/-)5/30 (max 30 e lode)
+  - Presentazione di gruppo del progetto
+  - Domande pratiche e teoriche agli individui
+  - Domande specifiche su progettazione e miglioramenti
+
+### Requisiti del progetto
+
+- Repository su GitHub
+- Tecnologie richieste:
+  - ASP.NET Core MVC
+  - Entity Framework
+  - Vue.js (per parti dinamiche)
+  - SignalR (per parti collaborative)
+  - Bootstrap + CSS personalizzato
+  - Mockup in Figma
+
+## 2. ASP.NET Core MVC
+
+### Panoramica
+
+- Framework web open-source, multi-piattaforma, alte prestazioni
+- Caratteristiche:
+  - Multi-piattaforma (Windows, Linux)
+  - Alte prestazioni (chiamate asincrone)
+  - Open-source (Community su GitHub)
+  - Dependency injection integrata
+  - Controllo completo sul markup
+
+### Pattern MVC
+
+- **Model**: Rappresenta stato dell'applicazione e logica di business
+- **View**: Responsabile della presentazione dei contenuti via UI
+- **Controller**: Punto d'ingresso che gestisce richieste e seleziona modelli/view
+
+### Clean Architecture
+
+- Architettura a strati (Onion Architecture)
+- Logica di business al centro, indipendente dall'infrastruttura
+- Dependency Injection permette maggiore testabilità
+
+### Pipeline ASP.NET Core
+
+- Pipeline configurabile tramite middleware in Program.cs
+- L'ordine di aggiunta dei middleware definisce l'ordine di esecuzione (per richieste: in ordine di aggiunta; per risposte: in ordine inverso)
+- Ordine fondamentale per sicurezza, prestazioni e funzionalità
+
+### Convention over Configuration
+
+- Pattern che usa convenzioni standard invece di configurazioni esplicite
+- Riduce il codice necessario concentrandosi sulle specifiche necessità
+- Configurazione completa possibile quando necessaria
+
+### File di configurazione principali
+
+- **appsettings.json**: Parametri statici dell'applicativo
+- **Program.cs**: Punto d'ingresso con metodo Main
+- **Startup.cs**: Registrazione servizi e costruzione pipeline
+
+### Routing
+
+- Meccanismo che collega richieste HTTP agli endpoint
+- Convenzioni importanti: nome controller deve essere "[nome]Controller"
+- Registrazione dei routing con ordine significativo (dal più specifico al più generico)
+
+### Actions
+
+- Endpoint singoli del controller
+- Ogni action ha uno scopo specifico
+- Tipi di ritorno: Json, Redirect, Stream di file, View
+
+### Views (.cshtml)
+
+- Generate lato server e inviate al client
+- Convention: stesso nome dell'action se non specificato
+- File speciali:
+  - **\_ViewImports.cshtml**: Include elementi comuni
+  - **\_ViewStart.cshtml**: Imposta layout
+
+### Layout e Partial Views
+
+- **Layout**: Separa il codice HTML comune dal caso d'uso specifico
+- **@RenderBody()**: Inserisce il contenuto della view nel layout
+- **@RenderSection**: Inserisce frammenti HTML specifici
+- **Partial View**: Frammenti riutilizzabili di HTML
+
+### Strutture dati Cross
+
+- **TempData**: Spazio condiviso che persiste alla request successiva
+- **ViewData**: Spazio non tipizzato perso al termine dell'action
+- **ViewBag**: Spazio dinamico perso al termine dell'action
+
+### Tag Helper e HTML Helper
+
+- **Tag Helper**: Sintassi simile a HTML (es. `<label asp-for="Title">`)
+- **HTML Helper**: Metodi statici che producono HTML (es. `@Html.LabelFor()`)
+
+### Bundle & Minify
+
+- Riduce numero e dimensione dei file richiesti dal browser
+- Vantaggi: meno chiamate, caching, minimizzazione
+- Svantaggi: potenziale rallentamento prima chiamata, codice inutilizzato
+
+### CSS e JavaScript migliorati
+
+- **Sass**: Superset di CSS con variabili, nesting, mixins, import
+- **TypeScript**: Superset di JavaScript con tipizzazione, classi, generics
+
+### SG4MVC
+
+- Generazione di URL tipizzati (sostituisce stringhe con metodi statici)
+- Vantaggi: controllo a runtime, IntelliSense, generazione automatica
+
+### Dependency Injection
+
+- Integrata nel framework
+- Permette di registrare e utilizzare servizi dove necessario
+
+### Autenticazione e Autorizzazione
+
+- **Autenticazione**: Riconoscimento dell'utente (badge)
+- **Autorizzazione**: Permessi attribuiti all'utente
+- Configurabile in Startup.cs
+- Attributi `[Authorize]` e `[AllowAnonymous]` per controller/action
+
+### Localizzazione
+
+- Gestione automatica delle lingue basata su preferenze browser
+- Cookie per impostazione manuale
+- Lingua di default con traduzioni chiave/valore
+- File .resx XML per dizionari traduzioni
+
+## 3. Consuetudini dello sviluppo Web
+
+### Background culturale dell'utente
+
+- L'utente ha aspettative basate su altri prodotti utilizzati
+- Necessità di contestualizzare il design nel periodo storico
+- Seguire consuetudini diffuse ed emergenti
+
+### Il Browser
+
+- Principale veicolo dell'esperienza utente
+- DevTools (F12) come alleato per esaminare elementi, controllare sorgenti e interazioni
+
+### Standard web
+
+- W3C: standardizzazione, indirizzamento verso nuove funzionalità
+- Verifica compatibilità su caniuse.com
+- Tendenza all'abbandono di jQuery con progressiva standardizzazione
+
+### Vulnerabilità
+
+- Limitare librerie utilizzate e mantenerle aggiornate
+- Strumenti come Retire.js per segnalare librerie con falle
+
+### Comportamenti del browser
+
+- **Tab**: Permettere apertura in più tab (richiede URL informativo e sessioni separate)
+- **Titolo pagina**: Identificare chiaramente contenuto o funzione
+- **Back/Forward**: Gestire correttamente con history.pushState() o location.replace()
+- **Preferiti**: Garantire URL informativi e funzionalità mantenuta
+- **Aggiorna**: Comportamento prevedibile, tornando allo stato iniziale
+
+### Pattern PRG (Post-Redirect-Get)
+
+- Soluzione per evitare problemi con "aggiorna" e "preferiti"
+- Server risponde con redirect a una GET dopo una POST
+- Evita invii multipli di form e problemi di navigazione
+
+### Velocità
+
+- Fattore critico per soddisfazione utente
+- Strategie:
+  - Ridurre tempo download e generazione pagina
+  - Ridurre peso pagina e numero request
+  - Non scaricare risorse non utilizzate
+  - Bundle appropriato
+  - Minimizzazione e formati ottimizzati
+
+### Sostenibilità
+
+- Impatto ambientale del sito (CO₂)
+- Misurabile su websitecarbon.com
+- Migliorabile ottimizzando pagina o usando hosting green
+
+### Accessibilità
+
+- Capacità di erogare servizi fruibili senza discriminazioni
+- Obbligatoria per PA e grandi aziende private
+- Diventa requisito per tutti i prodotti ICT dal 28 giugno 2025
+- Vantaggi extra-normativi: raggiungere più utenti, garantire usabilità futura
+
+### Responsive Design
+
+- **User scale**: Dimensioni monitor e risoluzione variabili
+- **Responsive**: Adattamento automatico al dispositivo
+- Tecniche:
+  - Media queries
+  - Griglie flessibili
+  - Immagini flessibili
+- **Mobile First**: Progettare prima per dispositivi piccoli
+
+### Contesto d'uso
+
+- Il caso d'uso può variare in base a:
+  - Contesto culturale
+  - Distribuzione geografica
+  - Necessità di garanzie tempistiche
+
+### Utilizzo dei colori
+
+- Creare palette per uniformità e consistenza
+- Veicolare significato e ridurre uso per dare risalto
+- Considerare diversi significati culturali dei colori
+
+### Elementi di orientamento
+
+- **Logo**: Sempre visibile, stessa posizione (alto a sinistra)
+- **Menu**: Principale metodo di navigazione, evidenzia voce attiva
+- **Breadcrumb**: Mostra percorso per raggiungere pagina corrente
+- **Sidebar**: Naviga tra contenuti del gruppo di pagine
+- **Navscroll**: Anteprima e scorrimento veloce nella stessa pagina
+- **Footer**: Dati obbligatori e collegamenti importanti
+
+### Tecnologie avanzate
+
+- **Animazioni CSS**: Effetti fluidi senza JavaScript
+- **SignalR**: Gestione automatica connessioni per scenari collaborativi
+- **Push notifications**: Richiamare attenzione dell'utente anche fuori dall'app
+- **Dark mode**: Riduzione consumo energia su display OLED
+- **CQRS** (Command and Query Responsibility Segregation): Separa operazioni di lettura e scrittura
+
+## 4. Elementi di psicologia cognitiva
+
+### Interfaccia uomo-macchina oltre il digitale
+
+- Tutti gli oggetti artificiali sono progettati
+- Design si occupa di funzionamento e interazione
+- Buon design diventa "invisibile", cattivo design frustrante
+
+### Caratteristiche di un buon design
+
+- **Visibilità**: Possibilità di indovinare azioni possibili
+- **Comprensibilità**: Chiarezza d'uso e significato dei comandi
+
+### Critica al design ingegneristico
+
+- Progettisti spesso esperti di tecnologia ma non di psicologia
+- Eccesso di logica invece di adattamento al comportamento umano
+
+### Human-centered design (HCD)
+
+- Parte dai bisogni, capacità e comportamenti umani
+- Richiede osservazione perché persone spesso non consapevoli dei propri bisogni
+
+### Principi fondamentali dell'interazione
+
+1. **Affordance** (invito all'uso): Relazione tra oggetto fisico e persona
+2. **Significanti**: Segnali che comunicano comportamento appropriato
+3. **Mapping**: Relazione tra comandi e azioni (analogie spaziali)
+4. **Feedback**: Informazione su richiesta in elaborazione
+5. **Modelli concettuali**: Spiegazione semplificata di funzionamento
+
+### Il paradosso della tecnologia
+
+- Tecnologia può semplificare e complicare simultaneamente
+- Funzioni aumentate rendono più difficile l'apprendimento
+
+### Pensiero umano
+
+- Sistema emotivo sottovalutato ma potente
+- Opera insieme alle funzioni cognitive
+
+### Sistemi cognitivi
+
+- **Subconscio**: Veloce, automatico, risorse multiple
+- **Conscio**: Lento, controllato, risorse limitate, richiesto per situazioni nuove
+
+### I sette stati delle azioni
+
+1. Cosa voglio realizzare?
+2. Quali sono le sequenze di azione alternative?
+3. Quale azione posso fare ora?
+4. Come la faccio?
+5. Cosa è successo?
+6. Cosa significa?
+7. Va bene? Ho realizzato il mio scopo?
+
+### Principi di design dai sette stati
+
+1. **Visibilità**: Scoprire immediatamente azioni possibili e stato attuale
+2. **Feedback**: Informazione continua sui risultati e stato attuale
+3. **Modello concettuale**: Informazioni per comprensione e controllo
+4. **Affordance**: Possibilità di azioni desiderate
+5. **Significanti**: Segnali per visibilità e feedback
+6. **Mapping**: Relazione chiara tra comandi e azioni
+7. **Vincoli**: Guida all'azione e interpretazione
+
+### Vincoli che obbligano il comportamento
+
+- **Interlock**: Obbligo di sequenza specifica
+- **Lock-in**: Mantenimento funzione attiva
+- **Lockout**: Impedimento ingresso in area pericolosa
+
+### Gestione degli errori
+
+- Difficile progettare per situazioni anomale
+- Strategie:
+  - Capire cause dell'errore e ridurle
+  - Prevedere controlli di ragionevolezza
+  - Permettere annullamento
+  - Facilitare scoperta e correzione
+  - Non stigmatizzare l'errore
+
+### Messaggi di errore efficaci
+
+- Evitare messaggi di conferma che compaiono nel momento sbagliato
+- Rendere evidente il materiale su cui si agisce
+- Rendere l'operazione reversibile
+- Implementare controlli di ragionevolezza
+
+### Il serbatoio di fiducia
+
+- Fiducia degli utenti è limitata e soggettiva
+- Si può ricaricare ma anche svuotare rapidamente
+- Cose che diminuiscono fiducia:
+  - Nascondere informazioni
+  - Punire per mancato rispetto regole
+  - Chiedere dati non necessari
+  - Presentare sito dilettantistico
+- Cose che aumentano fiducia:
+  - Facilitare operazioni principali
+  - Anticipare informazioni utili
+  - Risparmiare passaggi all'utente
+  - Facilitare correzione errori
+  - Scusarsi per disagi
+
+## 5. Entity Framework Core
+
+### Introduzione
+
+- **ORM** (Object-Relational Mapper): Lavora con database usando oggetti .NET
+- Elimina necessità di scrivere codice di accesso ai dati manualmente
+- Supporta molti database: SQL Server, SQLite, Cosmos, PostgreSQL, MySQL, Oracle, ecc.
+
+### Il modello
+
+- Accesso ai dati tramite un modello: classi di entità e contesto
+- Contesto rappresenta una sessione con il database
+- Esempio definizione modello:
+
+```csharp
+public class BloggingContext : DbContext {
+    public DbSet<Blog> Blogs { get; set; }
+    public DbSet<Post> Posts { get; set; }
+}
+
+public class Blog {
+    public int BlogId { get; set; }
+    public string Url { get; set; }
+    public int Rating { get; set; }
+    public List<Post> Posts { get; set; }
+}
+```
+
+### Configurazione modello
+
+- Personalizzazione per parti non conformi alle convenzioni
+- Due modalità:
+  1. **Attributi**: Decorare proprietà/classi
+  ```csharp
+  [Key()]
+  public Int32 InstructorID { get; set; }
+  ```
+  2. **Fluent API**: In OnModelCreating
+  ```csharp
+  modelBuilder.Entity<OfficeAssignment>().HasKey(t => t.InstructorID);
+  ```
+
+### LINQ (Language-Integrated Query)
+
+- Interrogazioni EF espresse in linguaggio LINQ
+- Due sintassi:
+  1. **Query**: `from num in numbers where num % 2 == 0 select num`
+  2. **Metodo**: `numbers.Where(num => num % 2 == 0)`
+- Operatori principali: where, select, join, group by, orderby
+
+### Esecuzione query
+
+- Query create in memoria, inviate al DB solo all'utilizzo dei risultati
+- Operazioni che causano invio:
+  - Iterazione risultati in ciclo
+  - ToList, ToArray, Single, Count o equivalenti asincroni
+
+### Operatori di query complessi
+
+- Join, GroupJoin, SelectMany, GroupBy, LeftJoin
+- Non tutti hanno traduzioni appropriate lato server
+
+### Paginazione
+
+- **Offset**: `Skip(position).Take(10)`
+- **Keyset**: `Where(b => b.PostId > lastId).Take(10)`
+
+### Salvare i dati
+
+- Entity materializzata tiene traccia di modifiche
+- SaveChanges() applica modifiche al database
+- Corrisponde a una transazione DB
+
+### Entity Tracking
+
+- Attivo su entità materializzate per intero
+- Si attiva con .Add() e .Remove()
+- Disattivabile con .AsNoTracking()
+
+### Performance e errori comuni
+
+- Materializzare solo dati necessari (select mirato)
+- Applicare filtri prima di caricare dati
+- Utilizzare correttamente indici
+- Evitare query nei cicli
+
+## 6. Progettazione
+
+### Pensiero progettuale
+
+- Non risolvere solo il problema presentato, ma capire il problema reale
+- Problema iniziale come suggerimento, non formulazione definitiva
+
+### Modello di processo a Doppio Rombo
+
+1. Allargare ambito problema (divergenza)
+2. Convergere su enunciato del problema
+3. Espandere spazio soluzioni (divergenza)
+4. Convergere su proposta soluzione
+
+### Processo del design antropocentrico (UCD)
+
+1. **Osservazione**: Capire natura del problema
+2. **Ideazione**: Generare possibili soluzioni
+3. **Prototipo**: Creare rappresentazioni della soluzione
+4. **Verifica**: Testare con utenti
+5. **Iterazione**: Perfezionamento progressivo
+
+### User Research
+
+- Idealmente avere utenti che accompagnano tutto il processo
+- Considerare differenze tra utente di test e utenti potenziali
+- Alternative: creare personas dai dati raccolti
+
+### Personas
+
+- Rappresentazione virtuale di classe di utenti reali
+- Elementi da enfatizzare:
+  - Scopi e motivazioni
+  - Comportamenti e atteggiamenti
+  - Obiettivi
+  - Storia (dati demografici, contesto)
+- Caratteristiche di buone personas:
+  - Rappresentare classe significativa (né troppo grande né troppo piccola)
+  - Non essere "persona media" ma "interessante"
+  - Specificità che la rendono credibile
+
+### Ideazione
+
+- Generare molte idee
+- Evitare critiche iniziali
+- Mettere tutto in discussione
+
+### Storyboard
+
+- Illustrare struttura esecuzione task
+- Mostrare successione pagine e attivazione widget
+
+### Customer Journey
+
+- Rappresenta viaggio dell'utente attraverso prodotto/servizio
+- Per ogni punto di contatto analizzare:
+  - Azioni dell'utente
+  - Pensieri durante contatto
+  - Sentimenti provati
+  - Touchpoint (elementi di contatto)
+  - Opportunità di miglioramento
+
+### Service Blueprint
+
+- Allargamento del Customer Journey
+- Include tutti gli attori visibili e non visibili
+- Schema completo del servizio
+
+### Prototipo
+
+- Fase iniziale: schizzi, modellini, immagini semplici
+- Fase di soluzione: veri prototipi della soluzione proposta
+
+### Scenario d'uso
+
+- Storia dettagliata di come un utente completa un obiettivo
+- Descrive interazione persona-sistema
+- Focus su task, non su comandi
+- Molto specifico per azione completa
+
+### Disegni e Sketch
+
+- Disegni a mano o con app specifiche
+- Volutamente schematici per concentrarsi sul concetto
+
+### Wireframe
+
+- Rappresentazione schematica a bassa fedeltà
+- Ingombri elementi già disposti
+- Contenuti assenti o approssimativi
+- Utile per verificare posizionamento
+
+### Mockup/Prototipo
+
+- Rappresentazione grafica fedele
+- Software: Balsamiq, Mockup.io, Pencil, Figma
+- Possibile gestione interattività per testing
+
+### Verifica
+
+- Test con piccolo gruppo rappresentativo
+- Condizioni d'uso realistiche
+- Test individuale o di gruppo in base a destinazione
+
+### Focus Group
+
+- Intervista con più persone simultaneamente
+- Incoraggia discussione e interazione
+- Raccoglie feedback e commenti
+- Utile per:
+  - Testare assunzioni iniziali
+  - Far emergere aspetti inattesi
+- Durata: 1,5-2 ore
+- Organizzazione:
+  1. Preparazione (partecipanti, topic, planning)
+  2. Conduzione (tempi, registrazione, fairness)
+  3. Analisi risultati
+
+### Test di usabilità
+
+- Osservare una persona alla volta usando il prodotto
+- Utile durante tutto il processo di sviluppo
+- Metodologia:
+  - Coinvolgimento di 1 utente per volta
+  - Proposta di task limitati (3-4 per sessione)
+  - Simulazione realistica
+  - Raccolta feedback e suggerimenti
+- Organizzazione:
+  1. Preparazione (obiettivi, prototipi, partecipanti, task)
+  2. Conduzione (simulazione interazione, think aloud, interviste)
+  3. Analisi risultati
+
+### Think Aloud Protocol
+
+- Utente esprime a voce alta pensieri durante svolgimento task
+- Include cosa guarda, pensa, fa e come si sente
+- Evidenzia processi cognitivi
+- Valutatore non interferisce, anche in caso di difficoltà
+- Preferibile registrare anche video
+
+### Numero ideale di partecipanti
+
+- Formula: N = (1 - (1 - L)^n) dove L ≈ 31%
+- 5 utenti rilevano circa 85% dei problemi
+- 15 utenti rilevano 100% dei problemi
+- Min. 20 utenti per significatività statistica
+
+### Minimum Viable Product (MVP)
+
+- Versione minima che permette apprendimento massimo con sforzo minimo
+- Focus su validazione con utenti reali
+
+### Metodi lineari vs iterativi
+
+- **Waterfall** (lineare):
+  - Pianificazione completa seguita da fasi sequenziali
+  - Rischio di specifiche sbagliate
+  - Difficile tornare indietro
+  - Efficace solo con requisiti ben definiti e tecnologia nota
+- **Agile** (iterativo):
+  - Sviluppo in finestre di tempo limitate
+  - Rivalutazione priorità dopo ogni iterazione
+  - Comunicazione in tempo reale
+  - Principi: persone > processi, software funzionante > documentazione, collaborazione, flessibilità
+  - Pratiche: coinvolgimento cliente, consegne frequenti, sviluppo iterativo
+
+## 7. Valutazione delle interfacce
+
+### Definizioni
+
+- **Human performance**: Massimizzazione prestazioni umane
+- **Ergonomia**: Interazione uomo-macchina per adattamento alle caratteristiche fisiche
+- **Ergonomia cognitiva**: Interazione per elaborazione informazioni, studio processi cognitivi
+- **Human factors**: Applicazione elementi psicologici e fisiologici a ingegneria e design
+- **Man-machine interaction**: Studi sull'usabilità di oggetti per lavoro
+
+### Approcci
+
+- **Interaction Design (IXD)**: Approccio multidisciplinare alla progettazione interazioni
+- **User Centered Design (UCD)**: Focus su bisogni, desideri, limiti dell'utente
+- **Human Centered Design (HCD)**: Approccio per rendere sistemi utilizzabili e utili
+- **Humanity Centered Design**: Focus su società con problemi complessi
+
+### User Interface (UI) vs User Experience (UX)
+
+- **UI**: Aspetti dell'applicazione con cui l'utente interagisce direttamente
+- **UX**: Relazione complessiva tra persona e sistema/prodotto/servizio
+  - Coinvolge tutti gli aspetti dell'esperienza
+  - Soggettiva
+  - Basata su comportamenti e bisogni
+
+### Usabilità
+
+- **Wikipedia**: Apprendibilità e facilità d'uso
+- **ISO 9241-11**: Efficacia, efficienza e soddisfazione in contesto specifico
+- **Nielsen**: Qualità dell'esperienza utente in interazione
+- **6 principi chiave**:
+  1. Progettazione basata su analisi utente, task, ambiente
+  2. Utenti coinvolti in tutte le fasi
+  3. Progetto guidato da valutazioni incentrate sull'utente
+  4. Processo iterativo
+  5. Progetto considera intera user experience
+  6. Team multidisciplinare
+
+### Valutazione euristica
+
+- Identificazione problemi usabilità da parte di esperti
+- Utile in fasi preliminari
+- Non richiede coinvolgimento utenti reali
+- Può precedere usability test per pre-correzioni
+
+### Euristiche di Nielsen
+
+1. **Visibilità stato sistema**: Feedback adeguato e tempestivo
+2. **Corrispondenza sistema-mondo reale**: Linguaggio familiare
+3. **Controllo e libertà**: Movimento libero, evitare costrizioni
+4. **Consistenza e standard**: Convenzioni valide per tutta l'interfaccia
+5. **Prevenzione errore**: Evitare situazioni ambigue
+6. **Riconoscimento anziché ricordo**: Istruzioni visibili e recuperabili
+7. **Flessibilità ed efficienza**: Uso differenziato per esperienza
+8. **Design e estetica minimalista**: Priorità al contenuto
+9. **Aiuto all'utente**: Messaggi errore comprensibili e soluzioni
+10. **Documentazione**: Disponibile, facile da reperire, strutturata
+
+## 8. Interfacce Web - applicazioni pratiche
+
+### Visual Competition
+
+- Elementi che competono per l'attenzione
+- Riduzione sforzo mentale richiesto
+- Soluzione: dirigere attenzione verso elementi specifici
+
+### Legge di Miller
+
+- Capacità memoria umana limitata a 7±2 elementi
+- Evitare di sovraccaricare schermo con troppe informazioni
+
+### Carico cognitivo
+
+- Ridurre lo sforzo mentale richiesto per elaborare informazioni
+- Evitare distrazioni che rendono difficile concentrarsi sul compito
+
+### Legge di Hick
+
+- Tempo decisionale aumenta con numero di scelte/stimoli
+- Limitare elementi a video migliora efficienza decisionale
+
+### Bias di conferma
+
+- Tendenza a cercare informazioni che confermano convinzioni
+- Ignorare prove contrarie
+- Mettere da parte convinzioni personali per design basato su evidenze
+
+### Effetto priming
+
+- Esposizione a uno stimolo influenza risposta a stimoli successivi
+- Utilizzare elementi che predispongono a interazione specifica
+
+### Gerarchia visiva
+
+- Organizzazione informazioni per navigazione intuitiva
+- Guida efficace dell'attenzione tramite:
+  - Posizione
+  - Contrasto
+  - Dimensione
+  - Combinazione proprietà
+
+### Punto focale
+
+- Elemento principale che cattura immediatamente l'attenzione
+- Dirige utenti verso aree specifiche per azioni precise
+
+### Spazio bianco
+
+- **Attivo**: Spazi intenzionali per effetti specifici
+- **Passivo**: Spazi naturali tra elementi
+- Evidenzia legami tra elementi in modo chiaro
+
+### Principi Gestalt
+
+- **Prossimità**: Elementi vicini percepiti come correlati
+- **Similarità**: Elementi con caratteristiche comuni unificati come gruppo
+- **Chiusura**: Tendenza a completare figure aperte
+
+### Regole d'oro per interfacce
+
+- **Dispositivi mobili**: Ottimizzazione per tutti i device
+- **Specificità**: Enfatizzare solo elementi importanti
+- **Semplicità**: Evitare caratteri elaborati, limitare colori, spazio bianco adeguato
+
+### Gestione del layout
+
+- Problema non è quantità informazioni ma enfasi e organizzazione
+- Comprensione rapida delle priorità
+- De-enfatizzare elementi bassa priorità
+
+### Legge dell'esperienza passata
+
+- Interpretazione basata su esperienze precedenti
+- Allineamento a modelli mentali esistenti
+
+### Gestione dello spazio vuoto (spacing)
+
+- Aree vuote tra elementi per gerarchia visiva
+- Interlinea, dimensioni, altezze (fisse vs variabili)
+
+### Microcopy
+
+- Testi brevi che orientano l'utente
+- Rendono l'interazione più umana
+- Rafforzano identità del brand
+- Presenti in:
+  - Etichette pulsanti
+  - Messaggi errore
+  - Istruzioni e suggerimenti
+  - Testi form
+  - Notifiche e conferme
+
+### Caratteristiche microcopy efficace
+
+- **Chiaro**: Immediatamente comprensibile
+- **Conciso**: Breve ma informativo
+- **Conversazionale**: Tono amichevole
+- **Utile**: Anticipa bisogni utente
+- **Consistente**: Coerente con comunicazione brand
+
+### Gestione campi form
+
+- Campi obbligatori chiaramente identificati
+- Istruzioni chiare per formati specifici
+- Regole password esplicite
+
+### Messaggi di errore efficaci
+
+1. Spiegare problema chiaramente
+2. Fornire soluzione immediata
+3. Rendere esperienza più piacevole
+
+- Evitare:
+  - Parole "errore" o "fallimento"
+  - Tono minaccioso o legalese
+  - Termini tecnici
+
+### Uso corretto dei placeholder
+
+- Non utilizzare come sostituto delle label
+- Evitare ridondanza
+- Utilizzi appropriati:
+  - Guidare tipo di risposta (social)
+  - Definire categorie di ricerca
+  - Fornire esempi
+
+## 9. Figma
+
+### Introduzione
+
+- Programma per rapida prototipazione interfacce grafiche
+- Punti chiave:
+  - **Collaborazione**: Con clienti e tra reparti
+  - **Prototipazione**: Interazione con utente tramite prototypes
+  - **Coprogettazione**: Design live con altri partecipanti
+
+### Collaborazione
+
+- Note da tutti gli utenti indipendentemente dal tipo account
+- Licenza permissiva (pagano solo utenze in editing)
+- Comunicazione efficace verso altri reparti
+
+### Prototipazione
+
+- Interazione con l'utente tramite prototypes
+- Selezione pagina destinazione per ogni elemento
+- Effetti nelle transizioni e scorrimento simulato
+
+### Organizzazione contenuti
+
+- **Tipografia**: Elemento chiave per uniformità e carattere
+- **Componenti**: Elementi riutilizzabili nell'applicazione
+- **Variants**: Varianti dei componenti per stati e semantiche diverse
+- **Groups vs Frames**:
+  - **Groups**: Raggruppamento che ridimensiona gli elementi al proprio interno
+  - **Frames**: Raggruppamento dove dimensione elementi è indipendente dal frame
+
+### Layout grids
+
+- Strumento per uniformità visiva e disposizione ordinata
+- Disponibili diversi tipi di griglie
+- Utili per suggerire allineamenti nel responsive
+
+### Libertà creativa
+
+- Piena libertà di realizzare elementi con stile preferito
+- Modellazione vettoriale con editor web
+- Dev mode per ottenere CSS di ogni elemento
+
+### Riutilizzo componenti
+
+- Possibilità di copiare componenti da progetti esistenti
+- Disponibilità di librerie standard (es. elementi Bootstrap)
+
+## 10. TypeScript e Vue.js
+
+### TypeScript
+
+- Superset tipizzato di JavaScript
+
+#### Tipi di base
+
+- **Boolean**: `let isDone: boolean = false;`
+- **Number**: `let decimal: number = 6;`
+- **String**: `let color: string = "blue";`
+- **Keyword let**: Alternativa migliore a var, con block-scoping
+
+#### Iterables
+
+- Oggetti con implementazione per Symbol.iterator
+- Loop for..of per iterare su oggetti iterabili:
+
+```typescript
+let someArray = [1, "string", false];
+for (let entry of someArray) {
+  console.log(entry);
+}
+```
+
+#### DOM Manipulation
+
+```typescript
+const app = document.getElementById("app");
+const first = document.querySelector("li");
+const all = document.querySelectorAll("li");
+```
+
+#### Classi e OOP
+
+```typescript
+interface User {
+  name: string;
+  id: number;
+}
+
+class UserAccount {
+  name: string;
+  id: number;
+  constructor(name: string, id: number) {
+    this.name = name;
+    this.id = id;
+  }
+}
+
+const user: User = new UserAccount("Murphy", 1);
+```
+
+#### Generics
+
+```typescript
+function identity<T>(arg: T): T {
+  return arg;
+}
+```
+
+#### Function Type Expressions
+
+```typescript
+function greeter(fn: (a: string) => void) {
+  fn("Hello, World");
+}
+
+function printToConsole(s: string) {
+  console.log(s);
+}
+
+greeter(printToConsole);
+```
+
+### Vue.js
+
+- Framework progressivo per building user interfaces
+- Incrementalmente adottabile
+- Core library focalizzata sul layer view
+
+#### Application Instance
+
+```javascript
+const app = Vue.createApp({
+  /* options */
+});
+const vm = app.mount("#app");
+```
+
+#### Ciclo di vita componenti
+
+- Hooks principali: beforeCreate, created, beforeMount, mounted, beforeUpdate, updated, beforeUnmount, unmounted
+
+#### Template Syntax
+
+- Basata su HTML
+- Vue compila template in funzioni Virtual DOM render
+- Interpolazioni:
+  - **Text**: `<span>Message: {{ msg }}</span>`
+  - **Raw HTML**: `<span v-html="rawHtml"></span>`
+
+#### Binding
+
+- Attributi con v-bind: `<div v-bind:id="dynamicId"></div>`
+- Shorthand: `<div :id="dynamicId"></div>`
+- Link: `<a :href="url">...</a>`
+- Eventi: `<a v-on:click="doSomething">...</a>` o `<a @click="doSomething">...</a>`
+
+#### Dynamic Arguments
+
+- Espressioni JavaScript in argomenti direttive: `<a v-bind:[attributeName]="url">...</a>`
+- Per eventi: `<a v-on:[eventName]="doSomething">...</a>`
+
+#### Form Input Bindings
+
+- Direttiva v-model per binding bidirezionale:
+
+```html
+<input v-model="message" placeholder="edit me" />
+<input type="checkbox" id="checkbox" v-model="checked" />
+<select v-model="selected">
+  <option disabled value="">Please select one</option>
+  <option>A</option>
+</select>
+```
+
+#### Conditional Rendering
+
+- **v-if**: Rendering condizionale basato su espressione
+
+```html
+<h1 v-if="awesome">Vue is awesome!</h1>
+<h1 v-else>Oh no</h1>
+```
+
+- **v-else-if**: Catena di condizioni
+
+```html
+<div v-if="type === 'A'">A</div>
+<div v-else-if="type === 'B'">B</div>
+<div v-else>Not A/B</div>
+```
+
+#### Visibilità
+
+- **v-show**: Alternativa a v-if, modifica solo display CSS
+
+```html
+<h1 v-show="ok">Hello!</h1>
+```
+
+- **v-if vs v-show**:
+  - v-if è rendering condizionale "reale" (distrugge/ricrea componenti)
+  - v-if è "lazy" (non renderizza finché condizione non è true)
+  - v-show è più efficiente per toggle frequenti
+
+#### List Rendering
+
+```html
+<ul id="array-rendering">
+  <li v-for="item in items">{{ item.message }}</li>
+</ul>
+```
+
+```javascript
+Vue.createApp({
+  data() {
+    return {
+      items: [{ message: "Foo" }, { message: "Bar" }],
+    };
+  },
+}).mount("#array-rendering");
+```
+
+#### Computed Properties
+
+```javascript
+computed: {
+  // computed getter
+  publishedBooksMessage() {
+    return this.author.books.length > 0 ? 'Yes' : 'No'
+  }
+}
+```
+
+#### Computed vs Methods
+
+- **Computed**: Cached basato su dipendenze reactive, ricalcolato solo quando dipendenze cambiano
+- **Methods**: Eseguiti ogni volta che vengono chiamati
+
+#### Components
+
+- Organizzazione in albero di componenti nidificati
+- Registrazione necessaria per uso in templates
+- Utili per header, sidebar, aree contenuto, ecc.
+
+#### Tool di sviluppo
+
+- Vue.js DevTools (estensione Chrome): Debugging e ispezione componenti
+
+## Considerazioni finali per la preparazione dell'esame
+
+### Progetto pratico
+
+- Inizia a pensare tempestivamente a un caso d'uso da proporre
+- Assicurati di utilizzare tutte le tecnologie richieste
+- Organizza il lavoro di gruppo con chiara divisione compiti
+
+### Preparazione orale
+
+- Rivedi concetti di UX/UI fondamentali
+- Comprendi i principi di progettazione e valutazione
+- Sii pronto a difendere scelte progettuali
+- Prepara miglioramenti basati su feedback
+
+### Bilanciamento teoria-pratica
+
+- La parte teorica (psicologia cognitiva, valutazione interfacce) sostiene le scelte pratiche
+- Le tecnologie (.NET, Vue.js) sono strumenti per implementare i principi di design
+
+### Competenze trasversali
+
+- Capacità di lavorare in team
+- Comprensione requisiti utente
+- Adattamento a feedback
+- Visione d'insieme del processo di design e sviluppo
