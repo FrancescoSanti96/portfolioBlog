@@ -1,9 +1,9 @@
-import type { TimelineItem } from 'app/data/profile'
+import type { TimelineItem } from "app/data/profile";
 
 type TimelineProps = {
-  items: TimelineItem[]
-  accentClassName: string
-}
+  items: TimelineItem[];
+  accentClassName: string;
+};
 
 export function Timeline({ items, accentClassName }: TimelineProps) {
   return (
@@ -39,5 +39,5 @@ export function Timeline({ items, accentClassName }: TimelineProps) {
         </article>
       ))}
     </div>
-  )
+  );
 }

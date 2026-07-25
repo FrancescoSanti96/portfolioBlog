@@ -1,5 +1,5 @@
-import { experiences } from 'app/data/profile'
-import { Timeline } from './timeline'
+import { experiences } from "app/data/profile";
+import { Timeline } from "./timeline";
 
 export function ExperienceSection() {
   return (
@@ -9,5 +9,5 @@ export function ExperienceSection() {
       </h2>
       <Timeline items={experiences} accentClassName="bg-sky-600" />
     </section>
-  )
+  );
 }

@@ -1,37 +1,37 @@
-import Image from 'next/image'
+import Image from "next/image";
 
 const secondaryProjects = [
   {
-    title: 'PetPlanet',
+    title: "PetPlanet",
     description:
-      'Una piattaforma community dedicata alla gestione degli animali domestici, con profili, relazioni ed eventi.',
-    imageSrc: '/img/petplanet.jpeg',
-    imageAlt: 'Interfaccia del progetto PetPlanet',
+      "Una piattaforma community dedicata alla gestione degli animali domestici, con profili, relazioni ed eventi.",
+    imageSrc: "/img/petplanet.jpeg",
+    imageAlt: "Interfaccia del progetto PetPlanet",
     links: [
       {
-        label: 'Repository',
-        href: 'https://github.com/FrancescoSanti96/pet-planet',
+        label: "Repository",
+        href: "https://github.com/FrancescoSanti96/pet-planet",
       },
       {
-        label: 'Demo video',
-        href: 'https://www.youtube.com/watch?v=vM7iD80ckWk&t=3s',
+        label: "Demo video",
+        href: "https://www.youtube.com/watch?v=vM7iD80ckWk&t=3s",
       },
     ],
   },
   {
-    title: 'Analisi evoluzione della società italiana',
+    title: "Analisi evoluzione della società italiana",
     description:
-      'Un progetto di analisi e visualizzazione dati che confronta generazioni e cambiamenti della società italiana.',
-    imageSrc: '/img/analisi.png',
-    imageAlt: 'Grafici del progetto di analisi della società italiana',
+      "Un progetto di analisi e visualizzazione dati che confronta generazioni e cambiamenti della società italiana.",
+    imageSrc: "/img/analisi.png",
+    imageAlt: "Grafici del progetto di analisi della società italiana",
     links: [
       {
-        label: 'Repository',
-        href: 'https://github.com/FrancescoSanti96/analisi_evoluzione_della_Societ-_Italiana',
+        label: "Repository",
+        href: "https://github.com/FrancescoSanti96/analisi_evoluzione_della_Societ-_Italiana",
       },
     ],
   },
-] as const
+] as const;
 
 export function ProjectsSection() {
   return (
@@ -91,7 +91,7 @@ export function ProjectsSection() {
               className="flex snap-x gap-3 overflow-x-auto pb-2 lg:grid lg:grid-cols-3 lg:overflow-visible lg:pb-0"
               aria-label="Schermate di Patti"
             >
-              {['home', 'activities', 'shopping'].map((screen) => (
+              {["home", "activities", "shopping"].map((screen) => (
                 <div
                   key={screen}
                   className="min-w-[220px] flex-1 snap-start overflow-hidden rounded-lg border border-[var(--border)] bg-white shadow-sm lg:min-w-0"
@@ -153,5 +153,5 @@ export function ProjectsSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

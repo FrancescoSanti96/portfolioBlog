@@ -16,13 +16,15 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "geist": "^1.7.2",
+    "gray-matter": "^4.0.3",
     "next": "16.2.11",
     "next-mdx-remote": "^6.0.0",
     "postcss": "^8.5.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sugar-high": "^1.2.1",
-    "tailwindcss": "4.3.3"
+    "tailwindcss": "4.3.3",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",

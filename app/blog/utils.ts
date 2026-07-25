@@ -1,99 +1,95 @@
-import fs from 'fs'
-import path from 'path'
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { z } from "zod";
 
-export type PostMetadata = {
-  title: string
-  publishedAt: string
-  summary: string
-  image?: string
-}
+const postMetadataSchema = z.object({
+  title: z.string().trim().min(1),
+  publishedAt: z
+    .string()
+    .trim()
+    .refine((value) => !Number.isNaN(Date.parse(value)), {
+      message: "publishedAt deve essere una data valida",
+    }),
+  updatedAt: z
+    .string()
+    .trim()
+    .refine((value) => !Number.isNaN(Date.parse(value)), {
+      message: "updatedAt deve essere una data valida",
+    })
+    .optional(),
+  summary: z.string().trim().min(1),
+  image: z.string().trim().optional(),
+});
+
+export type PostMetadata = z.infer<typeof postMetadataSchema>;
 
 export type BlogPost = {
-  metadata: PostMetadata
-  slug: string
-  content: string
-}
-
-function parseFrontmatter(fileContent: string): {
-  metadata: PostMetadata
-  content: string
-} {
-  const frontmatterRegex = /---\s*([\s\S]*?)\s*---/
-  const match = frontmatterRegex.exec(fileContent)
-  const frontMatterBlock = match![1]
-  const content = fileContent.replace(frontmatterRegex, '').trim()
-  const frontMatterLines = frontMatterBlock.trim().split('\n')
-  const metadata: Partial<PostMetadata> = {}
-
-  frontMatterLines.forEach((line) => {
-    const [key, ...valueArr] = line.split(': ')
-    let value = valueArr.join(': ').trim()
-    value = value.replace(/^['"](.*)['"]$/, '$1') // Remove quotes
-    metadata[key.trim() as keyof PostMetadata] = value
-  })
-
-  return { metadata: metadata as PostMetadata, content }
-}
+  metadata: PostMetadata;
+  slug: string;
+  content: string;
+};
 
 function getMDXFiles(dir: string) {
-  return fs.readdirSync(dir).filter((file) => path.extname(file) === '.mdx')
+  return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx");
 }
 
 function readMDXFile(filePath: string) {
-  const rawContent = fs.readFileSync(filePath, 'utf-8')
-  return parseFrontmatter(rawContent)
+  const rawContent = fs.readFileSync(filePath, "utf-8");
+  const { data, content } = matter(rawContent);
+  const result = postMetadataSchema.safeParse(data);
+
+  if (!result.success) {
+    throw new Error(
+      `Frontmatter non valido in ${filePath}: ${z.prettifyError(result.error)}`,
+    );
+  }
+
+  return { metadata: result.data, content: content.trim() };
 }
 
 function getMDXData(dir: string): BlogPost[] {
-  const mdxFiles = getMDXFiles(dir)
-  return mdxFiles.map((file) => {
-    const { metadata, content } = readMDXFile(path.join(dir, file))
-    const slug = path.basename(file, path.extname(file))
+  return getMDXFiles(dir).map((file) => {
+    const { metadata, content } = readMDXFile(path.join(dir, file));
+    const slug = path.basename(file, path.extname(file));
 
     return {
       metadata,
       slug,
       content,
-    }
-  })
+    };
+  });
 }
 
 export function getBlogPosts() {
-  return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts'))
+  return getMDXData(path.join(process.cwd(), "app", "blog", "posts"));
 }
 
 export function formatDate(date: string, includeRelative = false) {
-  const currentDate = new Date()
-  if (!date.includes('T')) {
-    date = `${date}T00:00:00`
-  }
-  const targetDate = new Date(date)
+  const currentDate = new Date();
+  const normalizedDate = date.includes("T") ? date : `${date}T00:00:00`;
+  const targetDate = new Date(normalizedDate);
+  const daysAgo = Math.floor(
+    (currentDate.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24),
+  );
 
-  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear()
-  const monthsAgo = currentDate.getMonth() - targetDate.getMonth()
-  const daysAgo = currentDate.getDate() - targetDate.getDate()
+  let relativeDate = "";
 
-  let formattedDate = ''
-
-  if (yearsAgo > 0) {
-    formattedDate = `${yearsAgo}y ago`
-  } else if (monthsAgo > 0) {
-    formattedDate = `${monthsAgo}mo ago`
+  if (daysAgo >= 365) {
+    relativeDate = `${Math.floor(daysAgo / 365)} anni fa`;
+  } else if (daysAgo >= 30) {
+    relativeDate = `${Math.floor(daysAgo / 30)} mesi fa`;
   } else if (daysAgo > 0) {
-    formattedDate = `${daysAgo}d ago`
+    relativeDate = `${daysAgo} giorni fa`;
   } else {
-    formattedDate = 'Today'
+    relativeDate = "Oggi";
   }
 
-  const fullDate = targetDate.toLocaleString('it-IT', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  const fullDate = targetDate.toLocaleString("it-IT", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
-  if (!includeRelative) {
-    return fullDate
-  }
-
-  return `${fullDate} (${formattedDate})`
+  return includeRelative ? `${fullDate} (${relativeDate})` : fullDate;
 }

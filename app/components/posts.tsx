@@ -1,12 +1,12 @@
-import Link from 'next/link'
-import { formatDate, getBlogPosts } from 'app/blog/utils'
+import Link from "next/link";
+import { formatDate, getBlogPosts } from "app/blog/utils";
 
 type BlogPostsProps = {
-  currentPage?: number
-  postsPerPage?: number
-  showHeading?: boolean
-  limit?: number
-}
+  currentPage?: number;
+  postsPerPage?: number;
+  showHeading?: boolean;
+  limit?: number;
+};
 
 export function BlogPosts({
   currentPage = 1,
@@ -16,36 +16,36 @@ export function BlogPosts({
 }: BlogPostsProps) {
   const sortedBlogs = getBlogPosts().sort((a, b) => {
     if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
-      return -1
+      return -1;
     }
 
-    return 1
-  })
+    return 1;
+  });
 
   const totalPages = postsPerPage
     ? Math.ceil(sortedBlogs.length / postsPerPage)
-    : 1
+    : 1;
   const safeCurrentPage =
-    totalPages > 0 ? Math.min(Math.max(currentPage, 1), totalPages) : 1
+    totalPages > 0 ? Math.min(Math.max(currentPage, 1), totalPages) : 1;
   const paginatedBlogs = postsPerPage
     ? sortedBlogs.slice(
         (safeCurrentPage - 1) * postsPerPage,
-        safeCurrentPage * postsPerPage
+        safeCurrentPage * postsPerPage,
       )
     : limit
       ? sortedBlogs.slice(0, limit)
-      : sortedBlogs
+      : sortedBlogs;
 
   function getPageHref(page: number) {
-    return page === 1 ? '/blog' : `/blog?page=${page}`
+    return page === 1 ? "/blog" : `/blog?page=${page}`;
   }
 
   return (
     <div>
       {showHeading && (
-        <h1 className="mb-8 text-2xl font-semibold tracking-tighter text-center md:text-left">
+        <h2 className="mb-8 text-2xl font-semibold text-center md:text-left">
           Articoli recenti
-        </h1>
+        </h2>
       )}
       <div>
         {paginatedBlogs.map((post) => (
@@ -58,7 +58,7 @@ export function BlogPosts({
               <p className="text-neutral-600 dark:text-neutral-400 w-[100px] tabular-nums">
                 {formatDate(post.metadata.publishedAt, false)}
               </p>
-              <p className="text-neutral-900 dark:text-neutral-100 tracking-tight">
+              <p className="text-neutral-900 dark:text-neutral-100">
                 {post.metadata.title}
               </p>
             </div>
@@ -67,7 +67,7 @@ export function BlogPosts({
       </div>
       {totalPages > 1 && (
         <nav
-          aria-label="Blog pagination"
+          aria-label="Paginazione blog"
           className="mt-8 flex items-center justify-center gap-2 md:justify-start"
         >
           <Link
@@ -75,8 +75,8 @@ export function BlogPosts({
             aria-disabled={safeCurrentPage === 1}
             className={`rounded border px-3 py-1 text-sm transition-colors ${
               safeCurrentPage === 1
-                ? 'pointer-events-none border-neutral-200 text-neutral-400 dark:border-neutral-800 dark:text-neutral-600'
-                : 'border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900'
+                ? "pointer-events-none border-neutral-200 text-neutral-400 dark:border-neutral-800 dark:text-neutral-600"
+                : "border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
             }`}
           >
             Precedente
@@ -84,23 +84,23 @@ export function BlogPosts({
 
           <div className="flex items-center gap-2">
             {Array.from({ length: totalPages }, (_, index) => {
-              const page = index + 1
-              const isActive = page === safeCurrentPage
+              const page = index + 1;
+              const isActive = page === safeCurrentPage;
 
               return (
                 <Link
                   key={page}
                   href={getPageHref(page)}
-                  aria-current={isActive ? 'page' : undefined}
+                  aria-current={isActive ? "page" : undefined}
                   className={`rounded px-3 py-1 text-sm transition-colors ${
                     isActive
-                      ? 'bg-black text-white dark:bg-white dark:text-black'
-                      : 'border border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900'
+                      ? "bg-black text-white dark:bg-white dark:text-black"
+                      : "border border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
                   }`}
                 >
                   {page}
                 </Link>
-              )
+              );
             })}
           </div>
 
@@ -109,8 +109,8 @@ export function BlogPosts({
             aria-disabled={safeCurrentPage === totalPages}
             className={`rounded border px-3 py-1 text-sm transition-colors ${
               safeCurrentPage === totalPages
-                ? 'pointer-events-none border-neutral-200 text-neutral-400 dark:border-neutral-800 dark:text-neutral-600'
-                : 'border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900'
+                ? "pointer-events-none border-neutral-200 text-neutral-400 dark:border-neutral-800 dark:text-neutral-600"
+                : "border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
             }`}
           >
             Successiva
@@ -118,5 +118,5 @@ export function BlogPosts({
         </nav>
       )}
     </div>
-  )
+  );
 }

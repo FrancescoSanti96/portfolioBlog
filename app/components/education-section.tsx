@@ -1,5 +1,5 @@
-import { education } from 'app/data/profile'
-import { Timeline } from './timeline'
+import { education } from "app/data/profile";
+import { Timeline } from "./timeline";
 
 export function EducationSection() {
   return (
@@ -9,5 +9,5 @@ export function EducationSection() {
       </h2>
       <Timeline items={education} accentClassName="bg-emerald-600" />
     </section>
-  )
+  );
 }

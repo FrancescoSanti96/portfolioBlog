@@ -1,10 +1,10 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { BlogPosts } from 'app/components/posts'
-import { EducationSection } from './components/education-section'
-import { ExperienceSection } from './components/experience-section'
-import { ProjectsSection } from './components/projects-section'
-import { profile } from './data/profile'
+import Image from "next/image";
+import Link from "next/link";
+import { BlogPosts } from "app/components/posts";
+import { EducationSection } from "./components/education-section";
+import { ExperienceSection } from "./components/experience-section";
+import { ProjectsSection } from "./components/projects-section";
+import { profile } from "./data/profile";
 
 export default function Page() {
   return (
@@ -18,10 +18,7 @@ export default function Page() {
           sizes="100vw"
           className="object-cover object-[center_28%] sm:origin-left sm:scale-110"
         />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-black/50"
-        />
+        <div aria-hidden="true" className="absolute inset-0 bg-black/50" />
         <div className="site-container relative z-10 pb-14 pt-36 text-white sm:pb-20">
           <p className="text-sm font-semibold uppercase text-sky-200">
             {profile.role}
@@ -72,5 +69,5 @@ export default function Page() {
         </section>
       </div>
     </>
-  )
+  );
 }

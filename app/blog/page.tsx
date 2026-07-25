@@ -1,26 +1,26 @@
-import { BlogPosts } from 'app/components/posts'
+import { BlogPosts } from "app/components/posts";
 
 export const metadata = {
-  title: 'Blog',
+  title: "Blog",
   description:
-    'Appunti su sviluppo software, algoritmi, sistemi e progettazione di prodotti digitali.',
-}
+    "Appunti su sviluppo software, algoritmi, sistemi e progettazione di prodotti digitali.",
+};
 
 type BlogPageProps = {
   searchParams?: Promise<{
-    page?: string
-  }>
-}
+    page?: string;
+  }>;
+};
 
-const POSTS_PER_PAGE = 5
+const POSTS_PER_PAGE = 5;
 
 export default async function Page({ searchParams }: BlogPageProps) {
-  const query = await searchParams
-  const page = Number(query?.page)
-  const currentPage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1
+  const query = await searchParams;
+  const page = Number(query?.page);
+  const currentPage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
 
   return (
-    <section>
+    <section className="site-container py-16">
       <p className="eyebrow">Scrittura</p>
       <h1 className="mb-3 mt-2 text-4xl font-semibold text-[var(--ink)]">
         Blog
@@ -35,5 +35,5 @@ export default async function Page({ searchParams }: BlogPageProps) {
         showHeading={false}
       />
     </section>
-  )
+  );
 }

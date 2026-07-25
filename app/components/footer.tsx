@@ -1,10 +1,10 @@
-import { profile } from 'app/data/profile'
+import { profile } from "app/data/profile";
 
 const links = [
-  { label: 'LinkedIn', href: profile.links.linkedin },
-  { label: 'GitHub', href: profile.links.github },
-  { label: 'Email', href: `mailto:${profile.email}` },
-] as const
+  { label: "LinkedIn", href: profile.links.linkedin },
+  { label: "GitHub", href: profile.links.github },
+  { label: "Email", href: `mailto:${profile.email}` },
+] as const;
 
 export default function Footer() {
   return (
@@ -18,10 +18,10 @@ export default function Footer() {
             <li key={link.href}>
               <a
                 href={link.href}
-                target={link.href.startsWith('http') ? '_blank' : undefined}
+                target={link.href.startsWith("http") ? "_blank" : undefined}
                 rel={
-                  link.href.startsWith('http')
-                    ? 'noopener noreferrer'
+                  link.href.startsWith("http")
+                    ? "noopener noreferrer"
                     : undefined
                 }
                 className="font-medium text-[var(--muted)] transition hover:text-[var(--accent)]"
@@ -33,5 +33,5 @@ export default function Footer() {
         </ul>
       </div>
     </footer>
-  )
+  );
 }
