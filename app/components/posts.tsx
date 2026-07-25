@@ -5,12 +5,14 @@ type BlogPostsProps = {
   currentPage?: number
   postsPerPage?: number
   showHeading?: boolean
+  limit?: number
 }
 
 export function BlogPosts({
   currentPage = 1,
   postsPerPage,
   showHeading = true,
+  limit,
 }: BlogPostsProps) {
   const sortedBlogs = getBlogPosts().sort((a, b) => {
     if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
@@ -30,7 +32,9 @@ export function BlogPosts({
         (safeCurrentPage - 1) * postsPerPage,
         safeCurrentPage * postsPerPage
       )
-    : sortedBlogs
+    : limit
+      ? sortedBlogs.slice(0, limit)
+      : sortedBlogs
 
   function getPageHref(page: number) {
     return page === 1 ? '/blog' : `/blog?page=${page}`
@@ -40,7 +44,7 @@ export function BlogPosts({
     <div>
       {showHeading && (
         <h1 className="mb-8 text-2xl font-semibold tracking-tighter text-center md:text-left">
-          Recent Posts
+          Articoli recenti
         </h1>
       )}
       <div>
@@ -75,7 +79,7 @@ export function BlogPosts({
                 : 'border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900'
             }`}
           >
-            Previous
+            Precedente
           </Link>
 
           <div className="flex items-center gap-2">
@@ -109,7 +113,7 @@ export function BlogPosts({
                 : 'border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900'
             }`}
           >
-            Next
+            Successiva
           </Link>
         </nav>
       )}

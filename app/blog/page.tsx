@@ -2,7 +2,8 @@ import { BlogPosts } from 'app/components/posts'
 
 export const metadata = {
   title: 'Blog',
-  description: 'Read my blog.',
+  description:
+    'Appunti su sviluppo software, algoritmi, sistemi e progettazione di prodotti digitali.',
 }
 
 type BlogPageProps = {
@@ -20,7 +21,14 @@ export default async function Page({ searchParams }: BlogPageProps) {
 
   return (
     <section>
-      <h1 className="font-semibold text-2xl mb-8 tracking-tighter">My Blog</h1>
+      <p className="eyebrow">Scrittura</p>
+      <h1 className="mb-3 mt-2 text-4xl font-semibold text-[var(--ink)]">
+        Blog
+      </h1>
+      <p className="mb-10 max-w-2xl leading-7 text-[var(--muted)]">
+        Appunti di studio e approfondimenti su sviluppo software, algoritmi,
+        sistemi e prodotti digitali.
+      </p>
       <BlogPosts
         currentPage={currentPage}
         postsPerPage={POSTS_PER_PAGE}
