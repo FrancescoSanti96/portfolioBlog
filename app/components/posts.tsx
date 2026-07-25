@@ -12,7 +12,7 @@ export function BlogPosts({
   postsPerPage,
   showHeading = true,
 }: BlogPostsProps) {
-  let sortedBlogs = getBlogPosts().sort((a, b) => {
+  const sortedBlogs = getBlogPosts().sort((a, b) => {
     if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
       return -1
     }
@@ -20,12 +20,12 @@ export function BlogPosts({
     return 1
   })
 
-  let totalPages = postsPerPage
+  const totalPages = postsPerPage
     ? Math.ceil(sortedBlogs.length / postsPerPage)
     : 1
-  let safeCurrentPage =
+  const safeCurrentPage =
     totalPages > 0 ? Math.min(Math.max(currentPage, 1), totalPages) : 1
-  let paginatedBlogs = postsPerPage
+  const paginatedBlogs = postsPerPage
     ? sortedBlogs.slice(
         (safeCurrentPage - 1) * postsPerPage,
         safeCurrentPage * postsPerPage
@@ -80,8 +80,8 @@ export function BlogPosts({
 
           <div className="flex items-center gap-2">
             {Array.from({ length: totalPages }, (_, index) => {
-              let page = index + 1
-              let isActive = page === safeCurrentPage
+              const page = index + 1
+              const isActive = page === safeCurrentPage
 
               return (
                 <Link

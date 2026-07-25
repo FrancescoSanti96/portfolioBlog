@@ -1,11 +1,12 @@
 import React from "react";
+import type { ReactNode } from "react";
 
 type Experience = {
   title: string;
   position: string;
   company: string;
   period: string;
-  description: any;
+  description: ReactNode;
 };
 
 const experiences: Experience[] = [

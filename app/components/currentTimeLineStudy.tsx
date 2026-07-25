@@ -1,10 +1,11 @@
 import React from "react";
+import type { ReactNode } from "react";
 
 type StudyExperience = {
   title: string;
   institution: string;
   period: string;
-  description: any;
+  description: ReactNode;
 };
 
 const studyExperiences: StudyExperience[] = [

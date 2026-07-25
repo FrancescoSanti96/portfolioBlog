@@ -6,16 +6,17 @@ export const metadata = {
 }
 
 type BlogPageProps = {
-  searchParams?: {
+  searchParams?: Promise<{
     page?: string
-  }
+  }>
 }
 
 const POSTS_PER_PAGE = 5
 
-export default function Page({ searchParams }: BlogPageProps) {
-  let page = Number(searchParams?.page)
-  let currentPage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1
+export default async function Page({ searchParams }: BlogPageProps) {
+  const query = await searchParams
+  const page = Number(query?.page)
+  const currentPage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1
 
   return (
     <section>

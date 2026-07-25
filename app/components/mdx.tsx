@@ -1,14 +1,23 @@
 import Link from 'next/link'
-import Image from 'next/image'
-import { MDXRemote } from 'next-mdx-remote/rsc'
+import Image, { type ImageProps } from 'next/image'
+import { MDXRemote, type MDXRemoteProps } from 'next-mdx-remote/rsc'
 import { highlight } from 'sugar-high'
-import React from 'react'
+import React, {
+  type AnchorHTMLAttributes,
+  type HTMLAttributes,
+  type ReactNode,
+} from 'react'
 
-function Table({ data }) {
-  let headers = data.headers.map((header, index) => (
+type TableData = {
+  headers: ReactNode[]
+  rows: ReactNode[][]
+}
+
+function Table({ data }: { data: TableData }) {
+  const headers = data.headers.map((header, index) => (
     <th key={index}>{header}</th>
   ))
-  let rows = data.rows.map((row, index) => (
+  const rows = data.rows.map((row, index) => (
     <tr key={index}>
       {row.map((cell, cellIndex) => (
         <td key={cellIndex}>{cell}</td>
@@ -26,8 +35,8 @@ function Table({ data }) {
   )
 }
 
-function CustomLink(props) {
-  let href = props.href
+function CustomLink(props: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  const href = props.href ?? '#'
 
   if (href.startsWith('/')) {
     return (
@@ -44,16 +53,19 @@ function CustomLink(props) {
   return <a target="_blank" rel="noopener noreferrer" {...props} />
 }
 
-function RoundedImage(props) {
-  return <Image alt={props.alt} className="rounded-lg" {...props} />
+function RoundedImage({ alt, ...props }: ImageProps) {
+  return <Image alt={alt} className="rounded-lg" {...props} />
 }
 
-function Code({ children, ...props }) {
-  let codeHTML = highlight(children)
+function Code({
+  children,
+  ...props
+}: HTMLAttributes<HTMLElement> & { children?: ReactNode }) {
+  const codeHTML = highlight(String(children ?? ''))
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
 }
 
-function slugify(str) {
+function slugify(str: string) {
   return str
     .toString()
     .toLowerCase()
@@ -64,9 +76,9 @@ function slugify(str) {
     .replace(/\-\-+/g, '-') // Replace multiple - with single -
 }
 
-function createHeading(level) {
-  const Heading = ({ children }) => {
-    let slug = slugify(children)
+function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
+  const Heading = ({ children }: { children?: ReactNode }) => {
+    const slug = slugify(React.Children.toArray(children).join(' '))
     return React.createElement(
       `h${level}`,
       { id: slug },
@@ -86,7 +98,7 @@ function createHeading(level) {
   return Heading
 }
 
-let components = {
+const components = {
   h1: createHeading(1),
   h2: createHeading(2),
   h3: createHeading(3),
@@ -99,7 +111,7 @@ let components = {
   Table,
 }
 
-export function CustomMDX(props) {
+export function CustomMDX(props: MDXRemoteProps) {
   return (
     <MDXRemote
       {...props}
