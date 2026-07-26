@@ -60,7 +60,7 @@ body {
 }
 
 .hero {
-  min-height: min(680px, calc(100svh - 7rem));
+  min-height: min(720px, 78svh);
 }
 
 .eyebrow {

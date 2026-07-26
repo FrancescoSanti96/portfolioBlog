@@ -9,18 +9,18 @@ import { profile } from "./data/profile";
 export default function Page() {
   return (
     <>
-      <section className="hero relative isolate flex items-end overflow-hidden bg-neutral-900">
+      <section className="hero group relative isolate flex items-end overflow-hidden bg-neutral-900">
         <Image
-          src="/img/me2.jpg"
+          src="/img/profile/francesco-hero.jpg"
           alt={`Ritratto di ${profile.name}`}
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[center_28%] sm:origin-left sm:scale-110"
+          className="object-cover object-[58%_35%] grayscale transition duration-700 ease-out group-active:grayscale-0 group-focus-within:grayscale-0 group-hover:grayscale-0 motion-reduce:transition-none sm:object-[center_38%]"
         />
-        <div aria-hidden="true" className="absolute inset-0 bg-black/50" />
-        <div className="site-container relative z-10 pb-14 pt-36 text-white sm:pb-20">
-          <p className="text-sm font-semibold uppercase text-sky-200">
+        <div aria-hidden="true" className="absolute inset-0 bg-black/55" />
+        <div className="site-container relative z-10 pb-12 pt-28 text-white sm:pb-16 sm:pt-36">
+          <p className="max-w-2xl text-sm font-semibold uppercase text-sky-100">
             {profile.role}
           </p>
           <h1 className="mt-3 max-w-3xl text-5xl font-semibold sm:text-6xl">
@@ -36,12 +36,12 @@ export default function Page() {
             >
               Scopri i progetti
             </Link>
-            <a
-              href={`mailto:${profile.email}`}
+            <Link
+              href="/blog"
               className="rounded-lg border border-white/60 px-5 py-3 font-semibold text-white transition hover:border-white hover:bg-white/10"
             >
-              Scrivimi
-            </a>
+              Leggi il blog
+            </Link>
           </div>
         </div>
       </section>
