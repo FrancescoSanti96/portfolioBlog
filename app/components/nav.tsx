@@ -8,7 +8,7 @@ import { profile } from "app/data/profile";
 
 const navItems = [
   { href: "/", label: "Home" },
-  { href: "/#projects", label: "Progetti" },
+  { href: "/projects", label: "Progetti" },
   { href: "/blog", label: "Blog" },
 ] as const;
 
@@ -44,9 +44,11 @@ export function Navbar() {
             const isActive =
               item.href === "/blog"
                 ? pathname.startsWith("/blog")
-                : item.href === "/"
-                  ? pathname === "/"
-                  : false;
+                : item.href === "/projects"
+                  ? pathname.startsWith("/projects")
+                  : item.href === "/"
+                    ? pathname === "/"
+                    : false;
 
             return (
               <Link

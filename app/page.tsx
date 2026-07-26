@@ -3,7 +3,7 @@ import Link from "next/link";
 import { BlogPosts } from "app/components/posts";
 import { EducationSection } from "./components/education-section";
 import { ExperienceSection } from "./components/experience-section";
-import { ProjectsSection } from "./components/projects-section";
+import { FeaturedProjectsSection } from "./components/projects-section";
 import { profile } from "./data/profile";
 
 export default function Page() {
@@ -31,7 +31,7 @@ export default function Page() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              href="/#projects"
+              href="/projects"
               className="rounded-lg bg-white px-5 py-3 font-semibold text-neutral-950 transition hover:bg-sky-100"
             >
               Scopri i progetti
@@ -46,7 +46,7 @@ export default function Page() {
         </div>
       </section>
 
-      <ProjectsSection />
+      <FeaturedProjectsSection />
 
       <div className="site-container">
         <ExperienceSection />
