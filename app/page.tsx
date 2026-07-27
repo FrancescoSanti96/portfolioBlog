@@ -18,15 +18,15 @@ export default function Page() {
           sizes="100vw"
           className="object-cover object-[58%_35%] grayscale transition duration-700 ease-out group-active:grayscale-0 group-focus-within:grayscale-0 group-hover:grayscale-0 motion-reduce:transition-none sm:object-[center_38%]"
         />
-        <div aria-hidden="true" className="absolute inset-0 bg-black/55" />
-        <div className="site-container relative z-10 pb-12 pt-28 text-white sm:pb-16 sm:pt-36">
-          <p className="max-w-2xl text-sm font-semibold uppercase text-sky-100">
+        <div aria-hidden="true" className="absolute inset-0 bg-black/65" />
+        <div className="site-container relative z-10 pb-12 pt-28 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] sm:pb-16 sm:pt-36">
+          <p className="max-w-2xl text-base font-semibold uppercase text-white">
             {profile.role}
           </p>
-          <h1 className="mt-3 max-w-3xl text-5xl font-semibold sm:text-6xl">
+          <h1 className="mt-3 max-w-4xl text-6xl font-semibold sm:text-7xl">
             {profile.name}
           </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-neutral-100">
+          <p className="mt-6 max-w-3xl text-xl leading-8 text-white sm:text-2xl sm:leading-9">
             {profile.summary}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
