@@ -1,10 +1,19 @@
+import Link from "next/link";
+
 export default function NotFound() {
   return (
-    <section>
-      <h1 className="mb-8 text-2xl font-semibold tracking-tighter">
-        404 - Page Not Found
-      </h1>
-      <p className="mb-4">The page you are looking for does not exist.</p>
+    <section className="site-container py-24">
+      <p className="eyebrow">Errore 404</p>
+      <h1 className="mt-2 text-4xl font-semibold">Pagina non trovata</h1>
+      <p className="mt-4 text-[var(--muted)]">
+        La pagina richiesta non esiste oppure è stata spostata.
+      </p>
+      <Link
+        href="/"
+        className="mt-8 inline-block font-medium text-[var(--accent)] underline underline-offset-4"
+      >
+        Torna alla home
+      </Link>
     </section>
-  )
+  );
 }

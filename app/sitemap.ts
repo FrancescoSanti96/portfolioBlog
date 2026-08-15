@@ -1,19 +1,17 @@
-import { getBlogPosts } from 'app/blog/utils'
+import type { MetadataRoute } from "next";
+import { getBlogPosts } from "app/blog/utils";
+import { siteConfig } from "app/config/site";
 
-export const baseUrl = 'https://portfolio-blog-starter.vercel.app'
+export default function sitemap(): MetadataRoute.Sitemap {
+  const posts = getBlogPosts().map((post) => ({
+    url: `${siteConfig.url}/blog/${post.slug}`,
+    lastModified: post.metadata.updatedAt ?? post.metadata.publishedAt,
+  }));
 
-export default async function sitemap() {
-  // Aspetta i risultati della chiamata a getBlogPosts
-  let blogs = (await getBlogPosts()).map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: post.metadata.publishedAt,
-  }))
+  const routes = ["", "/projects", "/blog"].map((route) => ({
+    url: `${siteConfig.url}${route}`,
+    lastModified: new Date(),
+  }));
 
-  // Aggiungi la rotta /experience alle rotte statiche
-  let routes = ['', '/blog', '/experience'].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date().toISOString().split('T')[0],
-  }))
-
-  return [...routes, ...blogs]
+  return [...routes, ...posts];
 }

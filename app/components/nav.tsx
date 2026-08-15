@@ -1,79 +1,94 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { FaGithub, FaLinkedinIn } from "react-icons/fa6";
+import { HiOutlineEnvelope } from "react-icons/hi2";
+import { profile } from "app/data/profile";
 
-const navItems = {
-  '/': {
-    name: 'Home',
+const navItems = [
+  { href: "/", label: "Home" },
+  { href: "/projects", label: "Progetti" },
+  { href: "/blog", label: "Blog" },
+] as const;
+
+const contactItems = [
+  {
+    href: profile.links.github,
+    label: "GitHub",
+    icon: FaGithub,
   },
-  '/blog': {
-    name: 'Blog',
-  }
-}
+  {
+    href: profile.links.linkedin,
+    label: "LinkedIn",
+    icon: FaLinkedinIn,
+  },
+  {
+    href: `mailto:${profile.email}`,
+    label: "Email",
+    icon: HiOutlineEnvelope,
+  },
+] as const;
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
-  const pathname = usePathname() 
+  const pathname = usePathname();
 
   return (
-    <aside className="mb-16 tracking-tight">
-      <div className="lg:sticky lg:top-20">
-        <nav className="flex flex-row items-start relative px-0 pb-0 md:overflow-auto">
-          {/* Mobile hamburger/X button */}
-          <button
-            className="lg:hidden flex items-center px-3 py-2 border rounded text-black dark:text-white"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-expanded={isOpen} // Accessibility
-            aria-label="Toggle navigation menu"
-          >
-            {isOpen ? (
-              <svg
-                className="fill-current h-3 w-3"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <title>Close</title>
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M10 8.586l-4.293-4.293-1.414 1.414L8.586 10l-4.293 4.293 1.414 1.414L10 11.414l4.293 4.293 1.414-1.414L11.414 10l4.293-4.293-1.414-1.414L10 8.586z"
-                />
-              </svg>
-            ) : (
-              <svg
-                className="fill-current h-3 w-3"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <title>Menu</title>
-                <path d="M0 3h20v2H0zM0 7h20v2H0zM0 11h20v2H0z" />
-              </svg>
-            )}
-          </button>
+    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[color:var(--background)]/95 backdrop-blur">
+      <nav
+        aria-label="Navigazione principale"
+        className="site-container flex min-h-16 items-center justify-between gap-2"
+      >
+        <div className="flex items-center gap-0 sm:gap-2">
+          {navItems.map((item) => {
+            const isActive =
+              item.href === "/blog"
+                ? pathname.startsWith("/blog")
+                : item.href === "/projects"
+                  ? pathname.startsWith("/projects")
+                  : item.href === "/"
+                    ? pathname === "/"
+                    : false;
 
-          {/* Desktop & Mobile Menu */}
-          <div
-            className={`${isOpen ? 'block' : 'hidden'} lg:flex lg:space-x-4 transition-all duration-300 ease-in-out`}
-          >
-            {Object.entries(navItems).map(([path, { name }]) => {
-              const isActive = pathname === path // Check if the link is active
-              return (
-                <Link
-                  key={path}
-                  href={path}
-                  className={`transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle py-1 px-2 m-1 ${
-                    isActive ? 'font-bold text-neutral-800 dark:text-neutral-200' : ''
-                  }`}
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={isActive ? "page" : undefined}
+                className={`px-2 py-2 text-sm font-medium transition sm:px-3 ${
+                  isActive
+                    ? "text-[var(--accent)]"
+                    : "text-[var(--muted)] hover:text-[var(--ink)]"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
+
+        <ul className="flex items-center gap-1" aria-label="Contatti">
+          {contactItems.map((item) => {
+            const Icon = item.icon;
+            const isExternal = item.href.startsWith("http");
+
+            return (
+              <li key={item.label}>
+                <a
+                  href={item.href}
+                  aria-label={item.label}
+                  title={item.label}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--muted)] transition hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                 >
-                  {name}
-                </Link>
-              )
-            })}
-          </div>
-        </nav>
-      </div>
-    </aside>
-  )
+                  <Icon aria-hidden="true" size={18} strokeWidth={1.8} />
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </header>
+  );
 }
